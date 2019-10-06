@@ -64,15 +64,16 @@ For operation check
 ## Shutter is a GPIO toggle
 
 Initial Sate is PULLDOWN   
-When it turns from OFF to ON, it prepares the shutter and takes a picture again when it is OFF.   
+The shutter is prepared when it is turned from OFF to ON, and a picture is taken when it is turned from ON to OFF.   
 
 Initial Sate is PULLUP   
-When it turns from ON to OFF, it prepares the shutter and takes a picture again when it is ON.   
+The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
 
 ![config-shutter-3](https://user-images.githubusercontent.com/6020549/66263122-660d6300-e828-11e9-8619-e54ab0c6b54f.jpg)
 
 ## Shutter is TCP Socket   
 
+You can connect with mDNS hostname.   
 You can use tcp_send.py.   
 ```
 python ./tcp_send.py
