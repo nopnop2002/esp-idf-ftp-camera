@@ -81,6 +81,7 @@ Initial Sate is PULLUP
 The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
 
 I confirmed that the following GPIO can be used.   
+
 |GPIO|PullDown|PullUp|
 |:-:|:-:|:-:|
 |GPIO12|OK|NG|
