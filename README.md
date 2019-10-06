@@ -2,7 +2,7 @@
 Remote camera for esp-idf.   
 You can publish your photos via FTP.   
 
-![esp-idf-remote-camera](https://user-images.githubusercontent.com/6020549/66264057-4fbbd300-e839-11e9-9abb-109ab54727c9.jpg)
+![esp-idf-remote-camera](https://user-images.githubusercontent.com/6020549/66264066-9c071300-e839-11e9-9e56-51aeeb1052ed.jpg)
 
 
 ```
