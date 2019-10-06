@@ -56,15 +56,22 @@ You can choose one of the following shutter methods
 
 ![config-shutter-2](https://user-images.githubusercontent.com/6020549/66263121-660d6300-e828-11e9-9c8f-8c12a8f3f2a7.jpg)
 
-Shutter is the Enter key on the keyboard
+## Shutter is the Enter key on the keyboard   
+For operation check
 
 ![config-shutter-1](https://user-images.githubusercontent.com/6020549/66263120-6574cc80-e828-11e9-980b-b495e9f59e8e.jpg)
 
-Shutter is a GPIO toggle
+## Shutter is a GPIO toggle
+
+Initial Sate is PULLDOWN   
+When it turns from OFF to ON, it prepares the shutter and takes a picture again when it is OFF.   
+
+Initial Sate is PULLUP   
+When it turns from ON to OFF, it prepares the shutter and takes a picture again when it is ON.   
 
 ![config-shutter-3](https://user-images.githubusercontent.com/6020549/66263122-660d6300-e828-11e9-8619-e54ab0c6b54f.jpg)
 
-Shutter is TCP Socket   
+## Shutter is TCP Socket   
 
 You can use tcp_send.py.   
 ```
@@ -73,7 +80,7 @@ python ./tcp_send.py
 ![config-shutter-4](https://user-images.githubusercontent.com/6020549/66263123-660d6300-e828-11e9-897e-137533cd246f.jpg)
 
 
-Shutter is UDP Socket
+## Shutter is UDP Socket
 You can use udp_send.py.   
 ```
 python ./udp_send.py
