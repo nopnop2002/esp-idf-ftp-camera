@@ -1,5 +1,6 @@
 # esp-idf-remote-camera
-Remote camera for esp-idf
+Remote camera for esp-idf.   
+You can publish your photos via FTP.   
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-remote-camera
