@@ -33,14 +33,22 @@ You can select any one using menuconfig.
 
 # FTP server
 
+![config-ftpserver](https://user-images.githubusercontent.com/6020549/66263096-483ffe00-e828-11e9-8452-25518d18bd8b.jpg)
+
 You can choose the file name on the FTP server side from the following.   
 1.Always the same file name   
 2.File name based on date and time   
 
-![config-ftpserver](https://user-images.githubusercontent.com/6020549/66263096-483ffe00-e828-11e9-8452-25518d18bd8b.jpg)
+![config-filename](https://user-images.githubusercontent.com/6020549/66263575-37938600-e830-11e9-86aa-7c043cb869ee.jpg)
 
 When you choose date and time file name, you will need an NTP server.
 ![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/66263303-78d56700-e82b-11e9-9290-067f6b9f974e.jpg)
+
+Fixed file name
+![file-name-fixed](https://user-images.githubusercontent.com/6020549/66263588-7c1f2180-e830-11e9-97cd-ab2f96531055.jpg)
+
+File name based on date and time
+![file_name_datetime](https://user-images.githubusercontent.com/6020549/66263577-4417de80-e830-11e9-89c4-79f5e088613a.jpg)
 
 # Camera Pin
 
@@ -68,6 +76,9 @@ The shutter is prepared when it is turned from OFF to ON, and a picture is taken
 
 Initial Sate is PULLUP   
 The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
+
+I confirmed that the following GPIO can be used.   
+
 
 ![config-shutter-3](https://user-images.githubusercontent.com/6020549/66263122-660d6300-e828-11e9-8619-e54ab0c6b54f.jpg)
 
