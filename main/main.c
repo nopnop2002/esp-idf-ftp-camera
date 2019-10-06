@@ -483,7 +483,12 @@ void app_main(void)
 		ESP_LOGI(TAG, "ftp user  :%s", EXAMPLE_FTP_USER);
 		static NetBuf_t* ftpClientNetBuf = NULL;
 		FtpClient* ftpClient = getFtpClient();
-		ftpClient->ftpClientConnect(EXAMPLE_FTP_SERVER, 21, &ftpClientNetBuf);
+		int connected = ftpClient->ftpClientConnect(EXAMPLE_FTP_SERVER, 21, &ftpClientNetBuf);
+		if (connected == 0) {
+			ESP_LOGE(TAG, "FTP server connect fail");
+			break;
+    	}
+
 		ftpClient->ftpClientLogin(EXAMPLE_FTP_USER, EXAMPLE_FTP_PASSWORD, ftpClientNetBuf);
 		ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
 		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", localFileName, remoteFileName);
