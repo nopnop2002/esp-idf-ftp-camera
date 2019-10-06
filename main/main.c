@@ -495,8 +495,6 @@ void app_main(void)
 			break;
     	}
 
-#if CONFIG_REMOTE_IS_FIXED_NAME
-
 		// Put Picture to FTP server
 		int put = ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
 		if (put == 0) {
