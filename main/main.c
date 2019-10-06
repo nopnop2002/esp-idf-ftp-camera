@@ -477,20 +477,32 @@ void app_main(void)
 			}
 		} // end while
 
-
-		// Put Picture to ftp server
+		// Open FTP server
 		ESP_LOGI(TAG, "ftp server:%s", EXAMPLE_FTP_SERVER);
 		ESP_LOGI(TAG, "ftp user  :%s", EXAMPLE_FTP_USER);
 		static NetBuf_t* ftpClientNetBuf = NULL;
 		FtpClient* ftpClient = getFtpClient();
-		int connected = ftpClient->ftpClientConnect(EXAMPLE_FTP_SERVER, 21, &ftpClientNetBuf);
-		if (connected == 0) {
+		int connect = ftpClient->ftpClientConnect(EXAMPLE_FTP_SERVER, 21, &ftpClientNetBuf);
+		if (connect == 0) {
 			ESP_LOGE(TAG, "FTP server connect fail");
 			break;
     	}
 
-		ftpClient->ftpClientLogin(EXAMPLE_FTP_USER, EXAMPLE_FTP_PASSWORD, ftpClientNetBuf);
-		ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
+		// Login FTP server
+		int login = ftpClient->ftpClientLogin(EXAMPLE_FTP_USER, EXAMPLE_FTP_PASSWORD, ftpClientNetBuf);
+		if (login == 0) {
+			ESP_LOGE(TAG, "FTP server login fail");
+			break;
+    	}
+
+#if CONFIG_REMOTE_IS_FIXED_NAME
+
+		// Put Picture to FTP server
+		int put = ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
+		if (put == 0) {
+			ESP_LOGE(TAG, "FTP server put fail");
+			break;
+    	}
 		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", localFileName, remoteFileName);
 
 		// Delete Local file
