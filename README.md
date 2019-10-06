@@ -4,7 +4,6 @@ Remote camera for esp-idf
 ```
 git clone https://github.com/nopnop2002/esp-idf-remote-camera
 cd esp-idf-remote-camera
-mkdir components
 git clone https://github.com/espressif/esp32-camera components
 make menuconfig
 make flash monitor
