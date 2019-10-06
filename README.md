@@ -42,12 +42,15 @@ You can choose the file name on the FTP server side from the following.
 ![config-filename](https://user-images.githubusercontent.com/6020549/66263575-37938600-e830-11e9-86aa-7c043cb869ee.jpg)
 
 When you choose date and time file name, you will need an NTP server.
+
 ![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/66263303-78d56700-e82b-11e9-9290-067f6b9f974e.jpg)
 
 Fixed file name
+
 ![file-name-fixed](https://user-images.githubusercontent.com/6020549/66263588-7c1f2180-e830-11e9-97cd-ab2f96531055.jpg)
 
 File name based on date and time
+
 ![file_name_datetime](https://user-images.githubusercontent.com/6020549/66263577-4417de80-e830-11e9-89c4-79f5e088613a.jpg)
 
 # Camera Pin
