@@ -37,6 +37,7 @@ esp_err_t ledc_init(camera_config_t * config) {
     timer_conf.timer_num = config->ledc_timer;
     ESP_LOGI(TAG,"dr = %d, fr = %d", timer_conf.duty_resolution, timer_conf.freq_hz);
     timer_conf.clk_cfg = LEDC_AUTO_CLK;
+    //timer_conf.clk_cfg = LEDC_USE_APB_CLK;
     esp_err_t err = ledc_timer_config(&timer_conf);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "ledc_timer_config failed, rc=%x", err);
@@ -162,7 +163,7 @@ esp_err_t camera_detect()
     }
 #endif
 
-#if 1
+#if CONFIG_CAMERA_MODEL_AI_THINKER
     // initialize PWDN pin
     // https://github.com/espressif/esp32-camera/issues/66
     gpio_config_t gpio_pwr_config;
