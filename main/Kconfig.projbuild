@@ -77,27 +77,27 @@ menu "Application Configuration"
 			Select remote file name.
 
 		config REMOTE_IS_FIXED_NAME
-				bool "Remote file name is fixed"
+			bool "Remote file name is fixed"
 		config REMOTE_IS_VARIABLE_NAME
-				bool "Remote file name is date and time"
+			bool "Remote file name is date and time"
 		endchoice
 
 		config FIXED_REMOTE_FILE
-				depends on REMOTE_IS_FIXED_NAME
+			depends on REMOTE_IS_FIXED_NAME
 			string "Fixed-Remote file name"
 			default "picture.jpg"
 			help
 			Remote file name.
 
 		config NTP_SERVER
-				depends on REMOTE_IS_VARIABLE_NAME
+			depends on REMOTE_IS_VARIABLE_NAME
 			string "NTP Server"
 			default "pool.ntp.org"
 			help
 			Hostname for NTP Server.
 
 		config LOCAL_TIMEZONE
-				depends on REMOTE_IS_VARIABLE_NAME
+			depends on REMOTE_IS_VARIABLE_NAME
 			int "Your TimeZone"
 			range 0 23
 			default 0
