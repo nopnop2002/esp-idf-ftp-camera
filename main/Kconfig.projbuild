@@ -71,10 +71,10 @@ menu "Application Configuration"
 			FTP Password for the example to use.
 
 		choice REMOTE_FILE
-				bool "Select remote file name"
-				default REMOTE_IS_FIXED_NAME
-				help
-				Select remote file name.
+			bool "Select remote file name"
+			default REMOTE_IS_FIXED_NAME
+			help
+			Select remote file name.
 
 		config REMOTE_IS_FIXED_NAME
 				bool "Remote file name is fixed"
