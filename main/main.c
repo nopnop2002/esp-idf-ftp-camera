@@ -29,9 +29,6 @@
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
 
-#include "lwip/err.h"
-#include "lwip/sys.h"
-
 #include "FtpClient.h"
 #include "camera.h"
 #include "cmd.h"
