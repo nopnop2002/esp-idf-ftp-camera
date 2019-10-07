@@ -31,6 +31,34 @@ You can select any one using menuconfig.
 
 ![config-filesystem](https://user-images.githubusercontent.com/6020549/66263087-3bbba580-e828-11e9-8bd5-36137eb4627d.jpg)
 
+## Using FAT file system on SPI peripheral SDCARD
+
+__Must be formatted with FAT32 before use__
+
+|ESP32 pin|SPI pin|Notes|
+|:-:|:-:|:-:|
+|GPIO14(MTMS)|SCK||
+|GPIO15(MTDO)|MOSI|10k pull up if can't mount|
+|GPIO2|MISO||
+|GPIO13(MTCK)|CS|| 
+|3.3V|VCC|Can't use 5V supply|
+|GND|GND||
+
+## Using FAT file system on SDMMC peripheral SDCARD
+
+__Must be formatted with FAT32 before use__
+
+|ESP32 pin|SD card pin|Notes|
+|:-:|:-:|:-:|
+|GPIO14(MTMS)|CLK|10k pullup|
+|GPIO15(MTDO)|CMD|10k pullup|
+|GPIO2|D0|10k pullup|
+|GPIO4|D1|not used in 1-line SD mode; 10k pullup in 4-line SD mode|
+|GPIO12(MTDI)|D2|not used in 1-line SD mode; 10k pullup in 4-line SD mode|
+|GPIO13 (MTCK)|D3|not used in 1-line SD mode, but card's D3 pin must have a 10k pullup
+|N/C|CD|optional, not used in the example|
+|N/C|WP|optional, not used in the example|
+
 # Wifi
 
 ![config-wifi](https://user-images.githubusercontent.com/6020549/66263088-42e2b380-e828-11e9-9ea0-2191f99db05e.jpg)
