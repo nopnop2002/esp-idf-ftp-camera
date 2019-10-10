@@ -89,7 +89,7 @@ File name based on date and time
 
 ![config-camerapin](https://user-images.githubusercontent.com/6020549/66263115-55f58380-e828-11e9-87ab-a57c6ec999df.jpg)
 
-# Picutre Size
+# Picture Size
 
 ![config-picturesize](https://user-images.githubusercontent.com/6020549/66263117-60b01880-e828-11e9-9839-8c38edd0ced2.jpg)
 
