@@ -261,7 +261,7 @@ menu "Application Configuration"
 	menu "Picture Size"
 
 		choice SELECT_PSRAM
-		bool "Select PSRAM"
+			bool "Select PSRAM"
 			default DONT_USE_PSRAM
 			help
 				Select whether to use PSRAM
