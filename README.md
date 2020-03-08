@@ -1,10 +1,22 @@
 # esp-idf-remote-camera
 Remote camera for esp-idf.   
-You can publish your photos via FTP.   
+Take a picture and Publish it via FTP.   
 
 ![esp-idf-remote-camera](https://user-images.githubusercontent.com/6020549/66264066-9c071300-e839-11e9-9e56-51aeeb1052ed.jpg)
 
 ![esp-idf-remote-camera-2](https://user-images.githubusercontent.com/6020549/66277385-b17f4a00-e8d8-11e9-8ef3-419b32439dbd.jpg)
+
+# Install
+Use a USB-TTL converter.   
+
+|ESP-32|USB-TTL|
+|:-:|:-:|
+|U0TXD|RXD|
+|U0RXD|TXD|
+|GPIO0|GND|
+|5V|5V|
+|GND|GND|
+
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-remote-camera
@@ -14,12 +26,14 @@ make menuconfig
 make flash monitor
 ```
 
+# Configuration
 Set the following items using menuconfig.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/66263277-d0270780-e82a-11e9-8d2e-16e020a897c2.jpg)
+
 ![config](https://user-images.githubusercontent.com/6020549/66263086-38c0b500-e828-11e9-904c-42bf5804ff50.jpg)
 
-# File system
+## File system
 
 ESP32 supports the following file systems.   
 1.SPIFFS file system on FLASH   
@@ -31,7 +45,7 @@ You can select any one using menuconfig.
 
 ![config-filesystem](https://user-images.githubusercontent.com/6020549/66263087-3bbba580-e828-11e9-8bd5-36137eb4627d.jpg)
 
-## Using FAT file system on SPI peripheral SDCARD
+- Using FAT file system on SPI peripheral SDCARD
 
 __Must be formatted with FAT32 before use__
 
@@ -44,7 +58,7 @@ __Must be formatted with FAT32 before use__
 |3.3V|VCC|Can't use 5V supply|
 |GND|GND||
 
-## Using FAT file system on SDMMC peripheral SDCARD
+- Using FAT file system on SDMMC peripheral SDCARD
 
 __Must be formatted with FAT32 before use__
 
@@ -59,11 +73,11 @@ __Must be formatted with FAT32 before use__
 |N/C|CD|optional, not used in the example|
 |N/C|WP|optional, not used in the example|
 
-# Wifi
+## Wifi
 
 ![config-wifi](https://user-images.githubusercontent.com/6020549/66263088-42e2b380-e828-11e9-9ea0-2191f99db05e.jpg)
 
-# FTP server
+## FTP server
 
 ![config-ftpserver](https://user-images.githubusercontent.com/6020549/66263096-483ffe00-e828-11e9-8452-25518d18bd8b.jpg)
 
@@ -85,31 +99,31 @@ File name based on date and time
 
 ![file_name_datetime](https://user-images.githubusercontent.com/6020549/66263577-4417de80-e830-11e9-89c4-79f5e088613a.jpg)
 
-# Camera Pin
+## Camera Pin
 
 ![config-camerapin](https://user-images.githubusercontent.com/6020549/66263115-55f58380-e828-11e9-87ab-a57c6ec999df.jpg)
 
-# Picture Size
+## Picture Size
 
 ![config-picturesize](https://user-images.githubusercontent.com/6020549/66263117-60b01880-e828-11e9-9839-8c38edd0ced2.jpg)
 
-# Shutter method
+## Shutter method
 
 You can choose one of the following shutter methods
 
 ![config-shutter-2](https://user-images.githubusercontent.com/6020549/66263121-660d6300-e828-11e9-9c8f-8c12a8f3f2a7.jpg)
 
-## Shutter is the Enter key on the keyboard   
+- Shutter is the Enter key on the keyboard   
 For operation check
 
 ![config-shutter-1](https://user-images.githubusercontent.com/6020549/66263120-6574cc80-e828-11e9-980b-b495e9f59e8e.jpg)
 
-## Shutter is a GPIO toggle
+- Shutter is a GPIO toggle
 
-Initial Sate is PULLDOWN   
+  - Initial Sate is PULLDOWN   
 The shutter is prepared when it is turned from OFF to ON, and a picture is taken when it is turned from ON to OFF.   
 
-Initial Sate is PULLUP   
+  - Initial Sate is PULLUP   
 The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
 
 I confirmed that the following GPIO can be used.   
@@ -125,7 +139,7 @@ I confirmed that the following GPIO can be used.
 
 ![config-shutter-3](https://user-images.githubusercontent.com/6020549/66263122-660d6300-e828-11e9-8619-e54ab0c6b54f.jpg)
 
-## Shutter is TCP Socket   
+- Shutter is TCP Socket   
 
 You can connect with mDNS hostname.   
 You can use tcp_send.py.   
@@ -135,7 +149,7 @@ python ./tcp_send.py
 ![config-shutter-4](https://user-images.githubusercontent.com/6020549/66263123-660d6300-e828-11e9-897e-137533cd246f.jpg)
 
 
-## Shutter is UDP Socket
+- Shutter is UDP Socket
 You can use udp_send.py.   
 ```
 python ./udp_send.py
