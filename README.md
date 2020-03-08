@@ -6,6 +6,9 @@ Take a picture and Publish it via FTP.
 
 ![esp-idf-remote-camera-2](https://user-images.githubusercontent.com/6020549/66277385-b17f4a00-e8d8-11e9-8ef3-419b32439dbd.jpg)
 
+# Software requirements
+esp-idf ver4.1 or later.   
+
 # Install
 Use a USB-TTL converter.   
 
