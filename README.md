@@ -149,7 +149,7 @@ python ./tcp_send.py
 ![config-shutter-4](https://user-images.githubusercontent.com/6020549/66263123-660d6300-e828-11e9-897e-137533cd246f.jpg)
 
 
-- Shutter is UDP Socket
+- Shutter is UDP Socket   
 You can use udp_send.py.   
 ```
 python ./udp_send.py
