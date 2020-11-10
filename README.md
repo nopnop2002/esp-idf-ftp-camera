@@ -93,17 +93,10 @@ You can choose the file name on the FTP server side from the following.
 - Always the same file name   
 - File name based on date and time   
 When you choose date and time file name, you will need an NTP server.
+The file name will be YYYYMMDD-hhmmss.jpg.   
 
 ![config-remote-file-1](https://user-images.githubusercontent.com/6020549/98636788-dc08c580-236a-11eb-9ebc-e38362b7a072.jpg)
 ![config-remote-file-2](https://user-images.githubusercontent.com/6020549/98636804-e1fea680-236a-11eb-8425-0831c905962b.jpg)
-
-Fixed file name
-
-![file-name-fixed](https://user-images.githubusercontent.com/6020549/66263588-7c1f2180-e830-11e9-97cd-ab2f96531055.jpg)
-
-File name based on date and time
-
-![file_name_datetime](https://user-images.githubusercontent.com/6020549/66263577-4417de80-e830-11e9-89c4-79f5e088613a.jpg)
 
 ## Camera Pin
 
