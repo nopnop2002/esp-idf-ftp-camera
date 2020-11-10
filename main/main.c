@@ -36,17 +36,21 @@
 /* The examples use WiFi configuration that you can set via project configuration menu
 
    If you'd rather not, just change the below entries to strings with
-   the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
+   the config you want - ie #define ESP_WIFI_SSID "mywifissid"
 */
-#define EXAMPLE_ESP_WIFI_SSID		CONFIG_ESP_WIFI_SSID
-#define EXAMPLE_ESP_WIFI_PASS		CONFIG_ESP_WIFI_PASSWORD
-#define EXAMPLE_ESP_MAXIMUM_RETRY	CONFIG_ESP_MAXIMUM_RETRY
-#define EXAMPLE_FTP_SERVER			CONFIG_FTP_SERVER
-#define EXAMPLE_FTP_USER			CONFIG_FTP_USER  
-#define EXAMPLE_FTP_PASSWORD		CONFIG_FTP_PASSWORD
-#define EXAMPLE_NTP_SERVER			CONFIG_NTP_SERVER
+#define ESP_WIFI_SSID			CONFIG_ESP_WIFI_SSID
+#define ESP_WIFI_PASS			CONFIG_ESP_WIFI_PASSWORD
+#define ESP_MAXIMUM_RETRY		CONFIG_ESP_MAXIMUM_RETRY
+#define ESP_FTP_SERVER			CONFIG_FTP_SERVER
+#define ESP_FTP_USER			CONFIG_FTP_USER  
+#define ESP_FTP_PASSWORD		CONFIG_FTP_PASSWORD
+
+#if CONFIG_REMOTE_IS_VARIABLE_NAME
+#define ESP_NTP_SERVER			CONFIG_NTP_SERVER
+#endif
+
 #if CONFIG_REMOTE_IS_FIXED_NAME
-#define EXAMPLE_FIXED_REMOTE_FILE	CONFIG_FIXED_REMOTE_FILE
+#define ESP_FIXED_REMOTE_FILE	CONFIG_FIXED_REMOTE_FILE
 #endif
 
 /* FreeRTOS event group to signal when we are connected*/
@@ -83,7 +87,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
 		esp_wifi_connect();
 	} else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-		if (s_retry_num < EXAMPLE_ESP_MAXIMUM_RETRY) {
+		if (s_retry_num < ESP_MAXIMUM_RETRY) {
 			esp_wifi_connect();
 			xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
 			s_retry_num++;
@@ -121,8 +125,8 @@ void wifi_init_sta(void)
 
 	wifi_config_t wifi_config = {
 		.sta = {
-			.ssid = EXAMPLE_ESP_WIFI_SSID,
-			.password = EXAMPLE_ESP_WIFI_PASS
+			.ssid = ESP_WIFI_SSID,
+			.password = ESP_WIFI_PASS
 		},
 	};
 	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
@@ -131,7 +135,7 @@ void wifi_init_sta(void)
 
 	xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
 	ESP_LOGI(TAG, "wifi_init_sta finished.");
-	ESP_LOGI(TAG, "connect to ap SSID:%s", EXAMPLE_ESP_WIFI_SSID);
+	ESP_LOGI(TAG, "connect to ap SSID:%s", ESP_WIFI_SSID);
 }
 
 #if CONFIG_SPIFFS 
@@ -292,8 +296,8 @@ static void initialize_sntp(void)
 	ESP_LOGI(TAG, "Initializing SNTP");
 	sntp_setoperatingmode(SNTP_OPMODE_POLL);
 	//sntp_setservername(0, "pool.ntp.org");
-	ESP_LOGI(TAG, "Your NTP Server is %s", EXAMPLE_NTP_SERVER);
-	sntp_setservername(0, EXAMPLE_NTP_SERVER);
+	ESP_LOGI(TAG, "Your NTP Server is %s", ESP_NTP_SERVER);
+	sntp_setservername(0, ESP_NTP_SERVER);
 	sntp_set_time_sync_notification_cb(time_sync_notification_cb);
 	sntp_init();
 }
@@ -409,7 +413,7 @@ void app_main(void)
 	sprintf(localFileName, "%s/picture.jpg", base_path);
 #if CONFIG_REMOTE_IS_FIXED_NAME
 	//sprintf(remoteFileName, "picture.jpg");
-	sprintf(remoteFileName, "%s", EXAMPLE_FIXED_REMOTE_FILE);
+	sprintf(remoteFileName, "%s", ESP_FIXED_REMOTE_FILE);
 #endif
 	ESP_LOGI(TAG, "localFileName=%s",localFileName);
 		
@@ -460,18 +464,18 @@ void app_main(void)
 		} // end while
 
 		// Open FTP server
-		ESP_LOGI(TAG, "ftp server:%s", EXAMPLE_FTP_SERVER);
-		ESP_LOGI(TAG, "ftp user  :%s", EXAMPLE_FTP_USER);
+		ESP_LOGI(TAG, "ftp server:%s", ESP_FTP_SERVER);
+		ESP_LOGI(TAG, "ftp user  :%s", ESP_FTP_USER);
 		static NetBuf_t* ftpClientNetBuf = NULL;
 		FtpClient* ftpClient = getFtpClient();
-		int connect = ftpClient->ftpClientConnect(EXAMPLE_FTP_SERVER, 21, &ftpClientNetBuf);
+		int connect = ftpClient->ftpClientConnect(ESP_FTP_SERVER, 21, &ftpClientNetBuf);
 		if (connect == 0) {
 			ESP_LOGE(TAG, "FTP server connect fail");
 			break;
 		}
 
 		// Login FTP server
-		int login = ftpClient->ftpClientLogin(EXAMPLE_FTP_USER, EXAMPLE_FTP_PASSWORD, ftpClientNetBuf);
+		int login = ftpClient->ftpClientLogin(ESP_FTP_USER, ESP_FTP_PASSWORD, ftpClientNetBuf);
 		if (login == 0) {
 			ESP_LOGE(TAG, "FTP server login fail");
 			break;
