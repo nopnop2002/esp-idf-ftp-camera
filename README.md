@@ -39,7 +39,7 @@ Set the following items using menuconfig.
 
 ![config-menu](https://user-images.githubusercontent.com/6020549/98636606-90561c00-236a-11eb-9055-62a564d5b18b.jpg)
 
-## File system
+## File system Selection
 
 ESP32 supports the following file systems.   
 1.SPIFFS file system on FLASH   
@@ -79,15 +79,15 @@ __Must be formatted with FAT32 before use__
 |N/C|CD|optional, not used in the example|
 |N/C|WP|optional, not used in the example|
 
-## Wifi
+## Wifi Setting
 
 ![config-wifi](https://user-images.githubusercontent.com/6020549/98636701-bda2ca00-236a-11eb-9379-0084435b3e52.jpg)
 
-## FTP server
+## FTP server Setting
 
 ![config-ftpserver](https://user-images.githubusercontent.com/6020549/98636743-ca272280-236a-11eb-9094-7ec4d07ebcac.jpg)
 
-## Remote File Name
+## Remote File Name Setting
 
 You can choose the file name on the FTP server side from the following.   
 - Always the same file name   
@@ -113,7 +113,7 @@ File name based on date and time
 
 ![config-picturesize](https://user-images.githubusercontent.com/6020549/98636918-11adae80-236b-11eb-817c-3c6a9be82866.jpg)
 
-## Shutter method
+## Select Shutter
 
 You can choose one of the following shutter methods
 
