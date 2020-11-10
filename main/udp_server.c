@@ -77,9 +77,8 @@ void udp_server(void *pvParameters)
 			ESP_LOGI(TAG, "lwip_recv buffer=%s",buffer);
 			inet_ntop(AF_INET, &senderInfo.sin_addr, senderstr, sizeof(senderstr));
 			ESP_LOGI(TAG, "recvfrom : %s, port=%d", senderstr, ntohs(senderInfo.sin_port));
-			//xQueueSend(xQueueCmd, &cmdBuf, 0);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGI(TAG, "xQueueSend fail");
+				ESP_LOGE(TAG, "xQueueSend fail");
 			}
 
 		}

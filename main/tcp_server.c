@@ -141,7 +141,7 @@ void tcp_server(void *pvParameters)
 			ESP_LOGI(TAG, "Received %d bytes from %s:", len, addr_str);
 			ESP_LOGI(TAG, "%s", rx_buffer);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGI(TAG, "xQueueSend fail");
+				ESP_LOGE(TAG, "xQueueSend fail");
 				strcpy(tx_buffer, "FAIL");
 				int err = send(sock, tx_buffer, strlen(tx_buffer), 0);
 				if (err < 0) {

@@ -269,11 +269,11 @@ menu "Application Configuration"
 			help
 				Select whether to use PSRAM
 
-		config USE_PSRAM
-			bool "Use PSRAM"
+			config USE_PSRAM
+				bool "Use PSRAM"
 
-		config DONT_USE_PSRAM
-			bool "Do not use PSRAM"
+			config DONT_USE_PSRAM
+				bool "Do not use PSRAM"
 
 		endchoice
 
@@ -312,14 +312,14 @@ menu "Application Configuration"
 			help
 				Selecting the shutter method
 
-		config SHUTTER_ENTER
-			bool "Use Enter key"
-		config SHUTTER_GPIO
-			bool "Use GPIO"
-		config SHUTTER_TCP
-			bool "Use TCP Socket"
-		config SHUTTER_UDP
-			bool "Use UDP Socket"
+			config SHUTTER_ENTER
+				bool "Use Enter key"
+			config SHUTTER_GPIO
+				bool "Use GPIO"
+			config SHUTTER_TCP
+				bool "Use TCP Socket"
+			config SHUTTER_UDP
+				bool "Use UDP Socket"
 		endchoice
 
 		config GPIO_INPUT
@@ -338,15 +338,15 @@ menu "Application Configuration"
 			help
 				Select initial state of GPIO.
 
-		config GPIO_PULLUP
-			bool "GPIO_PULLUP"
-			help
-				The initial state of GPIO is Pull-UP.
+			config GPIO_PULLUP
+				bool "GPIO_PULLUP"
+				help
+					The initial state of GPIO is Pull-UP.
 
-		config GPIO_PULLDOWN
-			bool "GPIO_PULLDOWN"
-			help
-				The initial state of GPIO is Pull-Down.
+			config GPIO_PULLDOWN
+				bool "GPIO_PULLDOWN"
+				help
+					The initial state of GPIO is Pull-Down.
 
 		endchoice
 

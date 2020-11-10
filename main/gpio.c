@@ -48,9 +48,8 @@ void gpio(void *pvParameter)
 				vTaskDelay(1);
 			}
 			ESP_LOGI(TAG, "Release Button");
-			//xQueueSend(xQueueCmd, &cmdBuf, 0);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGI(TAG, "xQueueSend fail");
+				ESP_LOGE(TAG, "xQueueSend fail");
 			}
 		}
 		vTaskDelay(1);
