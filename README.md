@@ -92,7 +92,7 @@ __Must be formatted with FAT32 before use__
 You can choose the file name on the FTP server side from the following.   
 - Always the same file name   
 - File name based on date and time   
-When you choose date and time file name, you will need an NTP server.
+When you choose date and time file name, you will need an NTP server.   
 The file name will be YYYYMMDD-hhmmss.jpg.   
 
 ![config-remote-file-1](https://user-images.githubusercontent.com/6020549/98636788-dc08c580-236a-11eb-9ebc-e38362b7a072.jpg)
