@@ -235,28 +235,34 @@ esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 }
 
 void printFrameSize(int size) {
-	if (size == FRAMESIZE_QQVGA) {
+	if (size == FRAMESIZE_96X96) {
+		ESP_LOGI(TAG, "Frame Size:96x96");
+	} else if (size == FRAMESIZE_QQVGA) {
 		ESP_LOGI(TAG, "Frame Size:160x120");
 	} else if (size == FRAMESIZE_QCIF) {
 		ESP_LOGI(TAG, "Frame Size:176x144");
 	} else if (size == FRAMESIZE_HQVGA) {
 		ESP_LOGI(TAG, "Frame Size:240x176");
+	} else if (size == FRAMESIZE_240X240) {
+		ESP_LOGI(TAG, "Frame Size:240x240");
 	} else if (size == FRAMESIZE_QVGA) {
 		ESP_LOGI(TAG, "Frame Size:320x240");
 	} else if (size == FRAMESIZE_CIF) {
 		ESP_LOGI(TAG, "Frame Size:400x296");
+	} else if (size == FRAMESIZE_HVGA) {
+		ESP_LOGI(TAG, "Frame Size:480x320");
 	} else if (size == FRAMESIZE_VGA) {
 		ESP_LOGI(TAG, "Frame Size:640x480");
 	} else if (size == FRAMESIZE_SVGA) {
 		ESP_LOGI(TAG, "Frame Size:800x600");
 	} else if (size == FRAMESIZE_XGA) {
 		ESP_LOGI(TAG, "Frame Size:1024x768");
+	} else if (size == FRAMESIZE_HD) {
+		ESP_LOGI(TAG, "Frame Size:1280x720");
 	} else if (size == FRAMESIZE_SXGA) {
 		ESP_LOGI(TAG, "Frame Size:1280x1024");
 	} else if (size == FRAMESIZE_UXGA) {
 		ESP_LOGI(TAG, "Frame Size:1600x1200");
-	} else if (size == FRAMESIZE_QXGA) {
-		ESP_LOGI(TAG, "Frame Size:2048x1536");
 	}
 }
 
