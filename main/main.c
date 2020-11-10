@@ -266,30 +266,7 @@ esp_err_t mountSDCARD(char * base_path) {
 
 
 #if CONFIG_SHUTTER_ENTER
-void keyin(void *pvParameters)
-{
-	ESP_LOGI(pcTaskGetTaskName(0), "Start");
-	CMD_t cmdBuf;
-	cmdBuf.taskHandle = xTaskGetCurrentTaskHandle();
-	cmdBuf.command = CMD_TAKE;
-
-	uint16_t c;
-	while (1) {
-		c = fgetc(stdin);
-		if (c == 0xffff) {
-			vTaskDelay(10);
-			continue;
-		}
-		//ESP_LOGI(pcTaskGetTaskName(0), "c=%x", c);
-		if (c == 0x0a) {
-			ESP_LOGI(pcTaskGetTaskName(0), "Push Enter");
-			//xQueueSend(xQueueCmd, &cmdBuf, 0);
-			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGI(TAG, "xQueueSend fail");
-			}
-		}
-	}
-}
+void keyin(void *pvParameters);
 #endif
 
 #if CONFIG_SHUTTER_GPIO
@@ -491,21 +468,21 @@ void app_main(void)
 		if (connect == 0) {
 			ESP_LOGE(TAG, "FTP server connect fail");
 			break;
-    	}
+		}
 
 		// Login FTP server
 		int login = ftpClient->ftpClientLogin(EXAMPLE_FTP_USER, EXAMPLE_FTP_PASSWORD, ftpClientNetBuf);
 		if (login == 0) {
 			ESP_LOGE(TAG, "FTP server login fail");
 			break;
-    	}
+		}
 
 		// Put Picture to FTP server
 		int put = ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
 		if (put == 0) {
 			ESP_LOGE(TAG, "FTP server put fail");
 			break;
-    	}
+		}
 		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", localFileName, remoteFileName);
 
 		// Delete Local file
