@@ -463,6 +463,11 @@ void app_main(void)
 			}
 		} // end while
 
+#if CONFIG_ENABLE_FLASH
+		// Flash Light OFF
+		gpio_set_level(CONFIG_GPIO_FLASH, 0);
+#endif
+
 		// Open FTP server
 		ESP_LOGI(TAG, "ftp server:%s", ESP_FTP_SERVER);
 		ESP_LOGI(TAG, "ftp user  :%s", ESP_FTP_USER);
@@ -495,10 +500,6 @@ void app_main(void)
 
 		ftpClient->ftpClientQuit(ftpClientNetBuf);
 
-#if CONFIG_ENABLE_FLASH
-		// Flash Light OFF
-		gpio_set_level(CONFIG_GPIO_FLASH, 0);
-#endif
 	} // end while
 
 #if CONFIG_SPIFFS
