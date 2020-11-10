@@ -6,25 +6,25 @@ menu "Application Configuration"
 		help
 			Select File System.
 
-	config SPIFFS
-		bool "SPIFFS File System on FLASH"
-		help
-			Use SPIFFS File System on FLASH.
+		config SPIFFS
+			bool "SPIFFS File System on FLASH"
+			help
+				Use SPIFFS File System on FLASH.
 
-	config FATFS
-		bool "FAT File System on FLASH"
-		help
-			Use FAT File System on FLASH.
+		config FATFS
+			bool "FAT File System on FLASH"
+			help
+				Use FAT File System on FLASH.
 
-	config SPI_SDCARD
-		bool "FAT File System on SPI SDCARD"
-		help
-			Use FAT File System on SPI SDCARD.
+		config SPI_SDCARD
+			bool "FAT File System on SPI SDCARD"
+			help
+				Use FAT File System on SPI SDCARD.
 
-	config MMC_SDCARD
-		bool "FAT File System on MMC SDCARD"
-		help
-			Use FAT File System on MMC SDCARD.
+		config MMC_SDCARD
+			bool "FAT File System on MMC SDCARD"
+			help
+				Use FAT File System on MMC SDCARD.
 
 	endchoice
 
@@ -69,6 +69,9 @@ menu "Application Configuration"
 			default "myftppass"
 			help
 				FTP Password for the example to use.
+	endmenu
+
+	menu "Remote File Name Setting"
 
 		choice REMOTE_FILE
 			bool "Select remote file name"
@@ -76,10 +79,10 @@ menu "Application Configuration"
 			help
 				Select remote file name.
 
-		config REMOTE_IS_FIXED_NAME
-			bool "Remote file name is fixed"
-		config REMOTE_IS_VARIABLE_NAME
-			bool "Remote file name is date and time"
+			config REMOTE_IS_FIXED_NAME
+				bool "Remote file name is fixed"
+			config REMOTE_IS_VARIABLE_NAME
+				bool "Remote file name is date and time"
 		endchoice
 
 		config FIXED_REMOTE_FILE
@@ -114,18 +117,18 @@ menu "Application Configuration"
 			help
 				Select Camera Pinout.
 
-		config CAMERA_MODEL_WROVER_KIT
-			bool "WROVER-KIT With OV2640 Module"
-		config CAMERA_MODEL_ESP_EYE
-			bool "ESP_EYE DevKit"
-		config CAMERA_MODEL_M5STACK_PSRAM
-			bool "M5Stack Camera With PSRAM"
-		config CAMERA_MODEL_M5STACK_WIDE
-			bool "M5Stack Camera F (Wide)"
-		config CAMERA_MODEL_AI_THINKER
-			bool "ESP32-CAM by AI-Thinker"
-		config CAMERA_MODEL_CUSTOM
-			bool "Custom Camera Pinout"
+			config CAMERA_MODEL_WROVER_KIT
+				bool "WROVER-KIT With OV2640 Module"
+			config CAMERA_MODEL_ESP_EYE
+				bool "ESP_EYE DevKit"
+			config CAMERA_MODEL_M5STACK_PSRAM
+				bool "M5Stack Camera With PSRAM"
+			config CAMERA_MODEL_M5STACK_WIDE
+				bool "M5Stack Camera F (Wide)"
+			config CAMERA_MODEL_AI_THINKER
+				bool "ESP32-CAM by AI-Thinker"
+			config CAMERA_MODEL_CUSTOM
+				bool "Custom Camera Pinout"
 		endchoice
 
 		config CAMERA_PIN_PWDN
@@ -280,24 +283,26 @@ menu "Application Configuration"
 			help
 				Select Picture Frame Size.
 
-		config FRAMESIZE_QQVGA
-			bool "Frame Size:160x120"
-		config FRAMESIZE_QQVGA2
-			bool "Frame Size:128x160"
-		config FRAMESIZE_QCIF
-			bool "Frame Size:176x144"
-		config FRAMESIZE_HQVGA
-			bool "Frame Size:240x176"
-		config FRAMESIZE_QVGA
-			bool "Frame Size:320x240"
-		config FRAMESIZE_CIF
-			bool "Frame Size:400x296"
-		config FRAMESIZE_VGA
-			bool "Frame Size:640x480"
-		config FRAMESIZE_SVGA
-			bool "Frame Size:800x600"
+			config FRAMESIZE_QQVGA
+				bool "Frame Size:160x120"
+			config FRAMESIZE_QCIF
+				bool "Frame Size:176x144"
+			config FRAMESIZE_HQVGA
+				bool "Frame Size:240x176"
+			config FRAMESIZE_240X240
+				bool "Frame Size:240x240"
+			config FRAMESIZE_QVGA
+				bool "Frame Size:320x240"
+			config FRAMESIZE_CIF
+				bool "Frame Size:400x296"
+			config FRAMESIZE_HVGA
+				bool "Frame Size:480x320"
+			config FRAMESIZE_VGA
+				bool "Frame Size:640x480"
+			config FRAMESIZE_SVGA
+				bool "Frame Size:800x600"
 		endchoice
-
+	
 	endmenu
 
 	menu "Select Shutter"

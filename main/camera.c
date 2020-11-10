@@ -122,20 +122,23 @@ esp_err_t camera_detect()
 #if CONFIG_FRAMESIZE_QQVGA
 	config.frame_size = FRAMESIZE_QQVGA;  // 160x120
 #endif
-#if CONFIG_FRAMESIZE_QQVGA2
-	config.frame_size = FRAMESIZE_QQVGA2; // 128x160
-#endif
 #if CONFIG_FRAMESIZE_QCIF
 	config.frame_size = FRAMESIZE_QCIF; // 176x144
 #endif
 #if CONFIG_FRAMESIZE_HQVGA
 	config.frame_size = FRAMESIZE_HQVGA; // 240x176
 #endif
+#if CONFIG_FRAMESIZE_240X240
+	config.frame_size = FRAMESIZE_240X240; // 240x240
+#endif
 #if CONFIG_FRAMESIZE_QVGA
 	config.frame_size = FRAMESIZE_QVGA; // 320x240
 #endif
 #if CONFIG_FRAMESIZE_CIF
 	config.frame_size = FRAMESIZE_CIF; // 400x296
+#endif
+#if CONFIG_FRAMESIZE_HVGA
+	config.frame_size = FRAMESIZE_HVGA; // 480x320
 #endif
 #if CONFIG_FRAMESIZE_VGA
 	config.frame_size = FRAMESIZE_VGA; // 640x480
@@ -145,6 +148,9 @@ esp_err_t camera_detect()
 #endif
 #if CONFIG_FRAMESIZE_XGA
 	config.frame_size = FRAMESIZE_XGA; // 1024x768
+#endif
+#if CONFIG_FRAMESIZE_HD
+	config.frame_size = FRAMESIZE_HD; // 1280x720
 #endif
 #if CONFIG_FRAMESIZE_SXGA
 	config.frame_size = FRAMESIZE_SXGA; // 1280x1024
@@ -231,8 +237,6 @@ esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 void printFrameSize(int size) {
 	if (size == FRAMESIZE_QQVGA) {
 		ESP_LOGI(TAG, "Frame Size:160x120");
-	} else if (size == FRAMESIZE_QQVGA2) {
-		ESP_LOGI(TAG, "Frame Size:128x160");
 	} else if (size == FRAMESIZE_QCIF) {
 		ESP_LOGI(TAG, "Frame Size:176x144");
 	} else if (size == FRAMESIZE_HQVGA) {

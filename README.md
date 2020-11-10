@@ -35,9 +35,9 @@ Change GPIO0 to open and press the RESET button.
 # Configuration
 Set the following items using menuconfig.
 
-![config-main](https://user-images.githubusercontent.com/6020549/66263277-d0270780-e82a-11e9-8d2e-16e020a897c2.jpg)
+![config-main](https://user-images.githubusercontent.com/6020549/98636527-63a20480-236a-11eb-8f9a-691084f226bc.jpg)
 
-![config](https://user-images.githubusercontent.com/6020549/66263086-38c0b500-e828-11e9-904c-42bf5804ff50.jpg)
+![config-menu](https://user-images.githubusercontent.com/6020549/98636606-90561c00-236a-11eb-9055-62a564d5b18b.jpg)
 
 ## File system
 
@@ -49,7 +49,7 @@ ESP32 supports the following file systems.
 
 You can select any one using menuconfig.   
 
-![config-filesystem](https://user-images.githubusercontent.com/6020549/66263087-3bbba580-e828-11e9-8bd5-36137eb4627d.jpg)
+![config-filesystem](https://user-images.githubusercontent.com/6020549/98636628-9c41de00-236a-11eb-907f-c4c293a1b577.jpg)
 
 - Using FAT file system on SPI peripheral SDCARD
 
@@ -81,21 +81,21 @@ __Must be formatted with FAT32 before use__
 
 ## Wifi
 
-![config-wifi](https://user-images.githubusercontent.com/6020549/66263088-42e2b380-e828-11e9-9ea0-2191f99db05e.jpg)
+![config-wifi](https://user-images.githubusercontent.com/6020549/98636701-bda2ca00-236a-11eb-9379-0084435b3e52.jpg)
 
 ## FTP server
 
-![config-ftpserver](https://user-images.githubusercontent.com/6020549/66263096-483ffe00-e828-11e9-8452-25518d18bd8b.jpg)
+![config-ftpserver](https://user-images.githubusercontent.com/6020549/98636743-ca272280-236a-11eb-9094-7ec4d07ebcac.jpg)
+
+## Remote File Name
 
 You can choose the file name on the FTP server side from the following.   
-1.Always the same file name   
-2.File name based on date and time   
-
-![config-filename](https://user-images.githubusercontent.com/6020549/66263575-37938600-e830-11e9-86aa-7c043cb869ee.jpg)
-
+- Always the same file name   
+- File name based on date and time   
 When you choose date and time file name, you will need an NTP server.
 
-![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/66263303-78d56700-e82b-11e9-9290-067f6b9f974e.jpg)
+![config-remote-file-1](https://user-images.githubusercontent.com/6020549/98636788-dc08c580-236a-11eb-9ebc-e38362b7a072.jpg)
+![config-remote-file-2](https://user-images.githubusercontent.com/6020549/98636804-e1fea680-236a-11eb-8425-0831c905962b.jpg)
 
 Fixed file name
 
@@ -107,22 +107,20 @@ File name based on date and time
 
 ## Camera Pin
 
-![config-camerapin](https://user-images.githubusercontent.com/6020549/66263115-55f58380-e828-11e9-87ab-a57c6ec999df.jpg)
+![config-camerapin](https://user-images.githubusercontent.com/6020549/98636895-06f31980-236b-11eb-8ba5-e92ccb79700d.jpg)
 
 ## Picture Size
 
-![config-picturesize](https://user-images.githubusercontent.com/6020549/66263117-60b01880-e828-11e9-9839-8c38edd0ced2.jpg)
+![config-picturesize](https://user-images.githubusercontent.com/6020549/98636918-11adae80-236b-11eb-817c-3c6a9be82866.jpg)
 
 ## Shutter method
 
 You can choose one of the following shutter methods
 
-![config-shutter-2](https://user-images.githubusercontent.com/6020549/66263121-660d6300-e828-11e9-9c8f-8c12a8f3f2a7.jpg)
-
 - Shutter is the Enter key on the keyboard   
 For operation check
 
-![config-shutter-1](https://user-images.githubusercontent.com/6020549/66263120-6574cc80-e828-11e9-980b-b495e9f59e8e.jpg)
+![config-shutter-1](https://user-images.githubusercontent.com/6020549/98636952-1e320700-236b-11eb-8c5b-0a2b56267310.jpg)
 
 - Shutter is a GPIO toggle
 
@@ -142,8 +140,7 @@ I confirmed that the following GPIO can be used.
 |GPIO15|OK|OK|
 |GPIO16|NG|NG|
 
-
-![config-shutter-3](https://user-images.githubusercontent.com/6020549/66263122-660d6300-e828-11e9-8619-e54ab0c6b54f.jpg)
+![config-shutter-2](https://user-images.githubusercontent.com/6020549/98636945-1c684380-236b-11eb-8682-32e8430d7216.jpg)
 
 - Shutter is TCP Socket   
 
@@ -152,8 +149,8 @@ You can use tcp_send.py.
 ```
 python ./tcp_send.py
 ```
-![config-shutter-4](https://user-images.githubusercontent.com/6020549/66263123-660d6300-e828-11e9-897e-137533cd246f.jpg)
 
+![config-shutter-3](https://user-images.githubusercontent.com/6020549/98636948-1d997080-236b-11eb-8579-b312da1ac915.jpg)
 
 - Shutter is UDP Socket   
 You can use udp_send.py.   
@@ -161,11 +158,11 @@ You can use udp_send.py.
 python ./udp_send.py
 ```
 
-![config-shutter-5](https://user-images.githubusercontent.com/6020549/66263119-6574cc80-e828-11e9-96f0-9a48bc2fe014.jpg)
+![config-shutter-4](https://user-images.githubusercontent.com/6020549/98636950-1d997080-236b-11eb-98ca-c14d16954f42.jpg)
 
 ## Flash Light
 
 ESP32-CAM by AI-Thinker have flash light on GPIO4.
 
-![config-flash](https://user-images.githubusercontent.com/6020549/66263918-5ac13400-e836-11e9-9511-7db58aa147b1.jpg)
+![config-flash](https://user-images.githubusercontent.com/6020549/98637034-46216a80-236b-11eb-8504-e83f718f5e85.jpg)
 
