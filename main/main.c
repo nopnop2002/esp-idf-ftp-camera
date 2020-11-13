@@ -15,6 +15,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
+#include "freertos/semphr.h"
 #include "esp_system.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
@@ -29,7 +30,6 @@
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
 
-#include "FtpClient.h"
 #include "camera.h"
 #include "cmd.h"
 
@@ -41,9 +41,6 @@
 #define ESP_WIFI_SSID			CONFIG_ESP_WIFI_SSID
 #define ESP_WIFI_PASS			CONFIG_ESP_WIFI_PASSWORD
 #define ESP_MAXIMUM_RETRY		CONFIG_ESP_MAXIMUM_RETRY
-#define ESP_FTP_SERVER			CONFIG_FTP_SERVER
-#define ESP_FTP_USER			CONFIG_FTP_USER  
-#define ESP_FTP_PASSWORD		CONFIG_FTP_PASSWORD
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 #define ESP_NTP_SERVER			CONFIG_NTP_SERVER
@@ -60,7 +57,7 @@ static EventGroupHandle_t s_wifi_event_group;
  * - are we connected to the AP with an IP? */
 const int WIFI_CONNECTED_BIT = BIT0;
 
-static const char *TAG = "ftpClient";
+static const char *TAG = "MAIN";
 
 //#define CONFIG_SPIFFS 1
 //#define CONFIG_FATFS	1
@@ -80,6 +77,8 @@ static const char *TAG = "ftpClient";
 static int s_retry_num = 0;
 
 QueueHandle_t xQueueCmd;
+QueueHandle_t xQueueFtp;
+SemaphoreHandle_t xSemaphoreFtp;
 
 static void event_handler(void* arg, esp_event_base_t event_base,
 								int32_t event_id, void* event_data)
@@ -268,6 +267,7 @@ esp_err_t mountSDCARD(char * base_path) {
 }
 #endif
 
+void ftp(void *pvParameters);
 
 #if CONFIG_SHUTTER_ENTER
 void keyin(void *pvParameters);
@@ -380,7 +380,16 @@ void app_main(void)
 
 	/* Create Queue */
 	xQueueCmd = xQueueCreate( 1, sizeof(CMD_t) );
+	xQueueFtp = xQueueCreate( 1, sizeof(FTP_t) );
 	configASSERT( xQueueCmd );
+	configASSERT( xQueueFtp );
+
+	/* Create Semaphore */
+	xSemaphoreFtp = xSemaphoreCreateBinary();
+	configASSERT( xSemaphoreFtp );
+
+	/* Create FTP Task */
+	xTaskCreate(ftp, "FTP", 1024*8, NULL, 2, NULL);
 
 	/* Create Shutter Task */
 #if CONFIG_SHUTTER_ENTER
@@ -408,20 +417,23 @@ void app_main(void)
 	if (ret != ESP_OK) return;
 
 	/* Get Picture */
-	char localFileName[64];
-	char remoteFileName[64];
-	sprintf(localFileName, "%s/picture.jpg", base_path);
+	//char localFileName[64];
+	//char remoteFileName[64];
+	FTP_t ftpBuf;
+	ftpBuf.command = CMD_FTP;
+	ftpBuf.taskHandle = xTaskGetCurrentTaskHandle();
+	sprintf(ftpBuf.localFileName, "%s/picture.jpg", base_path);
 #if CONFIG_REMOTE_IS_FIXED_NAME
-	//sprintf(remoteFileName, "picture.jpg");
-	sprintf(remoteFileName, "%s", ESP_FIXED_REMOTE_FILE);
+	//sprintf(ftpBuf.remoteFileName, "picture.jpg");
+	sprintf(ftpBuf.remoteFileName, "%s", ESP_FIXED_REMOTE_FILE);
 #endif
-	ESP_LOGI(TAG, "localFileName=%s",localFileName);
+	ESP_LOGI(TAG, "localFileName=%s",ftpBuf.localFileName);
 		
 	CMD_t cmdBuf;
 	while(1) {
-		ESP_LOGI(pcTaskGetTaskName(0),"Waitting %s ....", SHUTTER);
+		ESP_LOGI(TAG,"Waitting %s ....", SHUTTER);
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
-		ESP_LOGI(pcTaskGetTaskName(0),"cmdBuf.command=%d", cmdBuf.command);
+		ESP_LOGI(TAG,"cmdBuf.command=%d", cmdBuf.command);
 		if (cmdBuf.command == CMD_HALT) break;
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
@@ -430,10 +442,10 @@ void app_main(void)
 		localtime_r(&now, &timeinfo);
 		strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
 		ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
-		sprintf(remoteFileName, "%04d%02d%02d-%02d%02d%02d.jpg",
+		sprintf(ftpBuf.remoteFileName, "%04d%02d%02d-%02d%02d%02d.jpg",
 		(timeinfo.tm_year+1900),(timeinfo.tm_mon+1),timeinfo.tm_mday,
 		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec);
-		ESP_LOGI(TAG, "remoteFileName: %s", remoteFileName);
+		ESP_LOGI(TAG, "remoteFileName: %s", ftpBuf.remoteFileName);
 #endif
 
 #if CONFIG_ENABLE_FLASH
@@ -445,12 +457,12 @@ void app_main(void)
 		int retryCounter = 0;
 		while(1) {
 			size_t pictureSize;
-			ret = camera_capture(localFileName, &pictureSize);
+			ret = camera_capture(ftpBuf.localFileName, &pictureSize);
 			ESP_LOGI(TAG, "camera_capture=%d",ret);
 			ESP_LOGI(TAG, "pictureSize=%d",pictureSize);
 			if (ret != ESP_OK) continue;
 			struct stat statBuf;
-			if (stat(localFileName, &statBuf) == 0) {
+			if (stat(ftpBuf.localFileName, &statBuf) == 0) {
 				ESP_LOGI(TAG, "st_size=%d", (int)statBuf.st_size);
 				if (statBuf.st_size == pictureSize) break;
 				retryCounter++;
@@ -468,37 +480,12 @@ void app_main(void)
 		gpio_set_level(CONFIG_GPIO_FLASH, 0);
 #endif
 
-		// Open FTP server
-		ESP_LOGI(TAG, "ftp server:%s", ESP_FTP_SERVER);
-		ESP_LOGI(TAG, "ftp user  :%s", ESP_FTP_USER);
-		static NetBuf_t* ftpClientNetBuf = NULL;
-		FtpClient* ftpClient = getFtpClient();
-		int connect = ftpClient->ftpClientConnect(ESP_FTP_SERVER, 21, &ftpClientNetBuf);
-		if (connect == 0) {
-			ESP_LOGE(TAG, "FTP server connect fail");
-			break;
+		// send picture via FTP
+		xSemaphoreGive(xSemaphoreFtp);
+		if (xQueueSend(xQueueFtp, &ftpBuf, 10) != pdPASS) {
+			ESP_LOGE(TAG, "xQueueSend fail");
 		}
-
-		// Login FTP server
-		int login = ftpClient->ftpClientLogin(ESP_FTP_USER, ESP_FTP_PASSWORD, ftpClientNetBuf);
-		if (login == 0) {
-			ESP_LOGE(TAG, "FTP server login fail");
-			break;
-		}
-
-		// Put Picture to FTP server
-		int put = ftpClient->ftpClientPut(localFileName, remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
-		if (put == 0) {
-			ESP_LOGE(TAG, "FTP server put fail");
-			break;
-		}
-		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", localFileName, remoteFileName);
-
-		// Delete Local file
-		unlink(localFileName);
-		ESP_LOGI(TAG, "Local file removed");
-
-		ftpClient->ftpClientQuit(ftpClientNetBuf);
+		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 	} // end while
 
