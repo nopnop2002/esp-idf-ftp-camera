@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := esp-idf-remote-camera
+PROJECT_NAME := esp-idf-ftp-camera
 
 include $(IDF_PATH)/make/project.mk
 

@@ -1,4 +1,4 @@
-# esp-idf-remote-camera
+# esp-idf-ftp-camera
 Take a picture and Publish it via FTP.   
 
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/99764941-6a3a3400-2b41-11eb-82a6-8064cce5a5bf.JPG)
@@ -8,7 +8,7 @@ Take a picture and Publish it via FTP.
 # Software requirements
 esp-idf ver4.1 or later.   
 
-# Install
+# Installation
 Use a USB-TTL converter.   
 
 |ESP-32|USB-TTL|
@@ -21,8 +21,8 @@ Use a USB-TTL converter.
 
 
 ```
-git clone https://github.com/nopnop2002/esp-idf-remote-camera
-cd esp-idf-remote-camera
+git clone https://github.com/nopnop2002/esp-idf-ftp-camera
+cd esp-idf-ftp-camera
 git clone https://github.com/espressif/esp32-camera components
 make menuconfig
 make flash monitor
