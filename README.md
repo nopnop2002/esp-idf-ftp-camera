@@ -2,9 +2,9 @@
 Remote camera for esp-idf.   
 Take a picture and Publish it via FTP.   
 
-![スライド1](https://user-images.githubusercontent.com/6020549/98742099-2f255b80-23f1-11eb-9495-282ae7e21569.JPG)
+![スライド1](https://user-images.githubusercontent.com/6020549/99764941-6a3a3400-2b41-11eb-82a6-8064cce5a5bf.JPG)
 
-![スライド2](https://user-images.githubusercontent.com/6020549/98742111-32b8e280-23f1-11eb-8581-20df212ca143.JPG)
+![スライド2](https://user-images.githubusercontent.com/6020549/99764946-6c9c8e00-2b41-11eb-9419-2fb470ffc4ff.JPG)
 
 # Software requirements
 esp-idf ver4.1 or later.   
