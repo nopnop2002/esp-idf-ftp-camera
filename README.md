@@ -1,5 +1,4 @@
 # esp-idf-remote-camera
-Remote camera for esp-idf.   
 Take a picture and Publish it via FTP.   
 
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/99764941-6a3a3400-2b41-11eb-82a6-8064cce5a5bf.JPG)
