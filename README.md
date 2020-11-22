@@ -2,7 +2,7 @@
 Take a picture and Publish it via FTP.   
 I ported from [here](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
 
-![スライド1](https://user-images.githubusercontent.com/6020549/99764941-6a3a3400-2b41-11eb-82a6-8064cce5a5bf.JPG)
+![スライド1](https://user-images.githubusercontent.com/6020549/99897669-cbe3d500-2cde-11eb-91a7-5e02fa300417.JPG)
 
 ![スライド2](https://user-images.githubusercontent.com/6020549/99764946-6c9c8e00-2b41-11eb-9419-2fb470ffc4ff.JPG)
 
