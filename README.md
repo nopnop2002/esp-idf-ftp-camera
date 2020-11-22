@@ -1,12 +1,22 @@
 # esp-idf-ftp-camera
 Take a picture and Publish it via FTP.   
+I ported from [here](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
 
 ![スライド1](https://user-images.githubusercontent.com/6020549/99764941-6a3a3400-2b41-11eb-82a6-8064cce5a5bf.JPG)
 
 ![スライド2](https://user-images.githubusercontent.com/6020549/99764946-6c9c8e00-2b41-11eb-9419-2fb470ffc4ff.JPG)
 
 # Software requirements
-esp-idf ver4.1 or later.   
+esp-idf v4.0.2-120.   
+git clone -b release/v4.0 --recursive https://github.com/espressif/esp-idf.git
+
+esp-idf v4.1-520.   
+git clone -b release/v4.1 --recursive https://github.com/espressif/esp-idf.git
+
+esp-idf v4.2-beta1-227.   
+git clone -b release/v4.2 --recursive https://github.com/espressif/esp-idf.git
+
+__It does not work with esp-idf v4.3.__
 
 # Installation
 Use a USB-TTL converter.   
@@ -34,9 +44,9 @@ Change GPIO0 to open and press the RESET button.
 # Configuration
 Set the following items using menuconfig.
 
-![config-main](https://user-images.githubusercontent.com/6020549/98636527-63a20480-236a-11eb-8f9a-691084f226bc.jpg)
+![config-main](https://user-images.githubusercontent.com/6020549/99897392-7e666880-2cdc-11eb-81cf-f62fd123aa85.jpg)
 
-![config-menu](https://user-images.githubusercontent.com/6020549/98636606-90561c00-236a-11eb-9055-62a564d5b18b.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/99897394-81f9ef80-2cdc-11eb-90d0-c3adddd8939e.jpg)
 
 ## File system Selection
 
@@ -80,7 +90,10 @@ __Must be formatted with FAT32 before use__
 
 ## Wifi Setting
 
-![config-wifi](https://user-images.githubusercontent.com/6020549/98636701-bda2ca00-236a-11eb-9379-0084435b3e52.jpg)
+![config-wifi-1](https://user-images.githubusercontent.com/6020549/99897406-9d64fa80-2cdc-11eb-835e-99f5e7977370.jpg)
+
+You can use static IP.   
+![config-wifi-2](https://user-images.githubusercontent.com/6020549/99897407-9fc75480-2cdc-11eb-98e3-faf2953a4809.jpg)
 
 ## FTP server Setting
 
@@ -112,7 +125,7 @@ You can choose one of the following shutter methods
 - Shutter is the Enter key on the keyboard   
 For operation check
 
-![config-shutter-1](https://user-images.githubusercontent.com/6020549/98636952-1e320700-236b-11eb-8c5b-0a2b56267310.jpg)
+![config-shutter-1](https://user-images.githubusercontent.com/6020549/99897436-d1d8b680-2cdc-11eb-8f6c-cea149cb845a.jpg)
 
 - Shutter is a GPIO toggle
 
@@ -132,7 +145,7 @@ I confirmed that the following GPIO can be used.
 |GPIO15|OK|OK|
 |GPIO16|NG|NG|
 
-![config-shutter-2](https://user-images.githubusercontent.com/6020549/98636945-1c684380-236b-11eb-8682-32e8430d7216.jpg)
+![config-shutter-2](https://user-images.githubusercontent.com/6020549/99897437-d2714d00-2cdc-11eb-8e59-c8bf4ef25d62.jpg)
 
 - Shutter is TCP Socket   
 You can connect with mDNS hostname.   
@@ -141,7 +154,7 @@ You can use tcp_send.py.
 python ./tcp_send.py
 ```
 
-![config-shutter-3](https://user-images.githubusercontent.com/6020549/98636948-1d997080-236b-11eb-8579-b312da1ac915.jpg)
+![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
 
 - Shutter is UDP Socket   
 You can use udp_send.py.   
@@ -149,11 +162,20 @@ You can use udp_send.py.
 python ./udp_send.py
 ```
 
-![config-shutter-4](https://user-images.githubusercontent.com/6020549/98636950-1d997080-236b-11eb-98ca-c14d16954f42.jpg)
+![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
+
+- Shutter is HTTP Request   
+You can use this command.   
+
+```
+curl "http://192.168.10.110:8080/take_picture"
+```
+
+![config-shutter-5](https://user-images.githubusercontent.com/6020549/99897502-4ca1d180-2cdd-11eb-92a7-7f1075d10920.jpg)
 
 ## Flash Light
 
 ESP32-CAM by AI-Thinker have flash light on GPIO4.
 
-![config-flash](https://user-images.githubusercontent.com/6020549/98637034-46216a80-236b-11eb-8504-e83f718f5e85.jpg)
+![config-flash](https://user-images.githubusercontent.com/6020549/99897463-0cdaea00-2cdd-11eb-93ab-6c9540488639.jpg)
 
