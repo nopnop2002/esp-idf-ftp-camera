@@ -16,7 +16,8 @@ git clone -b release/v4.1 --recursive https://github.com/espressif/esp-idf.git
 esp-idf v4.2-beta1-227.   
 git clone -b release/v4.2 --recursive https://github.com/espressif/esp-idf.git
 
-__It does not work with esp-idf v4.3.__
+__It does not work with esp-idf v4.3.__   
+__Even if I fix [this](https://github.com/espressif/esp-idf/pull/6029), I still get a panic.__
 
 # Installation
 Use a USB-TTL converter.   
