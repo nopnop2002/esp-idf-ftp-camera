@@ -97,7 +97,7 @@ You can use static IP.
 ![config-wifi-2](https://user-images.githubusercontent.com/6020549/99897407-9fc75480-2cdc-11eb-98e3-faf2953a4809.jpg)
 
 __Note:__   
-There is a issues that the mdns library of esp-idf does not release allocated memory.   
+There is a issues that the mdns component of esp-idf does not release allocated memory.   
 Unfortunately, mdns name resolution cannot be used.   
 
 ## FTP server Setting
