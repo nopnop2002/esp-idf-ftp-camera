@@ -52,16 +52,16 @@ Set the following items using menuconfig.
 ## File system Selection
 
 ESP32 supports the following file systems.   
-1.SPIFFS file system on FLASH   
-2.FAT file system on FLASH   
-3.FAT file system on SPI peripheral SDCARD   
-4.FAT file system on SDMMC peripheral SDCARD   
+- SPIFFS file system on FLASH   
+- FAT file system on FLASH   
+- FAT file system on SPI peripheral SDCARD   
+- FAT file system on SDMMC peripheral SDCARD   
 
 You can select any one using menuconfig.   
 
 ![config-filesystem](https://user-images.githubusercontent.com/6020549/98636628-9c41de00-236a-11eb-907f-c4c293a1b577.jpg)
 
-- Using FAT file system on SPI peripheral SDCARD
+### Using FAT file system on SPI peripheral SDCARD
 
 __Must be formatted with FAT32 before use__
 
@@ -74,7 +74,7 @@ __Must be formatted with FAT32 before use__
 |3.3V|VCC|Can't use 5V supply|
 |GND|GND||
 
-- Using FAT file system on SDMMC peripheral SDCARD
+### Using FAT file system on SDMMC peripheral SDCARD
 
 __Must be formatted with FAT32 before use__
 
