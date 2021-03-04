@@ -162,6 +162,7 @@ python ./tcp_send.py
 
 - Shutter is UDP Socket   
 You can use udp_send.py.   
+Requires netifaces.   
 ```
 python ./udp_send.py
 ```
