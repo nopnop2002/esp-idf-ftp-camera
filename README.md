@@ -1,23 +1,20 @@
 # esp-idf-ftp-camera
 Take a picture and Publish it via FTP.   
-I ported from [here](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
+This project use [ESP32 Camera Driver](https://github.com/espressif/esp32-camera).
 
 ![スライド1](https://user-images.githubusercontent.com/6020549/99897669-cbe3d500-2cde-11eb-91a7-5e02fa300417.JPG)
-
 ![スライド2](https://user-images.githubusercontent.com/6020549/99764946-6c9c8e00-2b41-11eb-9419-2fb470ffc4ff.JPG)
 
+# Hardware requirements
+ESP32-CAM Development board.   
+Support for OV2640 camera.   
+If you use other camera, edit sdkconfig.default.   
+![ESP32-CAM-1](https://user-images.githubusercontent.com/6020549/118466947-4fd2c300-b73e-11eb-8e64-23260e73e693.JPG)
+![ESP32-CAM-2](https://user-images.githubusercontent.com/6020549/118466960-53664a00-b73e-11eb-8950-a5058516e1a3.JPG)
+
+
 # Software requirements
-esp-idf v4.0.2-120.   
-git clone -b release/v4.0 --recursive https://github.com/espressif/esp-idf.git
-
-esp-idf v4.1-520.   
-git clone -b release/v4.1 --recursive https://github.com/espressif/esp-idf.git
-
-esp-idf v4.2-beta1-227.   
-git clone -b release/v4.2 --recursive https://github.com/espressif/esp-idf.git
-
-__It does not work with esp-idf v4.3.__   
-__Even if I fix [this](https://github.com/espressif/esp-idf/pull/6029), I still get a panic.__
+esp-idf v4.4 or later.   
 
 # Installation
 Use a USB-TTL converter.   
@@ -35,8 +32,9 @@ Use a USB-TTL converter.
 git clone https://github.com/nopnop2002/esp-idf-ftp-camera
 cd esp-idf-ftp-camera
 git clone https://github.com/espressif/esp32-camera components
-make menuconfig
-make flash monitor
+idf.py set-target esp32
+idf.py menuconfig
+idf.py flash monitor
 ```
 
 # Start firmware
@@ -45,9 +43,8 @@ Change GPIO0 to open and press the RESET button.
 # Configuration
 Set the following items using menuconfig.
 
-![config-main](https://user-images.githubusercontent.com/6020549/99897392-7e666880-2cdc-11eb-81cf-f62fd123aa85.jpg)
-
-![config-app](https://user-images.githubusercontent.com/6020549/99897394-81f9ef80-2cdc-11eb-90d0-c3adddd8939e.jpg)
+![config-main](https://user-images.githubusercontent.com/6020549/118468330-9c6ace00-b73f-11eb-9ed0-49e6084f3dcf.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/118468342-9d9bfb00-b73f-11eb-98b7-ce95248f649f.jpg)
 
 ## File system Selection
 
@@ -91,14 +88,16 @@ __Must be formatted with FAT32 before use__
 
 ## Wifi Setting
 
-![config-wifi-1](https://user-images.githubusercontent.com/6020549/99897406-9d64fa80-2cdc-11eb-835e-99f5e7977370.jpg)
+![config-wifi-1](https://user-images.githubusercontent.com/6020549/118470621-cde49900-b741-11eb-8038-fbb6f8053afc.jpg)
+
+You can use the MDNS hostname instead of the IP address.   
+You need to change the mDNS strict mode according to [this](https://github.com/espressif/esp-idf/issues/6190) instruction.   
+![config-wifi-2](https://user-images.githubusercontent.com/6020549/118471770-12246900-b743-11eb-9619-4989f2fb3957.jpg)
 
 You can use static IP.   
-![config-wifi-2](https://user-images.githubusercontent.com/6020549/99897407-9fc75480-2cdc-11eb-98e3-faf2953a4809.jpg)
+![config-wifi-3](https://user-images.githubusercontent.com/6020549/118470645-d4731080-b741-11eb-85c0-cad1a497e499.jpg)
 
-__Note:__   
-There is a issues that the mdns component of esp-idf does not release allocated memory.   
-Unfortunately, mdns name resolution cannot be used.   
+
 
 ## FTP server Setting
 
@@ -114,14 +113,6 @@ The file name will be YYYYMMDD-hhmmss.jpg.
 
 ![config-remote-file-1](https://user-images.githubusercontent.com/6020549/98636788-dc08c580-236a-11eb-9ebc-e38362b7a072.jpg)
 ![config-remote-file-2](https://user-images.githubusercontent.com/6020549/98636804-e1fea680-236a-11eb-8425-0831c905962b.jpg)
-
-## Camera Pin
-
-![config-camerapin](https://user-images.githubusercontent.com/6020549/98636895-06f31980-236b-11eb-8ba5-e92ccb79700d.jpg)
-
-## Picture Size
-
-![config-picturesize](https://user-images.githubusercontent.com/6020549/98636918-11adae80-236b-11eb-817c-3c6a9be82866.jpg)
 
 ## Select Shutter
 

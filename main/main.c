@@ -1,16 +1,21 @@
 /*
-   FTP client example.
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
+   Take a picture and Publish it via FTP.
+
+   This code is in the Public Domain (or CC0 licensed, at your option.)
 
    Unless required by applicable law or agreed to in writing, this
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
+
+   I ported from here:
+   https://github.com/espressif/esp32-camera/blob/master/examples/take_picture.c
 */
 
 #include <stdio.h>
 #include <string.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -29,28 +34,14 @@
 #include "sdmmc_cmd.h"
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
+#include "mdns.h"
 
-#include "camera.h"
+#include "esp_camera.h"
+
 #include "cmd.h"
 
 #include "lwip/dns.h"
 
-/* The examples use WiFi configuration that you can set via project configuration menu
-
-   If you'd rather not, just change the below entries to strings with
-   the config you want - ie #define ESP_WIFI_SSID "mywifissid"
-*/
-#define ESP_WIFI_SSID			CONFIG_ESP_WIFI_SSID
-#define ESP_WIFI_PASS			CONFIG_ESP_WIFI_PASSWORD
-#define ESP_MAXIMUM_RETRY		CONFIG_ESP_MAXIMUM_RETRY
-
-#if CONFIG_REMOTE_IS_VARIABLE_NAME
-#define ESP_NTP_SERVER			CONFIG_NTP_SERVER
-#endif
-
-#if CONFIG_REMOTE_IS_FIXED_NAME
-#define ESP_FIXED_REMOTE_FILE	CONFIG_FIXED_REMOTE_FILE
-#endif
 
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
@@ -60,11 +51,6 @@ static EventGroupHandle_t s_wifi_event_group;
 const int WIFI_CONNECTED_BIT = BIT0;
 
 static const char *TAG = "MAIN";
-
-//#define CONFIG_SPIFFS 1
-//#define CONFIG_FATFS	1
-//#define CONFIG_SPI_SDCARD  1
-//#define CONFIG_MMC_SDCARD  1
 
 #if CONFIG_SPI_SDCARD
 // Pin mapping when using SPI mode.
@@ -82,13 +68,132 @@ QueueHandle_t xQueueCmd;
 QueueHandle_t xQueueFtp;
 SemaphoreHandle_t xSemaphoreFtp;
 
+#define BOARD_ESP32CAM_AITHINKER
+
+// WROVER-KIT PIN Map
+#ifdef BOARD_WROVER_KIT
+
+#define CAM_PIN_PWDN -1  //power down is not used
+#define CAM_PIN_RESET -1 //software reset will be performed
+#define CAM_PIN_XCLK 21
+#define CAM_PIN_SIOD 26
+#define CAM_PIN_SIOC 27
+
+#define CAM_PIN_D7 35
+#define CAM_PIN_D6 34
+#define CAM_PIN_D5 39
+#define CAM_PIN_D4 36
+#define CAM_PIN_D3 19
+#define CAM_PIN_D2 18
+#define CAM_PIN_D1 5
+#define CAM_PIN_D0 4
+#define CAM_PIN_VSYNC 25
+#define CAM_PIN_HREF 23
+#define CAM_PIN_PCLK 22
+
+#endif
+
+// ESP32Cam (AiThinker) PIN Map
+#ifdef BOARD_ESP32CAM_AITHINKER
+
+#define CAM_PIN_PWDN 32
+#define CAM_PIN_RESET -1 //software reset will be performed
+#define CAM_PIN_XCLK 0
+#define CAM_PIN_SIOD 26
+#define CAM_PIN_SIOC 27
+
+#define CAM_PIN_D7 35
+#define CAM_PIN_D6 34
+#define CAM_PIN_D5 39
+#define CAM_PIN_D4 36
+#define CAM_PIN_D3 21
+#define CAM_PIN_D2 19
+#define CAM_PIN_D1 18
+#define CAM_PIN_D0 5
+#define CAM_PIN_VSYNC 25
+#define CAM_PIN_HREF 23
+#define CAM_PIN_PCLK 22
+
+#endif
+
+
+static camera_config_t camera_config = {
+	.pin_pwdn = CAM_PIN_PWDN,
+	.pin_reset = CAM_PIN_RESET,
+	.pin_xclk = CAM_PIN_XCLK,
+	.pin_sscb_sda = CAM_PIN_SIOD,
+	.pin_sscb_scl = CAM_PIN_SIOC,
+
+	.pin_d7 = CAM_PIN_D7,
+	.pin_d6 = CAM_PIN_D6,
+	.pin_d5 = CAM_PIN_D5,
+	.pin_d4 = CAM_PIN_D4,
+	.pin_d3 = CAM_PIN_D3,
+	.pin_d2 = CAM_PIN_D2,
+	.pin_d1 = CAM_PIN_D1,
+	.pin_d0 = CAM_PIN_D0,
+	.pin_vsync = CAM_PIN_VSYNC,
+	.pin_href = CAM_PIN_HREF,
+	.pin_pclk = CAM_PIN_PCLK,
+
+	//XCLK 20MHz or 10MHz for OV2640 double FPS (Experimental)
+	.xclk_freq_hz = 20000000,
+	.ledc_timer = LEDC_TIMER_0,
+	.ledc_channel = LEDC_CHANNEL_0,
+
+	.pixel_format = PIXFORMAT_JPEG, //YUV422,GRAYSCALE,RGB565,JPEG
+	.frame_size = FRAMESIZE_VGA,	//QQVGA-UXGA Do not use sizes above QVGA when not JPEG
+
+	.jpeg_quality = 12, //0-63 lower number means higher quality
+	.fb_count = 1		//if more than one, i2s runs in continuous mode. Use only with JPEG
+};
+
+static esp_err_t init_camera()
+{
+	//initialize the camera
+	esp_err_t err = esp_camera_init(&camera_config);
+	if (err != ESP_OK)
+	{
+		ESP_LOGE(TAG, "Camera Init Failed");
+		return err;
+	}
+
+	return ESP_OK;
+}
+
+static esp_err_t camera_capture(char * FileName, size_t *pictureSize)
+{
+	//acquire a frame
+	camera_fb_t * fb = esp_camera_fb_get();
+	if (!fb) {
+		ESP_LOGE(TAG, "Camera Capture Failed");
+		return ESP_FAIL;
+	}
+
+	//replace this with your own function
+	//process_image(fb->width, fb->height, fb->format, fb->buf, fb->len);
+	FILE* f = fopen(FileName, "wb");
+	if (f == NULL) {
+		ESP_LOGE(TAG, "Failed to open file for writing");
+		return ESP_FAIL; 
+	}
+	fwrite(fb->buf, fb->len, 1, f);
+	ESP_LOGI(TAG, "fb->len=%d", fb->len);
+	*pictureSize = (size_t)fb->len;
+	fclose(f);
+  
+	//return the frame buffer back to the driver for reuse
+	esp_camera_fb_return(fb);
+	return ESP_OK;
+}
+
 static void event_handler(void* arg, esp_event_base_t event_base,
 								int32_t event_id, void* event_data)
 {
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
 		esp_wifi_connect();
 	} else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-		if (s_retry_num < ESP_MAXIMUM_RETRY) {
+		if (s_retry_num < CONFIG_ESP_MAXIMUM_RETRY) {
 			esp_wifi_connect();
 			xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
 			s_retry_num++;
@@ -207,21 +312,21 @@ void wifi_init_sta()
 	tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &ipInfo);
 #endif
 
-    /*
-    I referred from here.
-    https://www.esp32.com/viewtopic.php?t=5380
+	/*
+	I referred from here.
+	https://www.esp32.com/viewtopic.php?t=5380
 
-    if we should not be using DHCP (for example we are using static IP addresses),
-    then we need to instruct the ESP32 of the locations of the DNS servers manually.
-    Google publicly makes available two name servers with the addresses of 8.8.8.8 and 8.8.4.4.
-    */
+	if we should not be using DHCP (for example we are using static IP addresses),
+	then we need to instruct the ESP32 of the locations of the DNS servers manually.
+	Google publicly makes available two name servers with the addresses of 8.8.8.8 and 8.8.4.4.
+	*/
 
-    ip_addr_t d;
-    d.type = IPADDR_TYPE_V4;
-    d.u_addr.ip4.addr = 0x08080808; //8.8.8.8 dns
-    dns_setserver(0, &d);
-    d.u_addr.ip4.addr = 0x08080404; //8.8.4.4 dns
-    dns_setserver(1, &d);
+	ip_addr_t d;
+	d.type = IPADDR_TYPE_V4;
+	d.u_addr.ip4.addr = 0x08080808; //8.8.8.8 dns
+	dns_setserver(0, &d);
+	d.u_addr.ip4.addr = 0x08080404; //8.8.4.4 dns
+	dns_setserver(1, &d);
 
 #endif
 
@@ -233,8 +338,8 @@ void wifi_init_sta()
 
 	wifi_config_t wifi_config = {
 		.sta = {
-			.ssid = ESP_WIFI_SSID,
-			.password = ESP_WIFI_PASS
+			.ssid = CONFIG_ESP_WIFI_SSID,
+			.password = CONFIG_ESP_WIFI_PASSWORD
 		},
 	};
 	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
@@ -243,7 +348,7 @@ void wifi_init_sta()
 
 	ESP_LOGI(TAG, "wifi_init_sta finished.");
 	ESP_LOGI(TAG, "connect to ap SSID:%s password:%s",
-			 ESP_WIFI_SSID, ESP_WIFI_PASS);
+			 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
 
 	// wait for IP_EVENT_STA_GOT_IP
 	while(1) {
@@ -262,6 +367,19 @@ void wifi_init_sta()
 	ESP_LOGI(TAG, "Got IP Address.");
 }
 
+void initialise_mdns(void)
+{
+	//initialize mDNS
+	ESP_ERROR_CHECK( mdns_init() );
+	//set mDNS hostname (required if you want to advertise services)
+	ESP_ERROR_CHECK( mdns_hostname_set(CONFIG_MDNS_HOSTNAME) );
+	ESP_LOGI(TAG, "mdns hostname set to: [%s]", CONFIG_MDNS_HOSTNAME);
+
+#if 0
+	//set default mDNS instance name
+	ESP_ERROR_CHECK( mdns_instance_name_set("ESP32 with mDNS") );
+#endif
+}
 
 #if CONFIG_SPIFFS 
 esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
@@ -426,8 +544,8 @@ static void initialize_sntp(void)
 	ESP_LOGI(TAG, "Initializing SNTP");
 	sntp_setoperatingmode(SNTP_OPMODE_POLL);
 	//sntp_setservername(0, "pool.ntp.org");
-	ESP_LOGI(TAG, "Your NTP Server is %s", ESP_NTP_SERVER);
-	sntp_setservername(0, ESP_NTP_SERVER);
+	ESP_LOGI(TAG, "Your NTP Server is %s", CONFIG_NTP_SERVER);
+	sntp_setservername(0, CONFIG_NTP_SERVER);
 	sntp_set_time_sync_notification_cb(time_sync_notification_cb);
 	sntp_init();
 }
@@ -448,7 +566,7 @@ static esp_err_t obtain_time(void)
 }
 #endif
 
-void app_main(void)
+void app_main()
 {
 	//Initialize NVS
 	esp_err_t ret = nvs_flash_init();
@@ -460,6 +578,7 @@ void app_main(void)
 
 	ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
 	wifi_init_sta();
+	initialise_mdns();
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 	// obtain time over NTP
@@ -544,12 +663,10 @@ void app_main(void)
 
 #if CONFIG_SHUTTER_HTTP
 #define SHUTTER "HTTP Request"
-    xTaskCreate(web_server, "WEB", 1024*4, NULL, 2, NULL);
+	xTaskCreate(web_server, "WEB", 1024*4, NULL, 2, NULL);
 #endif
 
-	/* Detect camera */
-	ret = camera_detect();
-	if (ret != ESP_OK) return;
+	init_camera();
 
 	/* Get Picture */
 	//char localFileName[64];
@@ -560,11 +677,12 @@ void app_main(void)
 	sprintf(ftpBuf.localFileName, "%s/picture.jpg", base_path);
 #if CONFIG_REMOTE_IS_FIXED_NAME
 	//sprintf(ftpBuf.remoteFileName, "picture.jpg");
-	sprintf(ftpBuf.remoteFileName, "%s", ESP_FIXED_REMOTE_FILE);
+	sprintf(ftpBuf.remoteFileName, "%s", CONFIG_FIXED_REMOTE_FILE);
 #endif
 	ESP_LOGI(TAG, "localFileName=%s",ftpBuf.localFileName);
 		
 	CMD_t cmdBuf;
+
 	while(1) {
 		ESP_LOGI(TAG,"Waitting %s ....", SHUTTER);
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
@@ -637,6 +755,5 @@ void app_main(void)
 #if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
 	esp_vfs_fat_sdmmc_unmount();
 	ESP_LOGI(TAG, "SDCARD unmounted");
-#endif 
+#endif
 }
-

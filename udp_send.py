@@ -1,6 +1,8 @@
 #!/usr/bin/python
 #-*- encoding: utf-8 -*-
-#https://ameblo.jp/oyasai10/entry-10590541669.html
+#
+# Requirement library
+# python -m pip install -U netifaces
 
 from socket import *
 import netifaces
