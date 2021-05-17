@@ -91,7 +91,7 @@ __Must be formatted with FAT32 before use__
 
 ![config-wifi-1](https://user-images.githubusercontent.com/6020549/118470621-cde49900-b741-11eb-8038-fbb6f8053afc.jpg)
 
-You can use the MDNS hostname instead of the IP address.   
+You can use the mDNS hostname instead of the IP address.   
 ![config-wifi-2](https://user-images.githubusercontent.com/6020549/118471770-12246900-b743-11eb-9619-4989f2fb3957.jpg)
 
 You can use static IP.   
