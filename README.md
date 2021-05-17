@@ -164,7 +164,7 @@ python ./udp_send.py
 You can use this command.   
 
 ```
-curl "http://esp32-camera:8080/take_picture"
+curl "http://esp32-camera.local:8080/take_picture"
 ```
 
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/99897502-4ca1d180-2cdd-11eb-92a7-7f1075d10920.jpg)
