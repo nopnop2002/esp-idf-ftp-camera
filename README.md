@@ -115,7 +115,8 @@ The file name will be YYYYMMDD-hhmmss.jpg.
 ![config-remote-file-2](https://user-images.githubusercontent.com/6020549/118946780-b3086380-b991-11eb-96a5-a0ca8a604745.jpg)
 
 - Add FrameSize to Remote file Name   
-When this is enabled, FrameSize is added to remote file name.   
+When this is enabled, FrameSize is added to remote file name like this.   
+`20210520-165740_800x600.jpg`   
 
 ![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
 
