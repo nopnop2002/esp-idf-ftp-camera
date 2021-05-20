@@ -45,7 +45,7 @@ Change GPIO0 to open and press the RESET button.
 Set the following items using menuconfig.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/118468330-9c6ace00-b73f-11eb-9ed0-49e6084f3dcf.jpg)
-![config-app](https://user-images.githubusercontent.com/6020549/118468342-9d9bfb00-b73f-11eb-98b7-ce95248f649f.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/118947420-48a3f300-b992-11eb-8b4f-51b2980e2af7.jpg)
 
 ## File system Selection
 
@@ -111,8 +111,17 @@ You can choose the file name on the FTP server side from the following.
 When you choose date and time file name, you will need an NTP server.   
 The file name will be YYYYMMDD-hhmmss.jpg.   
 
-![config-remote-file-1](https://user-images.githubusercontent.com/6020549/98636788-dc08c580-236a-11eb-9ebc-e38362b7a072.jpg)
-![config-remote-file-2](https://user-images.githubusercontent.com/6020549/98636804-e1fea680-236a-11eb-8425-0831c905962b.jpg)
+![config-remote-file-1](https://user-images.githubusercontent.com/6020549/118946651-8f451d80-b991-11eb-94c4-8976a2ee67ba.jpg)
+![config-remote-file-2](https://user-images.githubusercontent.com/6020549/118946780-b3086380-b991-11eb-96a5-a0ca8a604745.jpg)
+
+- Add FrameSize to Remote file Name   
+When this is enabled, FrameSize is added to remote file name.   
+![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
+
+## Select Frame Size
+Large frame sizes take longer to take a picture.   
+![config-framesize-1](https://user-images.githubusercontent.com/6020549/118947689-8bfe6180-b992-11eb-8657-b4e86d3acc70.jpg)
+![config-framesize-2](https://user-images.githubusercontent.com/6020549/118947692-8d2f8e80-b992-11eb-9caa-1f6b6cb2210e.jpg)
 
 ## Select Shutter
 

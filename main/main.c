@@ -117,7 +117,8 @@ SemaphoreHandle_t xSemaphoreFtp;
 #endif
 
 
-static camera_config_t camera_config = {
+//static camera_config_t camera_config = {
+camera_config_t camera_config = {
 	.pin_pwdn = CAM_PIN_PWDN,
 	.pin_reset = CAM_PIN_RESET,
 	.pin_xclk = CAM_PIN_XCLK,
@@ -148,9 +149,10 @@ static camera_config_t camera_config = {
 	.fb_count = 1		//if more than one, i2s runs in continuous mode. Use only with JPEG
 };
 
-static esp_err_t init_camera()
+static esp_err_t init_camera(int framesize)
 {
 	//initialize the camera
+	camera_config.frame_size = framesize;
 	esp_err_t err = esp_camera_init(&camera_config);
 	if (err != ESP_OK)
 	{
@@ -666,7 +668,27 @@ void app_main()
 	xTaskCreate(web_server, "WEB", 1024*4, NULL, 2, NULL);
 #endif
 
-	init_camera();
+#if CONFIG_FRAMESIZE_VGA
+	int framesize = FRAMESIZE_VGA;
+	#define	FRAMESIZE_STRING "640x480"
+#elif CONFIG_FRAMESIZE_SVGA
+	int framesize = FRAMESIZE_SVGA;
+	#define	FRAMESIZE_STRING "800x600"
+#elif CONFIG_FRAMESIZE_XGA
+	int framesize = FRAMESIZE_XGA;
+	#define	FRAMESIZE_STRING "1024x768"
+#elif CONFIG_FRAMESIZE_HD
+	int framesize = FRAMESIZE_HD;
+	#define	FRAMESIZE_STRING "1280x720"
+#elif CONFIG_FRAMESIZE_SXGA
+	int framesize = FRAMESIZE_SXGA;
+	#define	FRAMESIZE_STRING "1280x1024"
+#elif CONFIG_FRAMESIZE_UXGA
+	int framesize = FRAMESIZE_UXGA;
+	#define	FRAMESIZE_STRING "1600x1200"
+#endif
+
+	init_camera(framesize);
 
 	/* Get Picture */
 	//char localFileName[64];
@@ -675,11 +697,16 @@ void app_main()
 	ftpBuf.command = CMD_FTP;
 	ftpBuf.taskHandle = xTaskGetCurrentTaskHandle();
 	sprintf(ftpBuf.localFileName, "%s/picture.jpg", base_path);
+	ESP_LOGI(TAG, "localFileName=%s",ftpBuf.localFileName);
 #if CONFIG_REMOTE_IS_FIXED_NAME
 	//sprintf(ftpBuf.remoteFileName, "picture.jpg");
+#if CONFIG_REMOTE_FRAMESIZE
+	sprintf(ftpBuf.remoteFileName, "%s_%s", CONFIG_FIXED_REMOTE_FILE, FRAMESIZE_STRING);
+#else
 	sprintf(ftpBuf.remoteFileName, "%s", CONFIG_FIXED_REMOTE_FILE);
 #endif
-	ESP_LOGI(TAG, "localFileName=%s",ftpBuf.localFileName);
+	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.localFileName);
+#endif
 		
 	CMD_t cmdBuf;
 
@@ -695,10 +722,17 @@ void app_main()
 		localtime_r(&now, &timeinfo);
 		strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
 		ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
+#if CONFIG_REMOTE_FRAMESIZE
+		sprintf(ftpBuf.remoteFileName, "%04d%02d%02d-%02d%02d%02d_%s.jpg",
+		(timeinfo.tm_year+1900),(timeinfo.tm_mon+1),timeinfo.tm_mday,
+		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec, FRAMESIZE_STRING);
+#else
 		sprintf(ftpBuf.remoteFileName, "%04d%02d%02d-%02d%02d%02d.jpg",
 		(timeinfo.tm_year+1900),(timeinfo.tm_mon+1),timeinfo.tm_mday,
 		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec);
+#endif
 		ESP_LOGI(TAG, "remoteFileName: %s", ftpBuf.remoteFileName);
+
 #endif
 
 #if CONFIG_ENABLE_FLASH

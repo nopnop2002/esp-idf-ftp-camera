@@ -140,7 +140,34 @@ menu "Application configuration"
 			help
 				Your local timezone.  When it is 0, Greenwich Mean Time.
 
+		config REMOTE_FRAMESIZE
+			bool "Add FrameSize to Remote file name"
+			default false
+			help
+				Add FrameSize to Remote file name.
+
 	endmenu
+
+	choice FRAMESIZE
+		bool "Select Frame Size"
+		default FRAMESIZE_VGA
+		help
+			Select Picture Frame Size.
+
+		config FRAMESIZE_VGA
+			bool "Frame Size:640x480"
+		config FRAMESIZE_SVGA
+			bool "Frame Size:800x600"
+		config FRAMESIZE_XGA
+			bool "Frame Size:1024x768"
+		config FRAMESIZE_HD
+			bool "Frame Size:1280x720"
+		config FRAMESIZE_SXGA
+			bool "Frame Size:1280x1024"
+		config FRAMESIZE_UXGA
+			bool "Frame Size:1600x1200"
+	endchoice
+
 
 	menu "Select Shutter"
 		choice SHUTTER_SELECT
