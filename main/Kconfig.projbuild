@@ -88,19 +88,20 @@ menu "Application configuration"
 			string "FTP Server"
 			default "myftpserver"
 			help
-				FTP Server host name or ip address for the example to use.
+				The host name or IP address of the FTP server to use.
 
 		config FTP_USER
 			string "FTP User Name"
 			default "myftpuser"
 			help
-				FTP User name for the example to use.
+				FTP user name to use.
 
 		config FTP_PASSWORD
 			string "FTP Password"
 			default "myftppass"
 			help
-				FTP Password for the example to use.
+				FTP password to use.
+
 	endmenu
 
 
@@ -170,6 +171,7 @@ menu "Application configuration"
 
 
 	menu "Select Shutter"
+
 		choice SHUTTER_SELECT
 			bool "Select Shutter"
 			default SHUTTER_ENTER

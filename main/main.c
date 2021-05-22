@@ -35,12 +35,11 @@
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
 #include "mdns.h"
+#include "lwip/dns.h"
 
 #include "esp_camera.h"
 
 #include "cmd.h"
-
-#include "lwip/dns.h"
 
 
 /* FreeRTOS event group to signal when we are connected*/
@@ -205,7 +204,6 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	} else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
 		ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
 		ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
-		//ESP_LOGI(TAG, "got ip:%s", ip4addr_ntoa(&event->ip_info.ip));
 		s_retry_num = 0;
 		xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
 	}
@@ -513,27 +511,6 @@ esp_err_t mountSDCARD(char * base_path) {
 }
 #endif
 
-void ftp(void *pvParameters);
-
-#if CONFIG_SHUTTER_ENTER
-void keyin(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_GPIO
-void gpio(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_TCP
-void tcp_server(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_UDP
-void udp_server(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_HTTP
-void web_server(void *pvParameters);
-#endif
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 void time_sync_notification_cb(struct timeval *tv)
@@ -566,6 +543,28 @@ static esp_err_t obtain_time(void)
 	if (retry == retry_count) return ESP_FAIL;
 	return ESP_OK;
 }
+#endif
+
+void ftp(void *pvParameters);
+
+#if CONFIG_SHUTTER_ENTER
+void keyin(void *pvParameters);
+#endif
+
+#if CONFIG_SHUTTER_GPIO
+void gpio(void *pvParameters);
+#endif
+
+#if CONFIG_SHUTTER_TCP
+void tcp_server(void *pvParameters);
+#endif
+
+#if CONFIG_SHUTTER_UDP
+void udp_server(void *pvParameters);
+#endif
+
+#if CONFIG_SHUTTER_HTTP
+void web_server(void *pvParameters);
 #endif
 
 void app_main()
@@ -690,9 +689,6 @@ void app_main()
 
 	init_camera(framesize);
 
-	/* Get Picture */
-	//char localFileName[64];
-	//char remoteFileName[64];
 	FTP_t ftpBuf;
 	ftpBuf.command = CMD_FTP;
 	ftpBuf.taskHandle = xTaskGetCurrentTaskHandle();
@@ -705,7 +701,7 @@ void app_main()
 #else
 	sprintf(ftpBuf.remoteFileName, "%s", CONFIG_FIXED_REMOTE_FILE);
 #endif
-	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.localFileName);
+	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.remoteFileName);
 #endif
 		
 	CMD_t cmdBuf;
@@ -732,7 +728,6 @@ void app_main()
 		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec);
 #endif
 		ESP_LOGI(TAG, "remoteFileName: %s", ftpBuf.remoteFileName);
-
 #endif
 
 #if CONFIG_ENABLE_FLASH
