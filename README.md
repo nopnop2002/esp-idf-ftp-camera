@@ -32,7 +32,7 @@ Use a USB-TTL converter.
 ```
 git clone https://github.com/nopnop2002/esp-idf-ftp-camera
 cd esp-idf-ftp-camera
-git clone https://github.com/espressif/esp32-camera components
+git clone https://github.com/espressif/esp32-camera components/esp32-camera
 idf.py set-target esp32
 idf.py menuconfig
 idf.py flash monitor
