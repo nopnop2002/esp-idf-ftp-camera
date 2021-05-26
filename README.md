@@ -1,9 +1,10 @@
 # esp-idf-ftp-camera
 Take a picture and Publish it via FTP.   
-This project use [ESP32 Camera Driver](https://github.com/espressif/esp32-camera).
+This project use [ESP32 Camera Driver](https://github.com/espressif/esp32-camera).   
+This project use [ESP32-FTP-Client](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
 
-![スライド1](https://user-images.githubusercontent.com/6020549/99897669-cbe3d500-2cde-11eb-91a7-5e02fa300417.JPG)
-![スライド2](https://user-images.githubusercontent.com/6020549/99764946-6c9c8e00-2b41-11eb-9419-2fb470ffc4ff.JPG)
+![slide1](https://user-images.githubusercontent.com/6020549/119622002-b6906480-be41-11eb-84cd-d4a53532ee5e.JPG)
+![slide2](https://user-images.githubusercontent.com/6020549/119622017-b98b5500-be41-11eb-8ad6-1bde963e7849.JPG)
 
 # Hardware requirements
 ESP32-CAM Development board.   
