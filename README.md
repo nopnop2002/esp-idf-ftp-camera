@@ -183,7 +183,7 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 ## Built-in WEB Server
 You can check the photos taken using the built-in WEB server.
 
-![browser](https://user-images.githubusercontent.com/6020549/124226686-78731880-db44-11eb-9e76-3a0ec68d9535.jpg)
+![browser](https://user-images.githubusercontent.com/6020549/124226975-e28bbd80-db44-11eb-9c06-f4755fc0c8f5.jpg)
 
 
 # References   
