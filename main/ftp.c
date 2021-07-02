@@ -78,9 +78,11 @@ void ftp(void *pvParameters)
 		}
 		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", ftpBuf.localFileName, ftpBuf.remoteFileName);
 
+#if 0
 		// Delete Local file
 		unlink(ftpBuf.localFileName);
 		ESP_LOGI(TAG, "Local file removed");
+#endif
 
 		ftpClient->ftpClientQuit(ftpClientNetBuf);
 

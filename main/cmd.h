@@ -3,13 +3,20 @@
 #define CMD_FTP		500
 
 typedef struct {
-    uint16_t command;
-    TaskHandle_t taskHandle;
+	uint16_t command;
+	TaskHandle_t taskHandle;
 } CMD_t;
 
 typedef struct {
 	char localFileName[64];
 	char remoteFileName[64];
-    uint16_t command;
-    TaskHandle_t taskHandle;
+	uint16_t command;
+	TaskHandle_t taskHandle;
 } FTP_t;
+
+// Message to HTTP
+typedef struct {
+	char localFileName[64];
+	uint16_t command;
+	TaskHandle_t taskHandle;
+} HTTP_t;

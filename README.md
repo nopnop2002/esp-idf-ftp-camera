@@ -180,6 +180,12 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
 ![config-flash](https://user-images.githubusercontent.com/6020549/99897463-0cdaea00-2cdd-11eb-93ab-6c9540488639.jpg)
 
+## Built-in WEB Server
+You can check the photos taken using the built-in WEB server.
+
+![browser](https://user-images.githubusercontent.com/6020549/124226686-78731880-db44-11eb-9e76-3a0ec68d9535.jpg)
+
+
 # References   
 https://github.com/nopnop2002/esp-idf-ftpServer
 

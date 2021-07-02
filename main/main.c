@@ -65,6 +65,7 @@ static int s_retry_num = 0;
 
 QueueHandle_t xQueueCmd;
 QueueHandle_t xQueueFtp;
+QueueHandle_t xQueueHttp;
 SemaphoreHandle_t xSemaphoreFtp;
 
 #define BOARD_ESP32CAM_AITHINKER
@@ -567,6 +568,8 @@ void udp_server(void *pvParameters);
 void web_server(void *pvParameters);
 #endif
 
+void http_task(void *pvParameters);
+
 void app_main()
 {
 	//Initialize NVS
@@ -630,9 +633,11 @@ void app_main()
 
 	/* Create Queue */
 	xQueueCmd = xQueueCreate( 1, sizeof(CMD_t) );
-	xQueueFtp = xQueueCreate( 1, sizeof(FTP_t) );
 	configASSERT( xQueueCmd );
+	xQueueFtp = xQueueCreate( 1, sizeof(FTP_t) );
 	configASSERT( xQueueFtp );
+	xQueueHttp = xQueueCreate( 10, sizeof(HTTP_t) );
+	configASSERT( xQueueHttp );
 
 	/* Create Semaphore */
 	xSemaphoreFtp = xSemaphoreCreateBinary();
@@ -666,6 +671,15 @@ void app_main()
 #define SHUTTER "HTTP Request"
 	xTaskCreate(web_server, "WEB", 1024*4, NULL, 2, NULL);
 #endif
+
+	/* Get the local IP address */
+	tcpip_adapter_ip_info_t ip_info;
+	ESP_ERROR_CHECK(tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info));
+
+	/* Create HTTP Task */
+	char cparam0[64];
+	sprintf(cparam0, "%s", ip4addr_ntoa(&ip_info.ip));
+	xTaskCreate(http_task, "HTTP", 1024*6, (void *)cparam0, 2, NULL);
 
 #if CONFIG_FRAMESIZE_VGA
 	int framesize = FRAMESIZE_VGA;
@@ -704,13 +718,23 @@ void app_main()
 	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.remoteFileName);
 #endif
 		
+	HTTP_t httpBuf;
+	httpBuf.command = CMD_FTP;
+	httpBuf.taskHandle = xTaskGetCurrentTaskHandle();
+	strcpy(httpBuf.localFileName, ftpBuf.localFileName);
+	
 	CMD_t cmdBuf;
+	struct stat statBuf;
 
 	while(1) {
 		ESP_LOGI(TAG,"Waitting %s ....", SHUTTER);
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
 		ESP_LOGI(TAG,"cmdBuf.command=%d", cmdBuf.command);
 		if (cmdBuf.command == CMD_HALT) break;
+		if (stat(ftpBuf.localFileName, &statBuf) == 0) {
+			unlink(ftpBuf.localFileName);
+			ESP_LOGI(TAG, "Local file removed");
+		}
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 		time(&now);
@@ -743,7 +767,6 @@ void app_main()
 			ESP_LOGI(TAG, "camera_capture=%d",ret);
 			ESP_LOGI(TAG, "pictureSize=%d",pictureSize);
 			if (ret != ESP_OK) continue;
-			struct stat statBuf;
 			if (stat(ftpBuf.localFileName, &statBuf) == 0) {
 				ESP_LOGI(TAG, "st_size=%d", (int)statBuf.st_size);
 				if (statBuf.st_size == pictureSize) break;
@@ -765,7 +788,10 @@ void app_main()
 		// send picture via FTP
 		xSemaphoreGive(xSemaphoreFtp);
 		if (xQueueSend(xQueueFtp, &ftpBuf, 10) != pdPASS) {
-			ESP_LOGE(TAG, "xQueueSend fail");
+			ESP_LOGE(TAG, "xQueueSend xQueueFtp fail");
+		}
+		if (xQueueSend(xQueueHttp, &httpBuf, 10) != pdPASS) {
+			ESP_LOGE(TAG, "xQueueSend xQueueHttp fail");
 		}
 		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
