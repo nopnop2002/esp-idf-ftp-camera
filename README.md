@@ -185,7 +185,6 @@ You can check the photos taken using the built-in WEB server.
 
 ![browser](https://user-images.githubusercontent.com/6020549/124226975-e28bbd80-db44-11eb-9c06-f4755fc0c8f5.jpg)
 
-
 # References   
 https://github.com/nopnop2002/esp-idf-ftpServer
 
