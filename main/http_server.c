@@ -38,16 +38,21 @@ static void SPIFFS_Directory(char * path) {
 }
 #endif
 
+// Calculate the size after conversion to base64
 // http://akabanessa.blog73.fc2.com/blog-entry-83.html
 int32_t calcBase64EncodedSize(int origDataSize)
 {
 	// 6bit単位のブロック数（6bit単位で切り上げ）
+	// Number of blocks in 6-bit units (rounded up in 6-bit units)
 	int32_t numBlocks6 = ((origDataSize * 8) + 5) / 6;
 	// 4文字単位のブロック数（4文字単位で切り上げ）
+	// Number of blocks in units of 4 characters (rounded up in units of 4 characters)
 	int32_t numBlocks4 = (numBlocks6 + 3) / 4;
 	// 改行を含まない文字数
+	// Number of characters without line breaks
 	int32_t numNetChars = numBlocks4 * 4;
 	// 76文字ごとの改行（改行は "\r\n" とする）を考慮したサイズ
+	// Size considering line breaks every 76 characters (line breaks are "\ r \ n")
 	//return numNetChars + ((numNetChars / 76) * 2);
 	return numNetChars;
 }
@@ -72,16 +77,9 @@ esp_err_t Image2Base64(char * filename, size_t fsize, unsigned char * base64_buf
 		fclose(fp);
 	}
 
-	strcpy((char *)base64_buffer, "<img src=\"data:image/jpeg;base64,");
-	int head_len = strlen((char *)base64_buffer);
 	size_t encord_len;
-	esp_err_t ret = mbedtls_base64_encode(&base64_buffer[head_len], base64_buffer_len-head_len, &encord_len, image_buffer, fsize);
+	esp_err_t ret = mbedtls_base64_encode(base64_buffer, base64_buffer_len, &encord_len, image_buffer, fsize);
 	ESP_LOGI(TAG, "mbedtls_base64_encode=%d encord_len=%d", ret, encord_len);
-	if (ret == 0) {
-		char tail[8];
-		strcpy(tail, "\" />");
-		strcpy((char *)&base64_buffer[head_len+encord_len], tail);
-	}
 	free(image_buffer);
 	return ret;
 }
@@ -105,11 +103,9 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 	httpd_resp_sendstr_chunk(req, "<!DOCTYPE html><html><body>");
 
 	// Convert from JPEG to BASE64
-	// <img src="data:image/jpeg;base64,ENCORDED_DATA" />
 	unsigned char*	img_src_buffer = NULL;
- 	size_t img_src_buffer_len = base64Size + 40;
+ 	size_t img_src_buffer_len = base64Size + 1;
 	img_src_buffer = malloc(img_src_buffer_len);
-	//img_src_buffer = calloc(img_src_buffer_len, 1);
 	if (img_src_buffer == NULL) {
 		ESP_LOGE(TAG, "malloc fail. img_src_buffer_len %d", img_src_buffer_len);
 	} else {
@@ -118,7 +114,10 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 		if (ret != 0) {
 			ESP_LOGE(TAG, "Error in mbedtls encode! ret = -0x%x", -ret);
 		} else {
-			httpd_resp_sendstr_chunk(req, (char *)img_src_buffer);
+			// <img src="data:image/jpeg;base64,ENCORDED_DATA" />
+			httpd_resp_sendstr_chunk(req, "<img src=\"data:image/jpeg;base64,");
+			httpd_resp_send_chunk(req, (char *)img_src_buffer, base64Size);
+			httpd_resp_sendstr_chunk(req, "\" />");
 		}
 	}
 	if (img_src_buffer != NULL) free(img_src_buffer);

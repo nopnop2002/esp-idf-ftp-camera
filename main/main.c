@@ -701,7 +701,10 @@ void app_main()
 	#define	FRAMESIZE_STRING "1600x1200"
 #endif
 
-	init_camera(framesize);
+	ret = init_camera(framesize);
+	if (ret != ESP_OK) {
+		while(1) { vTaskDelay(1); }
+	}
 
 	FTP_t ftpBuf;
 	ftpBuf.command = CMD_FTP;
