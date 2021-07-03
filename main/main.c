@@ -617,14 +617,20 @@ void app_main()
 	char *partition_label = "storage0";
 	char *base_path = "/spiffs"; 
 	ret = mountSPIFFS(partition_label, base_path);
-	if (ret != ESP_OK) return;
+	if (ret != ESP_OK) {
+		ESP_LOGE(TAG, "mountSPIFFS fail");
+		while(1) { vTaskDelay(1); }
+	}
 #endif
 
 #if CONFIG_FATFS
 	char *partition_label = "storage1";
-	char *base_path = "/spiflash";
+	char *base_path = "/fatfs";
 	wl_handle_t s_wl_handle = mountFATFS(partition_label, base_path);
-	if (s_wl_handle < 0) return;
+	if (s_wl_handle < 0) {
+		ESP_LOGE(TAG, "mountFATFS fail");
+		while(1) { vTaskDelay(1); }
+	}
 #endif 
 
 #if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
