@@ -1,4 +1,4 @@
-// Message to HTTP
+// Message to HTTP Server
 typedef struct {
     char localFileName[64];
     TaskHandle_t taskHandle;
