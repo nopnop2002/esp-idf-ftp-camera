@@ -742,16 +742,19 @@ void app_main()
 	strcpy(httpBuf.localFileName, ftpBuf.localFileName);
 	
 	CMD_t cmdBuf;
-	struct stat statBuf;
 
 	while(1) {
 		ESP_LOGI(TAG,"Waitting %s ....", SHUTTER);
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
 		ESP_LOGI(TAG,"cmdBuf.command=%d", cmdBuf.command);
 		if (cmdBuf.command == CMD_HALT) break;
+
+		// Delete local file
+		struct stat statBuf;
 		if (stat(ftpBuf.localFileName, &statBuf) == 0) {
+			// Delete it if it exists
 			unlink(ftpBuf.localFileName);
-			ESP_LOGI(TAG, "Local file removed");
+			ESP_LOGI(TAG, "Delete Local file");
 		}
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
