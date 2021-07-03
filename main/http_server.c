@@ -90,10 +90,15 @@ esp_err_t Image2Base64(char * filename, size_t fsize, unsigned char * base64_buf
 static esp_err_t root_get_handler(httpd_req_t *req)
 {
 	ESP_LOGI(TAG, "root_get_handler");
-	if (localFileName == NULL) return ESP_OK;
+	if (localFileName == NULL) {
+		httpd_resp_sendstr_chunk(req, NULL);
+		return ESP_OK;
+	}
+
 	struct stat st;
 	if (stat(localFileName, &st) != 0) {
 		ESP_LOGE(TAG, "[%s] not found", localFileName);
+		httpd_resp_sendstr_chunk(req, NULL);
 		return ESP_OK;
 	}
 
@@ -181,7 +186,7 @@ void http_task(void *pvParameters)
 	char url[64];
 	int port = 8080;
 	sprintf(url, "http://%s:%d", task_parameter, port);
-	ESP_LOGI(TAG, "Starting server on %s", url);
+	ESP_LOGI(TAG, "Starting HTTP server on %s", url);
 	//static httpd_handle_t server = NULL;
 	//server = start_webserver(port);
 	start_webserver(port);
