@@ -165,6 +165,14 @@ static esp_err_t init_camera(int framesize)
 
 static esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 {
+	//clear internal queue
+	//for(int i=0;i<2;i++) {
+	for(int i=0;i<1;i++) {
+		camera_fb_t * fb = esp_camera_fb_get();
+		ESP_LOGI(TAG, "fb->len=%d", fb->len);
+		esp_camera_fb_return(fb);
+	}
+
 	//acquire a frame
 	camera_fb_t * fb = esp_camera_fb_get();
 	if (!fb) {
@@ -186,6 +194,7 @@ static esp_err_t camera_capture(char * FileName, size_t *pictureSize)
   
 	//return the frame buffer back to the driver for reuse
 	esp_camera_fb_return(fb);
+
 	return ESP_OK;
 }
 
@@ -796,6 +805,7 @@ void app_main()
 		if (xQueueSend(xQueueHttp, &httpBuf, 10) != pdPASS) {
 			ESP_LOGE(TAG, "xQueueSend xQueueHttp fail");
 		}
+
 		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 	} // end while

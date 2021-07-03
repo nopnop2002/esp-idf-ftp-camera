@@ -60,7 +60,8 @@ int32_t calcBase64EncodedSize(int origDataSize)
 esp_err_t Image2Base64(char * filename, size_t fsize, unsigned char * base64_buffer, size_t base64_buffer_len)
 {
 	unsigned char* image_buffer = NULL;
-	image_buffer = malloc(fsize + 1);
+	//image_buffer = malloc(fsize + 1);
+	image_buffer = malloc(fsize);
 	if (image_buffer == NULL) {
 		ESP_LOGE(TAG, "malloc fail. image_buffer %d", fsize);
 		return ESP_FAIL;
