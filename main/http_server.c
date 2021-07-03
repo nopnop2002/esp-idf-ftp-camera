@@ -17,7 +17,7 @@
 #include "esp_spiffs.h"
 #include "esp_http_server.h"
 
-#include "cmd.h"
+#include "http.h"
 
 static const char *TAG = "HTTP";
 
@@ -57,6 +57,7 @@ int32_t calcBase64EncodedSize(int origDataSize)
 	return numNetChars;
 }
 
+// Convert image to BASE64
 esp_err_t Image2Base64(char * filename, size_t fsize, unsigned char * base64_buffer, size_t base64_buffer_len)
 {
 	unsigned char* image_buffer = NULL;
@@ -189,7 +190,7 @@ void http_task(void *pvParameters)
 	while(1) {
 		//Waiting for HTTP event.
 		if (xQueueReceive(xQueueHttp, &httpBuf, portMAX_DELAY) == pdTRUE) {
-			ESP_LOGI(TAG, "httpBuf.command=%d localFileName=[%s]", httpBuf.command, httpBuf.localFileName);
+			ESP_LOGI(TAG, "httpBuf.localFileName=[%s]", httpBuf.localFileName);
 			localFileName = httpBuf.localFileName;
 			ESP_LOGW(TAG, "Open this in your browser %s", url);
 		}

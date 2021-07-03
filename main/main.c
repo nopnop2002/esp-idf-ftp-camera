@@ -40,6 +40,7 @@
 #include "esp_camera.h"
 
 #include "cmd.h"
+#include "http.h"
 
 
 /* FreeRTOS event group to signal when we are connected*/
@@ -737,7 +738,6 @@ void app_main()
 #endif
 		
 	HTTP_t httpBuf;
-	httpBuf.command = CMD_FTP;
 	httpBuf.taskHandle = xTaskGetCurrentTaskHandle();
 	strcpy(httpBuf.localFileName, ftpBuf.localFileName);
 	

@@ -13,10 +13,3 @@ typedef struct {
 	uint16_t command;
 	TaskHandle_t taskHandle;
 } FTP_t;
-
-// Message to HTTP
-typedef struct {
-	char localFileName[64];
-	uint16_t command;
-	TaskHandle_t taskHandle;
-} HTTP_t;
