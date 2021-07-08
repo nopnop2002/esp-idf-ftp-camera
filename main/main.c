@@ -46,9 +46,11 @@
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
 
-/* The event group allows multiple bits for each event, but we only care about one event
- * - are we connected to the AP with an IP? */
-const int WIFI_CONNECTED_BIT = BIT0;
+/* The event group allows multiple bits for each event, but we only care about two events:
+ * - we are connected to the AP with an IP
+ * - we failed to connect after the maximum amount of retries */
+#define WIFI_CONNECTED_BIT BIT0
+#define WIFI_FAIL_BIT	   BIT1
 
 static const char *TAG = "MAIN";
 
@@ -207,11 +209,12 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	} else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
 		if (s_retry_num < CONFIG_ESP_MAXIMUM_RETRY) {
 			esp_wifi_connect();
-			xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
 			s_retry_num++;
 			ESP_LOGI(TAG, "retry to connect to the AP");
+		} else {
+			xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
 		}
-		ESP_LOGE(TAG,"connect to the AP fail");
+		ESP_LOGI(TAG,"connect to the AP fail");
 	} else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
 		ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
 		ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
@@ -220,36 +223,6 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	}
 }
 
-bool parseAddress(int * ip, char * text) {
-	ESP_LOGD(TAG, "parseAddress text=[%s]",text);
-	int len = strlen(text);
-	int octet = 0;
-	char buf[4];
-	int index = 0;
-	for(int i=0;i<len;i++) {
-		char c = text[i];
-		if (c == '.') {
-			ESP_LOGD(TAG, "buf=[%s] octet=%d", buf, octet);
-			ip[octet] = strtol(buf, NULL, 10);
-			octet++;
-			index = 0;
-		} else {
-			if (index == 3) return false;
-			if (c < '0' || c > '9') return false;
-			buf[index++] = c;
-			buf[index] = 0;
-		}
-	}
-
-	if (strlen(buf) > 0) {
-		ESP_LOGD(TAG, "buf=[%s] octet=%d", buf, octet);
-		ip[octet] = strtol(buf, NULL, 10);
-		octet++;
-	}
-	if (octet != 4) return false;
-	return true;
-
-}
 
 void wifi_init_sta()
 {
@@ -274,30 +247,6 @@ void wifi_init_sta()
 	ESP_LOGI(TAG, "CONFIG_STATIC_GW_ADDRESS=[%s]",CONFIG_STATIC_GW_ADDRESS);
 	ESP_LOGI(TAG, "CONFIG_STATIC_NM_ADDRESS=[%s]",CONFIG_STATIC_NM_ADDRESS);
 
-	int ip[4];
-	bool ret = parseAddress(ip, CONFIG_STATIC_IP_ADDRESS);
-	ESP_LOGI(TAG, "parseAddress ret=%d ip=%d.%d.%d.%d", ret, ip[0], ip[1], ip[2], ip[3]);
-	if (!ret) {
-		ESP_LOGE(TAG, "CONFIG_STATIC_IP_ADDRESS [%s] not correct", CONFIG_STATIC_IP_ADDRESS);
-	while(1) { vTaskDelay(1); }
-	}
-
-	int gw[4];
-	ret = parseAddress(gw, CONFIG_STATIC_GW_ADDRESS);
-	ESP_LOGI(TAG, "parseAddress ret=%d gw=%d.%d.%d.%d", ret, gw[0], gw[1], gw[2], gw[3]);
-	if (!ret) {
-		ESP_LOGE(TAG, "CONFIG_STATIC_GW_ADDRESS [%s] not correct", CONFIG_STATIC_GW_ADDRESS);
-	while(1) { vTaskDelay(1); }
-	}
-
-	int nm[4];
-	ret = parseAddress(nm, CONFIG_STATIC_NM_ADDRESS);
-	ESP_LOGI(TAG, "parseAddress ret=%d nm=%d.%d.%d.%d", ret, nm[0], nm[1], nm[2], nm[3]);
-	if (!ret) {
-		ESP_LOGE(TAG, "CONFIG_STATIC_NM_ADDRESS [%s] not correct", CONFIG_STATIC_NM_ADDRESS);
-	while(1) { vTaskDelay(1); }
-	}
-
 #if ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 1
 	/* Stop DHCP client */
 	ESP_ERROR_CHECK(esp_netif_dhcpc_stop(netif));
@@ -305,22 +254,24 @@ void wifi_init_sta()
 
 	/* Set STATIC IP Address */
 	esp_netif_ip_info_t ip_info;
-	IP4_ADDR(&ip_info.ip, ip[0], ip[1], ip[2], ip[3]);
-	IP4_ADDR(&ip_info.gw, gw[0], gw[1], gw[2], gw[3]);
-	IP4_ADDR(&ip_info.netmask, nm[0], nm[1], nm[2], nm[3]);
-	//tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info);
+	memset(&ip_info, 0 , sizeof(esp_netif_ip_info_t));
+	ip_info.ip.addr = ipaddr_addr(CONFIG_STATIC_IP_ADDRESS);
+	ip_info.netmask.addr = ipaddr_addr(CONFIG_STATIC_NM_ADDRESS);
+	ip_info.gw.addr = ipaddr_addr(CONFIG_STATIC_GW_ADDRESS);;
 	esp_netif_set_ip_info(netif, &ip_info);
 
 #else
 	/* Stop DHCP client */
 	tcpip_adapter_dhcpc_stop(TCPIP_ADAPTER_IF_STA);
+	ESP_LOGI(TAG, "Stop DHCP Services");
 
 	/* Set STATIC IP Address */
-	tcpip_adapter_ip_info_t ipInfo;
-	IP4_ADDR(&ipInfo.ip, ip[0], ip[1], ip[2], ip[3]);
-	IP4_ADDR(&ipInfo.gw, gw[0], gw[1], gw[2], gw[3]);
-	IP4_ADDR(&ipInfo.netmask, nm[0], nm[1], nm[2], nm[3]);
-	tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &ipInfo);
+	tcpip_adapter_ip_info_t ip_info;
+	memset(&ip_info, 0 , sizeof(tcpip_adapter_ip_info_t));
+	ip_info.ip.addr = ipaddr_addr(CONFIG_STATIC_IP_ADDRESS);
+	ip_info.netmask.addr = ipaddr_addr(CONFIG_STATIC_NM_ADDRESS);
+	ip_info.gw.addr = ipaddr_addr(CONFIG_STATIC_GW_ADDRESS);;
+	tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info);
 #endif
 
 	/*
@@ -358,24 +309,27 @@ void wifi_init_sta()
 	ESP_ERROR_CHECK(esp_wifi_start() );
 
 	ESP_LOGI(TAG, "wifi_init_sta finished.");
-	ESP_LOGI(TAG, "connect to ap SSID:%s password:%s",
-			 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
 
-	// wait for IP_EVENT_STA_GOT_IP
-	while(1) {
-		/* Wait forever for WIFI_CONNECTED_BIT to be set within the event group.
-		   Clear the bits beforeexiting. */
-		EventBits_t uxBits = xEventGroupWaitBits(s_wifi_event_group,
-		   WIFI_CONNECTED_BIT, /* The bits within the event group to waitfor. */
-		   pdTRUE,		  /* WIFI_CONNECTED_BIT should be cleared before returning. */
-		   pdFALSE,		  /* Don't waitfor both bits, either bit will do. */
-		   portMAX_DELAY);/* Wait forever. */
-	   if ( ( uxBits & WIFI_CONNECTED_BIT ) == WIFI_CONNECTED_BIT ){
-		   ESP_LOGI(TAG, "WIFI_CONNECTED_BIT");
-		   break;
-	   }
+	/* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
+	 * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
+	EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
+			WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
+			pdFALSE,
+			pdFALSE,
+			portMAX_DELAY);
+
+	/* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
+	 * happened. */
+	if (bits & WIFI_CONNECTED_BIT) {
+		ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
+				 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+	} else if (bits & WIFI_FAIL_BIT) {
+		ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
+				 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+	} else {
+		ESP_LOGE(TAG, "UNEXPECTED EVENT");
 	}
-	ESP_LOGI(TAG, "Got IP Address.");
+	vEventGroupDelete(s_wifi_event_group);
 }
 
 void initialise_mdns(void)
