@@ -15,8 +15,7 @@ If you use other camera, edit sdkconfig.default.
 
 
 # Software requirements
-esp-idf v4.4 or later.   
-The mDNS strict mode [issue](https://github.com/espressif/esp-idf/issues/6190) has been resolved.   
+esp-idf v4.3 or later.   
 
 # Installation
 Use a USB-TTL converter.   
@@ -93,6 +92,11 @@ __Must be formatted with FAT32 before use__
 ![config-wifi-1](https://user-images.githubusercontent.com/6020549/118470621-cde49900-b741-11eb-8038-fbb6f8053afc.jpg)
 
 You can use the mDNS hostname instead of the IP address.   
+- esp-idf V4.3 or earlier   
+ You will need to manually change the mDNS strict mode according to [this](https://github.com/espressif/esp-idf/issues/6190) instruction.   
+- esp-idf V4.4 or later  
+ If you set CONFIG_MDNS_STRICT_MODE = y in sdkconfig.default, the firmware will be built with MDNS_STRICT_MODE = 1.
+
 ![config-wifi-2](https://user-images.githubusercontent.com/6020549/118471770-12246900-b743-11eb-9619-4989f2fb3957.jpg)
 
 You can use static IP.   
