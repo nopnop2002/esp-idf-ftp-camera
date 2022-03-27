@@ -228,22 +228,11 @@ void wifi_init_sta()
 {
 	s_wifi_event_group = xEventGroupCreate();
 
-	ESP_LOGI(TAG,"ESP-IDF Ver%d.%d", ESP_IDF_VERSION_MAJOR, ESP_IDF_VERSION_MINOR);
-	ESP_LOGI(TAG,"ESP_IDF_VERSION %d", ESP_IDF_VERSION);
-
-//#if ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 1
-#if ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(4, 1, 0)
 	ESP_LOGI(TAG,"ESP-IDF esp_netif");
 	ESP_ERROR_CHECK(esp_netif_init());
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
 	esp_netif_t *netif = esp_netif_create_default_wifi_sta();
 	assert(netif);
-#else
-	ESP_LOGE(TAG,"esp-idf version 4.1 or higher required");
-	while(1) {
-		vTaskDelay(1);
-	}
-#endif // ESP_IDF_VERSION
 
 #if CONFIG_STATIC_IP
 
@@ -371,7 +360,7 @@ esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
 	ESP_LOGI(TAG, "Mount SPIFFS filesystem");
 	return ret;
 }
-#endif
+#endif // CONFIG_SPIFFS
 
 #if CONFIG_FATFS
 wl_handle_t mountFATFS(char * partition_label, char * base_path) {
@@ -393,7 +382,7 @@ wl_handle_t mountFATFS(char * partition_label, char * base_path) {
 	ESP_LOGI(TAG, "s_wl_handle=%d",s_wl_handle);
 	return s_wl_handle;
 }
-#endif
+#endif // CONFIG_FATFS
 
 #if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
 esp_err_t mountSDCARD(char * base_path) {
@@ -417,7 +406,7 @@ esp_err_t mountSDCARD(char * base_path) {
 	gpio_set_pull_mode(4, GPIO_PULLUP_ONLY);	// D1, needed in 4-line mode only
 	gpio_set_pull_mode(12, GPIO_PULLUP_ONLY);	// D2, needed in 4-line mode only
 	gpio_set_pull_mode(13, GPIO_PULLUP_ONLY);	// D3, needed in 4- and 1-line modes
-#endif
+#endif // CONFIG_MMC_SDCARD
 
 #if CONFIG_SPI_SDCARD
 	ESP_LOGI(TAG, "Initializing SPI peripheral");
@@ -429,7 +418,7 @@ esp_err_t mountSDCARD(char * base_path) {
 	slot_config.gpio_cs = PIN_NUM_CS;
 	// This initializes the slot without card detect (CD) and write protect (WP) signals.
 	// Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
-#endif
+#endif // CONFIG_SPI_SDCARD
 
 	// Options for mounting the filesystem.
 	// If format_if_mount_failed is set to true, SD card will be partitioned and
@@ -463,7 +452,7 @@ esp_err_t mountSDCARD(char * base_path) {
 	ESP_LOGI(TAG, "Mounte SD card");
 	return ret;
 }
-#endif
+#endif // CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
 
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
@@ -497,7 +486,7 @@ static esp_err_t obtain_time(void)
 	if (retry == retry_count) return ESP_FAIL;
 	return ESP_OK;
 }
-#endif
+#endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
 void ftp(void *pvParameters);
 
@@ -555,7 +544,7 @@ void app_main()
 	localtime_r(&now, &timeinfo);
 	strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
 	ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
-#endif
+#endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
 #if CONFIG_SPIFFS 
 	char *partition_label = "storage0";
