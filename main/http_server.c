@@ -1,10 +1,10 @@
 /* Simple HTTP Server Example
 
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
+	 This example code is in the Public Domain (or CC0 licensed, at your option.)
 
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
+	 Unless required by applicable law or agreed to in writing, this
+	 software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	 CONDITIONS OF ANY KIND, either express or implied.
 */
 
 #include <sys/stat.h>
@@ -86,7 +86,7 @@ esp_err_t Image2Base64(char * filename, size_t fsize, unsigned char * base64_buf
 	return ret;
 }
 
-/* An HTTP GET handler */
+/* root get handler */
 static esp_err_t root_get_handler(httpd_req_t *req)
 {
 	ESP_LOGI(TAG, "root_get_handler");
@@ -111,7 +111,7 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 
 	// Convert from JPEG to BASE64
 	unsigned char*	img_src_buffer = NULL;
- 	size_t img_src_buffer_len = base64Size + 1;
+	size_t img_src_buffer_len = base64Size + 1;
 	img_src_buffer = malloc(img_src_buffer_len);
 	if (img_src_buffer == NULL) {
 		ESP_LOGE(TAG, "malloc fail. img_src_buffer_len %d", img_src_buffer_len);
@@ -140,41 +140,49 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 	return ESP_OK;
 }
 
-static const httpd_uri_t root = {
-	.uri	   = "/",
-	.method    = HTTP_GET,
-	.handler   = root_get_handler,
-	/* Let's pass response string in user
-	 * context to demonstrate it's usage */
-	.user_ctx  = "Hello World!"
-};
-
-
-static httpd_handle_t start_webserver(int port)
+/* favicon get handler */
+static esp_err_t favicon_get_handler(httpd_req_t *req)
 {
-	// Generate default configuration
+	ESP_LOGI(TAG, "favicon_get_handler");
+	return ESP_OK;
+}
+
+/* Function to start the web server */
+esp_err_t start_server(int port)
+{
+	httpd_handle_t server = NULL;
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
-	// Empty handle to http_server
-	httpd_handle_t server = NULL;
-
-	// Purge “Least Recently Used” connection
+	// Purge“"Least Recently Used” connection
 	config.lru_purge_enable = true;
-
 	// TCP Port number for receiving and transmitting HTTP traffic
 	config.server_port = port;
 
 	// Start the httpd server
 	//ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
-	if (httpd_start(&server, &config) == ESP_OK) {
-		// Set URI handlers
-		ESP_LOGI(TAG, "Registering URI handlers");
-		httpd_register_uri_handler(server, &root);
-		return server;
+	if (httpd_start(&server, &config) != ESP_OK) {
+		ESP_LOGE(TAG, "Failed to start file server!");
+		return ESP_FAIL;
 	}
 
-	ESP_LOGE(TAG, "Error starting server!");
-	return NULL;
+	// Set URI handlers
+	httpd_uri_t _root_get_handler = {
+		.uri		 = "/",
+		.method		 = HTTP_GET,
+		.handler	 = root_get_handler,
+		//.user_ctx  = "Hello World!"
+	};
+	httpd_register_uri_handler(server, &_root_get_handler);
+
+	httpd_uri_t _favicon_get_handler = {
+		.uri		 = "/favicon.ico",
+		.method		 = HTTP_GET,
+		.handler	 = favicon_get_handler,
+		//.user_ctx  = "Hello World!"
+	};
+	httpd_register_uri_handler(server, &_favicon_get_handler);
+
+	return ESP_OK;
 }
 
 
@@ -187,13 +195,11 @@ void http_task(void *pvParameters)
 	int port = 8080;
 	sprintf(url, "http://%s:%d", task_parameter, port);
 	ESP_LOGI(TAG, "Starting HTTP server on %s", url);
-	//static httpd_handle_t server = NULL;
-	//server = start_webserver(port);
-	start_webserver(port);
+	ESP_ERROR_CHECK(start_server(port));
 
 	HTTP_t httpBuf;
 	while(1) {
-		//Waiting for HTTP event.
+		// Wait to take a picture
 		if (xQueueReceive(xQueueHttp, &httpBuf, portMAX_DELAY) == pdTRUE) {
 			ESP_LOGI(TAG, "httpBuf.localFileName=[%s]", httpBuf.localFileName);
 			localFileName = httpBuf.localFileName;

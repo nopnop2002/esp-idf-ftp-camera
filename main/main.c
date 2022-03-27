@@ -1,14 +1,14 @@
 /*
-   Take a picture and Publish it via FTP.
+	 Take a picture and Publish it via FTP.
 
-   This code is in the Public Domain (or CC0 licensed, at your option.)
+	 This code is in the Public Domain (or CC0 licensed, at your option.)
 
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
+	 Unless required by applicable law or agreed to in writing, this
+	 software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	 CONDITIONS OF ANY KIND, either express or implied.
 
-   I ported from here:
-   https://github.com/espressif/esp32-camera/blob/master/examples/take_picture.c
+	 I ported from here:
+	 https://github.com/espressif/esp32-camera/blob/master/examples/take_picture.c
 */
 
 #include <stdio.h>
@@ -50,7 +50,7 @@ static EventGroupHandle_t s_wifi_event_group;
  * - we are connected to the AP with an IP
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
-#define WIFI_FAIL_BIT	   BIT1
+#define WIFI_FAIL_BIT BIT1
 
 static const char *TAG = "MAIN";
 
@@ -60,8 +60,8 @@ static const char *TAG = "MAIN";
 // Note that a pull-up on CS line is required in SD mode.
 #define PIN_NUM_MISO 2
 #define PIN_NUM_MOSI 15
-#define PIN_NUM_CLK  14
-#define PIN_NUM_CS	 13
+#define PIN_NUM_CLK 14
+#define PIN_NUM_CS 13
 #endif 
 
 static int s_retry_num = 0;
@@ -194,7 +194,7 @@ static esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 	ESP_LOGI(TAG, "fb->len=%d", fb->len);
 	*pictureSize = (size_t)fb->len;
 	fclose(f);
-  
+	
 	//return the frame buffer back to the driver for reuse
 	esp_camera_fb_return(fb);
 
@@ -229,17 +229,21 @@ void wifi_init_sta()
 	s_wifi_event_group = xEventGroupCreate();
 
 	ESP_LOGI(TAG,"ESP-IDF Ver%d.%d", ESP_IDF_VERSION_MAJOR, ESP_IDF_VERSION_MINOR);
+	ESP_LOGI(TAG,"ESP_IDF_VERSION %d", ESP_IDF_VERSION);
 
-#if ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 1
+//#if ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 1
+#if ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(4, 1, 0)
 	ESP_LOGI(TAG,"ESP-IDF esp_netif");
 	ESP_ERROR_CHECK(esp_netif_init());
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
 	esp_netif_t *netif = esp_netif_create_default_wifi_sta();
+	assert(netif);
 #else
-	ESP_LOGI(TAG,"ESP-IDF tcpip_adapter");
-	tcpip_adapter_init();
-	ESP_ERROR_CHECK(esp_event_loop_create_default());
-#endif
+	ESP_LOGE(TAG,"esp-idf version 4.1 or higher required");
+	while(1) {
+		vTaskDelay(1);
+	}
+#endif // ESP_IDF_VERSION
 
 #if CONFIG_STATIC_IP
 
@@ -247,7 +251,6 @@ void wifi_init_sta()
 	ESP_LOGI(TAG, "CONFIG_STATIC_GW_ADDRESS=[%s]",CONFIG_STATIC_GW_ADDRESS);
 	ESP_LOGI(TAG, "CONFIG_STATIC_NM_ADDRESS=[%s]",CONFIG_STATIC_NM_ADDRESS);
 
-#if ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 1
 	/* Stop DHCP client */
 	ESP_ERROR_CHECK(esp_netif_dhcpc_stop(netif));
 	ESP_LOGI(TAG, "Stop DHCP Services");
@@ -259,20 +262,6 @@ void wifi_init_sta()
 	ip_info.netmask.addr = ipaddr_addr(CONFIG_STATIC_NM_ADDRESS);
 	ip_info.gw.addr = ipaddr_addr(CONFIG_STATIC_GW_ADDRESS);;
 	esp_netif_set_ip_info(netif, &ip_info);
-
-#else
-	/* Stop DHCP client */
-	tcpip_adapter_dhcpc_stop(TCPIP_ADAPTER_IF_STA);
-	ESP_LOGI(TAG, "Stop DHCP Services");
-
-	/* Set STATIC IP Address */
-	tcpip_adapter_ip_info_t ip_info;
-	memset(&ip_info, 0 , sizeof(tcpip_adapter_ip_info_t));
-	ip_info.ip.addr = ipaddr_addr(CONFIG_STATIC_IP_ADDRESS);
-	ip_info.netmask.addr = ipaddr_addr(CONFIG_STATIC_NM_ADDRESS);
-	ip_info.gw.addr = ipaddr_addr(CONFIG_STATIC_GW_ADDRESS);;
-	tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info);
-#endif
 
 	/*
 	I referred from here.
@@ -290,7 +279,7 @@ void wifi_init_sta()
 	d.u_addr.ip4.addr = 0x08080404; //8.8.4.4 dns
 	dns_setserver(1, &d);
 
-#endif
+#endif // CONFIG_STATIC_IP
 
 	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 	ESP_ERROR_CHECK(esp_wifi_init(&cfg));
@@ -436,8 +425,8 @@ esp_err_t mountSDCARD(char * base_path) {
 	sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
 	slot_config.gpio_miso = PIN_NUM_MISO;
 	slot_config.gpio_mosi = PIN_NUM_MOSI;
-	slot_config.gpio_sck  = PIN_NUM_CLK;
-	slot_config.gpio_cs   = PIN_NUM_CS;
+	slot_config.gpio_sck = PIN_NUM_CLK;
+	slot_config.gpio_cs = PIN_NUM_CS;
 	// This initializes the slot without card detect (CD) and write protect (WP) signals.
 	// Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
 #endif
@@ -765,10 +754,11 @@ void app_main()
 		if (xQueueSend(xQueueFtp, &ftpBuf, 10) != pdPASS) {
 			ESP_LOGE(TAG, "xQueueSend xQueueFtp fail");
 		}
+
+		// send local file name to http task
 		if (xQueueSend(xQueueHttp, &httpBuf, 10) != pdPASS) {
 			ESP_LOGE(TAG, "xQueueSend xQueueHttp fail");
 		}
-
 		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 	} // end while
