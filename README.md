@@ -106,7 +106,9 @@ You can use static IP.
 
 ## FTP server Setting
 
-![config-ftpserver](https://user-images.githubusercontent.com/6020549/98636743-ca272280-236a-11eb-9094-7ec4d07ebcac.jpg)
+![config-ftpserver](https://user-images.githubusercontent.com/6020549/160318240-905cedf0-39c7-480d-b3f2-7514004f5c5c.jpg)
+
+You can specify mDNS for the FTP server.   
 
 ## Remote File Name Setting
 
