@@ -86,7 +86,7 @@ menu "Application configuration"
 
 		config FTP_SERVER
 			string "FTP Server"
-			default "myftpserver"
+			default "myftpserver.local"
 			help
 				The host name or IP address of the FTP server to use.
 
