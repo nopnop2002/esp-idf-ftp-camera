@@ -89,7 +89,7 @@ __Must be formatted with FAT32 before use__
 
 ## Wifi Setting
 
-![config-wifi-1](https://user-images.githubusercontent.com/6020549/118470621-cde49900-b741-11eb-8038-fbb6f8053afc.jpg)
+![config-wifi-1](https://user-images.githubusercontent.com/6020549/160319603-bd916f04-d149-499c-88a9-0182d7479c10.jpg)
 
 You can use the mDNS hostname instead of the IP address.   
 - esp-idf V4.3 or earlier   
@@ -97,10 +97,10 @@ You can use the mDNS hostname instead of the IP address.
 - esp-idf V4.4 or later  
  If you set CONFIG_MDNS_STRICT_MODE = y in sdkconfig.default, the firmware will be built with MDNS_STRICT_MODE = 1.
 
-![config-wifi-2](https://user-images.githubusercontent.com/6020549/118471770-12246900-b743-11eb-9619-4989f2fb3957.jpg)
+![config-wifi-2](https://user-images.githubusercontent.com/6020549/160319623-de65c66b-dfe1-4886-9ba6-986900b62c91.jpg)
 
 You can use static IP.   
-![config-wifi-3](https://user-images.githubusercontent.com/6020549/118470645-d4731080-b741-11eb-85c0-cad1a497e499.jpg)
+![config-wifi-3](https://user-images.githubusercontent.com/6020549/160319234-4c7ee824-e833-4cf9-bed3-2b25ffe29066.jpg)
 
 
 
@@ -108,7 +108,7 @@ You can use static IP.
 
 ![config-ftpserver](https://user-images.githubusercontent.com/6020549/160318240-905cedf0-39c7-480d-b3f2-7514004f5c5c.jpg)
 
-You can specify mDNS for the FTP server.   
+You can specify mDNS hostname for the FTP server.   
 
 ## Remote File Name Setting
 
