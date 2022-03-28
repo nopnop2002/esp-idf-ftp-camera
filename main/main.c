@@ -154,6 +154,7 @@ camera_config_t camera_config = {
 
 static esp_err_t init_camera(int framesize)
 {
+	ESP_LOGI(TAG, "Start init_camera");
 	//initialize the camera
 	camera_config.frame_size = framesize;
 	esp_err_t err = esp_camera_init(&camera_config);
@@ -163,6 +164,7 @@ static esp_err_t init_camera(int framesize)
 		return err;
 	}
 
+	ESP_LOGI(TAG, "Finish init_camera");
 	return ESP_OK;
 }
 
@@ -574,7 +576,8 @@ void app_main()
 
 #if CONFIG_ENABLE_FLASH
 	// Enable Flash Light
-	gpio_pad_select_gpio(CONFIG_GPIO_FLASH);
+	//gpio_pad_select_gpio(CONFIG_GPIO_FLASH);
+	gpio_reset_pin(CONFIG_GPIO_FLASH);
 	gpio_set_direction(CONFIG_GPIO_FLASH, GPIO_MODE_OUTPUT);
 	gpio_set_level(CONFIG_GPIO_FLASH, 0);
 #endif
@@ -621,12 +624,16 @@ void app_main()
 #endif
 
 	/* Get the local IP address */
-	tcpip_adapter_ip_info_t ip_info;
-	ESP_ERROR_CHECK(tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info));
+	//tcpip_adapter_ip_info_t ip_info;
+	//ESP_ERROR_CHECK(tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info));
+	esp_netif_ip_info_t ip_info;
+	ESP_ERROR_CHECK(esp_netif_get_ip_info(esp_netif_get_handle_from_ifkey("WIFI_STA_DEF"), &ip_info));
 
 	/* Create HTTP Task */
 	char cparam0[64];
-	sprintf(cparam0, "%s", ip4addr_ntoa(&ip_info.ip));
+	//sprintf(cparam0, "%s", ip4addr_ntoa(&ip_info.ip));
+	sprintf(cparam0, IPSTR, IP2STR(&ip_info.ip));
+	ESP_LOGI(TAG, "cparam0=[%s]", cparam0);
 	xTaskCreate(http_task, "HTTP", 1024*6, (void *)cparam0, 2, NULL);
 
 #if CONFIG_FRAMESIZE_VGA
