@@ -129,14 +129,14 @@ I confirmed that the following GPIO can be used.
 
 - Shutter is TCP Socket   
 You can use tcp_send.py.   
-`python ./tcp_send.py`
+`python3 ./tcp_send.py`
 
 ![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
 
 - Shutter is UDP Socket   
 You can use udp_send.py.   
 Requires netifaces.   
-`python ./udp_send.py`
+`python3 ./udp_send.py`
 
 ![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
 
@@ -157,6 +157,9 @@ You can check the photos taken using the built-in WEB server.
 Enter the ESP32's IP address and port number in the address bar of your browser.   
 
 ![browser](https://user-images.githubusercontent.com/6020549/124227364-837a7880-db45-11eb-9d8b-fa15c676adac.jpg)
+
+__This feature is not available when Shutter is an HTTP request.__   
+Because it is not possible to start two HTTP servers.   
 
 # References   
 https://github.com/nopnop2002/esp-idf-ftpServer

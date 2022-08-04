@@ -507,12 +507,15 @@ void app_main()
 	esp_netif_ip_info_t ip_info;
 	ESP_ERROR_CHECK(esp_netif_get_ip_info(esp_netif_get_handle_from_ifkey("WIFI_STA_DEF"), &ip_info));
 
+	// It is not possible to start two HTTP servers
+#if !CONFIG_SHUTTER_HTTP
 	/* Create HTTP Task */
 	char cparam0[64];
 	//sprintf(cparam0, "%s", ip4addr_ntoa(&ip_info.ip));
 	sprintf(cparam0, IPSTR, IP2STR(&ip_info.ip));
 	ESP_LOGI(TAG, "cparam0=[%s]", cparam0);
 	xTaskCreate(http_task, "HTTP", 1024*6, (void *)cparam0, 2, NULL);
+#endif
 
 #if CONFIG_FRAMESIZE_VGA
 	int framesize = FRAMESIZE_VGA;
@@ -629,10 +632,12 @@ void app_main()
 			ESP_LOGE(TAG, "xQueueSend xQueueFtp fail");
 		}
 
+#if !CONFIG_SHUTTER_HTTP
 		// send local file name to http task
 		if (xQueueSend(xQueueHttp, &httpBuf, 10) != pdPASS) {
 			ESP_LOGE(TAG, "xQueueSend xQueueHttp fail");
 		}
+#endif
 		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 	} // end while
