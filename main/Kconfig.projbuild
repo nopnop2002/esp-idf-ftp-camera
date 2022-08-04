@@ -1,32 +1,5 @@
 menu "Application configuration"
 
-	choice FILE_SYSTEM
-		prompt "File System Selection"
-		default SPIFFS
-		help
-			Select File System.
-
-		config SPIFFS
-			bool "SPIFFS File System on FLASH"
-			help
-				Use SPIFFS File System on FLASH.
-
-		config FATFS
-			bool "FAT File System on FLASH"
-			help
-				Use FAT File System on FLASH.
-
-		config SPI_SDCARD
-			bool "FAT File System on SPI SDCARD"
-			help
-				Use FAT File System on SPI SDCARD.
-
-		config MMC_SDCARD
-			bool "FAT File System on MMC SDCARD"
-			help
-				Use FAT File System on MMC SDCARD.
-	endchoice
-
 	menu "WiFi Setting"
 
 		config ESP_WIFI_SSID
@@ -136,7 +109,7 @@ menu "Application configuration"
 		config LOCAL_TIMEZONE
 			depends on REMOTE_IS_VARIABLE_NAME
 			int "Your TimeZone"
-			range 0 23
+			range -23 23
 			default 0
 			help
 				Your local timezone.  When it is 0, Greenwich Mean Time.

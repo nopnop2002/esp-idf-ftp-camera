@@ -45,47 +45,7 @@ Change GPIO0 to open and press the RESET button.
 Set the following items using menuconfig.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/118468330-9c6ace00-b73f-11eb-9ed0-49e6084f3dcf.jpg)
-![config-app](https://user-images.githubusercontent.com/6020549/118947420-48a3f300-b992-11eb-8b4f-51b2980e2af7.jpg)
-
-## File system Selection
-
-ESP32 supports the following file systems.   
-- SPIFFS file system on FLASH   
-- FAT file system on FLASH   
-- FAT file system on SPI peripheral SDCARD   
-- FAT file system on SDMMC peripheral SDCARD   
-
-You can select any one using menuconfig.   
-
-![config-filesystem](https://user-images.githubusercontent.com/6020549/98636628-9c41de00-236a-11eb-907f-c4c293a1b577.jpg)
-
-### Using FAT file system on SPI peripheral SDCARD
-
-__Must be formatted with FAT32 before use__
-
-|ESP32 pin|SPI pin|Notes|
-|:-:|:-:|:-:|
-|GPIO14(MTMS)|SCK||
-|GPIO15(MTDO)|MOSI|10k pull up if can't mount|
-|GPIO2|MISO||
-|GPIO13(MTCK)|CS|| 
-|3.3V|VCC|Can't use 5V supply|
-|GND|GND||
-
-### Using FAT file system on SDMMC peripheral SDCARD
-
-__Must be formatted with FAT32 before use__
-
-|ESP32 pin|SD card pin|Notes|
-|:-:|:-:|:-:|
-|GPIO14(MTMS)|CLK|10k pullup|
-|GPIO15(MTDO)|CMD|10k pullup|
-|GPIO2|D0|10k pullup|
-|GPIO4|D1|not used in 1-line SD mode; 10k pullup in 4-line SD mode|
-|GPIO12(MTDI)|D2|not used in 1-line SD mode; 10k pullup in 4-line SD mode|
-|GPIO13 (MTCK)|D3|not used in 1-line SD mode, but card's D3 pin must have a 10k pullup
-|N/C|CD|optional, not used in the example|
-|N/C|WP|optional, not used in the example|
+![config-app](https://user-images.githubusercontent.com/6020549/182742820-9df4809c-bd90-46cd-923e-e7e974a03b3a.jpg)
 
 ## Wifi Setting
 

@@ -54,16 +54,6 @@ static EventGroupHandle_t s_wifi_event_group;
 
 static const char *TAG = "MAIN";
 
-#if CONFIG_SPI_SDCARD
-// Pin mapping when using SPI mode.
-// With this mapping, SD card can be used both in SPI and 1-line SD mode.
-// Note that a pull-up on CS line is required in SD mode.
-#define PIN_NUM_MISO 2
-#define PIN_NUM_MOSI 15
-#define PIN_NUM_CLK 14
-#define PIN_NUM_CS 13
-#endif 
-
 static int s_retry_num = 0;
 
 QueueHandle_t xQueueCmd;
@@ -326,7 +316,6 @@ void initialise_mdns(void)
 #endif
 }
 
-#if CONFIG_SPIFFS 
 esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
 	ESP_LOGI(TAG, "Initializing SPIFFS file system");
 
@@ -362,99 +351,6 @@ esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
 	ESP_LOGI(TAG, "Mount SPIFFS filesystem");
 	return ret;
 }
-#endif // CONFIG_SPIFFS
-
-#if CONFIG_FATFS
-wl_handle_t mountFATFS(char * partition_label, char * base_path) {
-	ESP_LOGI(TAG, "Initializing FAT file system");
-	// To mount device we need name of device partition, define base_path
-	// and allow format partition in case if it is new one and was not formated before
-	const esp_vfs_fat_mount_config_t mount_config = {
-		.max_files = 4,
-		.format_if_mount_failed = true,
-		.allocation_unit_size = CONFIG_WL_SECTOR_SIZE
-	};
-	wl_handle_t s_wl_handle;
-	esp_err_t err = esp_vfs_fat_spiflash_mount(base_path, partition_label, &mount_config, &s_wl_handle);
-	if (err != ESP_OK) {
-		ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
-		return -1;
-	}
-	ESP_LOGI(TAG, "Mount FAT filesystem");
-	ESP_LOGI(TAG, "s_wl_handle=%d",s_wl_handle);
-	return s_wl_handle;
-}
-#endif // CONFIG_FATFS
-
-#if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
-esp_err_t mountSDCARD(char * base_path) {
-
-#if CONFIG_MMC_SDCARD
-	ESP_LOGI(TAG, "Initializing SDMMC peripheral");
-	sdmmc_host_t host = SDMMC_HOST_DEFAULT();
-
-	// This initializes the slot without card detect (CD) and write protect (WP) signals.
-	// Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
-	sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
-
-	// To use 1-line SD mode, uncomment the following line:
-	// slot_config.width = 1;
-
-	// GPIOs 15, 2, 4, 12, 13 should have external 10k pull-ups.
-	// Internal pull-ups are not sufficient. However, enabling internal pull-ups
-	// does make a difference some boards, so we do that here.
-	gpio_set_pull_mode(15, GPIO_PULLUP_ONLY);	// CMD, needed in 4- and 1- line modes
-	gpio_set_pull_mode(2, GPIO_PULLUP_ONLY);	// D0, needed in 4- and 1-line modes
-	gpio_set_pull_mode(4, GPIO_PULLUP_ONLY);	// D1, needed in 4-line mode only
-	gpio_set_pull_mode(12, GPIO_PULLUP_ONLY);	// D2, needed in 4-line mode only
-	gpio_set_pull_mode(13, GPIO_PULLUP_ONLY);	// D3, needed in 4- and 1-line modes
-#endif // CONFIG_MMC_SDCARD
-
-#if CONFIG_SPI_SDCARD
-	ESP_LOGI(TAG, "Initializing SPI peripheral");
-	sdmmc_host_t host = SDSPI_HOST_DEFAULT();
-	sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
-	slot_config.gpio_miso = PIN_NUM_MISO;
-	slot_config.gpio_mosi = PIN_NUM_MOSI;
-	slot_config.gpio_sck = PIN_NUM_CLK;
-	slot_config.gpio_cs = PIN_NUM_CS;
-	// This initializes the slot without card detect (CD) and write protect (WP) signals.
-	// Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
-#endif // CONFIG_SPI_SDCARD
-
-	// Options for mounting the filesystem.
-	// If format_if_mount_failed is set to true, SD card will be partitioned and
-	// formatted in case when mounting fails.
-	esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-		.format_if_mount_failed = false,
-		.max_files = 5,
-		.allocation_unit_size = 16 * 1024
-	};
-
-	// Use settings defined above to initialize SD card and mount FAT filesystem.
-	// Note: esp_vfs_fat_sdmmc_mount is an all-in-one convenience function.
-	// Please check its source code and implement error recovery when developing
-	// production applications.
-	sdmmc_card_t* card;
-	esp_err_t ret = esp_vfs_fat_sdmmc_mount(base_path, &host, &slot_config, &mount_config, &card);
-
-	if (ret != ESP_OK) {
-		if (ret == ESP_FAIL) {
-			ESP_LOGE(TAG, "Failed to mount filesystem. "
-			"If you want the card to be formatted, set format_if_mount_failed = true.");
-		} else {
-			ESP_LOGE(TAG, "Failed to initialize the card (%s). "
-			"Make sure SD card lines have pull-up resistors in place.", esp_err_to_name(ret));
-		}
-		return ret;
-	}
-
-	// Card has been initialized, print its properties
-	sdmmc_card_print_info(stdout, card);
-	ESP_LOGI(TAG, "Mounte SD card");
-	return ret;
-}
-#endif // CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
 
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
@@ -548,7 +444,6 @@ void app_main()
 	ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
 #endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
-#if CONFIG_SPIFFS 
 	char *partition_label = "storage0";
 	char *base_path = "/spiffs"; 
 	ret = mountSPIFFS(partition_label, base_path);
@@ -556,23 +451,6 @@ void app_main()
 		ESP_LOGE(TAG, "mountSPIFFS fail");
 		while(1) { vTaskDelay(1); }
 	}
-#endif
-
-#if CONFIG_FATFS
-	char *partition_label = "storage1";
-	char *base_path = "/fatfs";
-	wl_handle_t s_wl_handle = mountFATFS(partition_label, base_path);
-	if (s_wl_handle < 0) {
-		ESP_LOGE(TAG, "mountFATFS fail");
-		while(1) { vTaskDelay(1); }
-	}
-#endif 
-
-#if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
-	char *base_path = "/sdcard";
-	ret = mountSDCARD(base_path);
-	if (ret != ESP_OK) return;
-#endif 
 
 #if CONFIG_ENABLE_FLASH
 	// Enable Flash Light
@@ -759,18 +637,7 @@ void app_main()
 
 	} // end while
 
-#if CONFIG_SPIFFS
 	esp_vfs_spiffs_unregister(NULL);
 	ESP_LOGI(TAG, "SPIFFS unmounted");
-#endif
 
-#if CONFIG_FATFS
-	esp_vfs_fat_spiflash_unmount(base_path, s_wl_handle);
-	ESP_LOGI(TAG, "FATFS unmounted");
-#endif 
-
-#if CONFIG_SPI_SDCARD || CONFIG_MMC_SDCARD
-	esp_vfs_fat_sdmmc_unmount();
-	ESP_LOGI(TAG, "SDCARD unmounted");
-#endif
 }
