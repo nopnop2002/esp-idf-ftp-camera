@@ -66,9 +66,15 @@ You can use static IP.
 
 ## FTP server Setting
 
-![config-ftpserver](https://user-images.githubusercontent.com/6020549/160318240-905cedf0-39c7-480d-b3f2-7514004f5c5c.jpg)
+![config-ftpserver-1](https://user-images.githubusercontent.com/6020549/182746690-6dfe8905-e435-4304-883c-b0877d0b3de3.jpg)
 
-You can specify mDNS hostname for the FTP server.   
+![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/182746693-b6f555ef-9ba9-475e-b05f-39ac073ec037.jpg)
+
+- FTP Server   
+ You can specify mDNS hostname for the FTP server.   
+
+- Save pictures in remote subdirectories   
+ Store pictures in FTP Server subdirectories.   
 
 ## Remote File Name Setting
 

@@ -75,6 +75,19 @@ menu "Application configuration"
 			help
 				FTP password to use.
 
+		config ENABLE_SUBDIR
+			bool "Save pictures in remote subdirectories"
+			default n
+			help
+				Save pictures in subdirectories.
+
+		config FTP_SUBDIR
+			depends on ENABLE_SUBDIR
+			string "Remote subdirectory to store pictures"
+			default "pictures"
+			help
+				Subdirectory to store pictures.
+
 	endmenu
 
 
@@ -226,6 +239,7 @@ menu "Application configuration"
 
 	config ENABLE_FLASH
 		bool "Enable Flash Light"
+		default n
 		help
 			Enable Flash Light.
 

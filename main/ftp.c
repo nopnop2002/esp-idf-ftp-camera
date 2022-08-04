@@ -70,13 +70,33 @@ void ftp(void *pvParameters)
 			continue;
 		}
 
+#if CONFIG_ENABLE_SUBDIR
+		// Create a directory
+		//int mkdir = ftpClient->ftpClientMakeDir("pictire", ftpClientNetBuf);
+		int mkdir = ftpClient->ftpClientMakeDir(CONFIG_FTP_SUBDIR, ftpClientNetBuf);
+		ESP_LOGD(TAG, "mkdir=%d", mkdir);
+
+		// Change working directory
+		//int chdir = ftpClient->ftpClientChangeDir("pictire", ftpClientNetBuf);
+		int chdir = ftpClient->ftpClientChangeDir(CONFIG_FTP_SUBDIR, ftpClientNetBuf);
+		ESP_LOGD(TAG, "chdir=%d", chdir);
+		if (chdir == 0) {
+			ESP_LOGE(TAG, "FTP server chdir fail");
+			continue;
+		}
+#endif
+
 		// Put Picture to FTP server
 		int put = ftpClient->ftpClientPut(ftpBuf.localFileName, ftpBuf.remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
 		if (put == 0) {
 			ESP_LOGE(TAG, "FTP server put fail");
 			continue;
 		}
+#if CONFIG_ENABLE_SUBDIR
+		ESP_LOGI(TAG, "ftpClientPut %s ---> %s/%s", ftpBuf.localFileName, CONFIG_FTP_SUBDIR, ftpBuf.remoteFileName);
+#else
 		ESP_LOGI(TAG, "ftpClientPut %s ---> %s", ftpBuf.localFileName, ftpBuf.remoteFileName);
+#endif
 
 #if 0
 		// Delete Local file
