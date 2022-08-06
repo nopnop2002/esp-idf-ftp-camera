@@ -7,9 +7,16 @@ typedef struct {
 	TaskHandle_t taskHandle;
 } CMD_t;
 
+// Message to FTP Client
 typedef struct {
 	char localFileName[64];
 	char remoteFileName[64];
 	uint16_t command;
 	TaskHandle_t taskHandle;
 } FTP_t;
+
+// Message to HTTP Server
+typedef struct {
+    char localFileName[64];
+    TaskHandle_t taskHandle;
+} HTTP_t;

@@ -26,12 +26,12 @@
 #include "esp_event.h"
 #include "esp_err.h"
 #include "esp_log.h"
-#include "esp_vfs.h"
+//#include "esp_vfs.h"
 #include "nvs_flash.h"
-#include "esp_vfs_fat.h"
-#include "driver/sdmmc_host.h"
-#include "driver/sdspi_host.h"
-#include "sdmmc_cmd.h"
+//#include "esp_vfs_fat.h"
+//#include "driver/sdmmc_host.h"
+//#include "driver/sdspi_host.h"
+//#include "sdmmc_cmd.h"
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
 #include "mdns.h"
@@ -40,7 +40,6 @@
 #include "esp_camera.h"
 
 #include "cmd.h"
-#include "http.h"
 
 
 /* FreeRTOS event group to signal when we are connected*/
