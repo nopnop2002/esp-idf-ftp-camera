@@ -78,6 +78,7 @@ When your FTP server acts as an HTTP server, You can view picture using browser.
 You can specify the rotation of the image.   
 ![config-ftpserver-4](https://user-images.githubusercontent.com/6020549/187012956-45504691-4c88-481d-a083-27a3a83d79a5.jpg)
 
+My FTP server acts as an HTTP server.   
 ![rotate-000](https://user-images.githubusercontent.com/6020549/187013052-0991b3e7-d781-4661-925a-fe96fbb403af.jpg)
 ![rotete-090](https://user-images.githubusercontent.com/6020549/187013054-f6c8d8fa-835a-448e-b9a3-ec03fa2fec94.jpg)
 
@@ -158,7 +159,7 @@ You can use this command as shutter.
 
 ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
-![config-flash](https://user-images.githubusercontent.com/6020549/99897463-0cdaea00-2cdd-11eb-93ab-6c9540488639.jpg)
+![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
 
 # Built-in WEB Server
 You can check the pictures taken using the built-in WEB server.   
