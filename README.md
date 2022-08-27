@@ -65,16 +65,24 @@ You can use static IP.
 
 
 ## FTP server Setting
+You can specify mDNS hostname for the FTP server.   
+![config-ftpserver-1](https://user-images.githubusercontent.com/6020549/187012952-f7ef4541-64dd-4a1a-8dbd-b8c19b0a69b2.jpg)
 
-![config-ftpserver-1](https://user-images.githubusercontent.com/6020549/182746690-6dfe8905-e435-4304-883c-b0877d0b3de3.jpg)
+Store pictures in FTP Server subdirectories.   
+![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/187012954-f6e79b78-813f-4072-854e-6d1f592f895a.jpg)
 
-![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/182746693-b6f555ef-9ba9-475e-b05f-39ac073ec037.jpg)
+Create index.html in in FTP Server.   
+When your FTP server acts as an HTTP server, You can view picture using browser.   
+![config-ftpserver-3](https://user-images.githubusercontent.com/6020549/187012955-c96f40d8-81d2-468a-aa13-ebd6faf26326.jpg)
 
-- FTP Server   
- You can specify mDNS hostname for the FTP server.   
+You can specify the rotation of the image.   
+![config-ftpserver-4](https://user-images.githubusercontent.com/6020549/187012956-45504691-4c88-481d-a083-27a3a83d79a5.jpg)
 
-- Save pictures in remote subdirectories   
- Store pictures in FTP Server subdirectories.   
+![rotate-000](https://user-images.githubusercontent.com/6020549/187013052-0991b3e7-d781-4661-925a-fe96fbb403af.jpg)
+![rotete-090](https://user-images.githubusercontent.com/6020549/187013054-f6c8d8fa-835a-448e-b9a3-ec03fa2fec94.jpg)
+
+
+
 
 ## Remote File Name Setting
 

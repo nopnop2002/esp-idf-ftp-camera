@@ -88,6 +88,30 @@ menu "Application configuration"
 			help
 				Subdirectory to store pictures.
 
+		config CREATE_INDEX_HTML
+			bool "Create index.html"
+			default n
+			help
+				Create index.html.
+
+		choice IMAGE_ROTATE
+			depends on CREATE_INDEX_HTML
+			bool "Select Image Rotate"
+			default IMAGE_ROTATE_0
+			help
+				Select Image Rotate.
+
+			config IMAGE_ROTATE_0
+				bool "Rotate(0deg)"
+			config IMAGE_ROTATE_90
+				bool "Rotate(90deg)"
+			config IMAGE_ROTATE_180
+				bool "Rotate(180deg)"
+			config IMAGE_ROTATE_270
+				bool "Rotate(270deg)"
+		endchoice
+
+
 	endmenu
 
 

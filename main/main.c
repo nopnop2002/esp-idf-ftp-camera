@@ -58,7 +58,6 @@ static int s_retry_num = 0;
 QueueHandle_t xQueueCmd;
 QueueHandle_t xQueueFtp;
 QueueHandle_t xQueueHttp;
-SemaphoreHandle_t xSemaphoreFtp;
 
 #define BOARD_ESP32CAM_AITHINKER
 
@@ -467,12 +466,11 @@ void app_main()
 	xQueueHttp = xQueueCreate( 10, sizeof(HTTP_t) );
 	configASSERT( xQueueHttp );
 
-	/* Create Semaphore */
-	xSemaphoreFtp = xSemaphoreCreateBinary();
-	configASSERT( xSemaphoreFtp );
-
 	/* Create FTP Task */
-	xTaskCreate(ftp, "FTP", 1024*8, NULL, 2, NULL);
+	TaskHandle_t taskHandle = xTaskGetCurrentTaskHandle();
+	ESP_LOGI(TAG, "taskHandle=%d", taskHandle);
+	//xTaskCreate(ftp, "FTP", 1024*8, NULL, 2, NULL);
+	xTaskCreate(ftp, "FTP", 1024*8, (void *)taskHandle, 2, NULL);
 
 	/* Create Shutter Task */
 #if CONFIG_SHUTTER_ENTER
@@ -626,10 +624,60 @@ void app_main()
 #endif
 
 		// send picture via FTP
-		xSemaphoreGive(xSemaphoreFtp);
+		ESP_LOGI(TAG, "xQueueSend ftpBuf");
 		if (xQueueSend(xQueueFtp, &ftpBuf, 10) != pdPASS) {
 			ESP_LOGE(TAG, "xQueueSend xQueueFtp fail");
 		}
+
+		// wait ftp complete
+		ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+		ESP_LOGI(TAG, "ulTaskNotifyTake");
+
+#if CONFIG_CREATE_INDEX_HTML
+		ESP_LOGI(TAG, "Opening index.html file");
+		FTP_t indexBuf;
+		indexBuf.command = CMD_FTP;
+		indexBuf.taskHandle = xTaskGetCurrentTaskHandle();
+		sprintf(indexBuf.localFileName, "%s/index.html", base_path);
+		sprintf(indexBuf.remoteFileName, "index.html");
+		FILE* f = fopen(indexBuf.localFileName, "w");
+		if (f == NULL) {
+			ESP_LOGE(TAG, "Failed to open file for writing");
+		} else {
+			ESP_LOGD(TAG, "ftpBuf.remoteFileName=%s", ftpBuf.remoteFileName);
+			fprintf(f, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n");
+			fprintf(f, "<html><head>\n");
+			fprintf(f, "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
+			fprintf(f, "<title>Picture</title>\n");
+			fprintf(f, "</head><body>\n");
+			fprintf(f, "%s\n", ftpBuf.remoteFileName);
+#if CONFIG_IMAGE_ROTATE_0
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(0deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+#endif
+#if CONFIG_IMAGE_ROTATE_90
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(90deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+#endif
+#if CONFIG_IMAGE_ROTATE_180
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(180deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+#endif
+#if CONFIG_IMAGE_ROTATE_270
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(270deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+#endif
+			fprintf(f, "</body></html>\n");
+			fclose(f);
+			ESP_LOGI(TAG, "File written");
+
+			// send index.html via FTP
+			if (xQueueSend(xQueueFtp, &indexBuf, 10) != pdPASS) {
+				ESP_LOGE(TAG, "xQueueSend xQueueFtp fail");
+			}
+
+			// wait ftp complete
+			ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+			ESP_LOGI(TAG, "ulTaskNotifyTake");
+			ESP_LOGW(TAG, "Open this in your browser http://%s/%s/index.html", CONFIG_FTP_SERVER, CONFIG_FTP_SUBDIR);
+		}
+#endif
 
 #if !CONFIG_SHUTTER_HTTP
 		// send local file name to http task
@@ -637,7 +685,6 @@ void app_main()
 			ESP_LOGE(TAG, "xQueueSend xQueueHttp fail");
 		}
 #endif
-		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 	} // end while
 

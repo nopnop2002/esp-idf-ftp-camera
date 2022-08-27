@@ -31,24 +31,18 @@
 #define ESP_FTP_PASSWORD		CONFIG_FTP_PASSWORD
 
 extern QueueHandle_t xQueueFtp;
-extern SemaphoreHandle_t xSemaphoreFtp;
 
 static const char *TAG = "FTP";
 
 void ftp(void *pvParameters)
 {
-	ESP_LOGI(TAG, "Start");
+	TaskHandle_t taskHandle = (TaskHandle_t)pvParameters;
+	ESP_LOGI(TAG, "Start. taskHandle=%d", taskHandle);
 	FTP_t ftpBuf;
 	while(1) {
-		// Give Semaphore
-		xSemaphoreGive(xSemaphoreFtp);
-
 		xQueueReceive(xQueueFtp, &ftpBuf, portMAX_DELAY);
 		ESP_LOGI(TAG,"ftpBuf.command=%d", ftpBuf.command);
 		if (ftpBuf.command == CMD_HALT) break;
-
-		// Take Semaphore
-		xSemaphoreTake(xSemaphoreFtp, portMAX_DELAY);
 
 		// Open FTP server
 		ESP_LOGI(TAG, "ftp server :%s", ESP_FTP_SERVER);
@@ -105,6 +99,9 @@ void ftp(void *pvParameters)
 #endif
 
 		ftpClient->ftpClientQuit(ftpClientNetBuf);
+
+		// Notify the end of processing
+		xTaskNotifyGive( taskHandle );
 
 	} // end while
 
