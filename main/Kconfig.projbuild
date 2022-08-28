@@ -198,6 +198,8 @@ menu "Application configuration"
 				bool "Use UDP Socket"
 			config SHUTTER_HTTP
 				bool "Use HTTP Request"
+			config SHUTTER_REMOTE_FILE
+				bool "Use REMOTE file polling"
 		endchoice
 
 		config GPIO_INPUT
@@ -246,19 +248,26 @@ menu "Application configuration"
 				Local port UDP server will listen on.
 
 		config LOCAL_WEB_PORT
-			int "LOCAL WEB PORT"
+			int "Local port for built-in WEB server"
 			depends on SHUTTER_HTTP
 			default 8080
 			help
 				Local port for WEB server.
 
 		config LOCAL_WEB_URL
-			string "LOCAL WEB URL"
+			string "Local URL for built-in WEB server"
 			depends on SHUTTER_HTTP
 			default "/take_picture"
 			help
-				local URL for WEB server.
+				Local URL for WEB server.
 				Must start with /.
+
+		config REMOTE_FILE_NAME
+			string "Remote file name for polling"
+			depends on SHUTTER_REMOTE_FILE
+			default "shutter.txt"
+			help
+				Remote file name for polling.
 	endmenu
 
 	config ENABLE_FLASH

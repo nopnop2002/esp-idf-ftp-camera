@@ -384,7 +384,7 @@ static esp_err_t obtain_time(void)
 }
 #endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
-void ftp(void *pvParameters);
+void ftp_put(void *pvParameters);
 
 #if CONFIG_SHUTTER_ENTER
 void keyin(void *pvParameters);
@@ -404,6 +404,10 @@ void udp_server(void *pvParameters);
 
 #if CONFIG_SHUTTER_HTTP
 void web_server(void *pvParameters);
+#endif
+
+#if CONFIG_SHUTTER_REMOTE_FILE
+void ftp_get(void *pvParameters);
 #endif
 
 void http_task(void *pvParameters);
@@ -469,8 +473,8 @@ void app_main()
 	/* Create FTP Task */
 	TaskHandle_t taskHandle = xTaskGetCurrentTaskHandle();
 	ESP_LOGI(TAG, "taskHandle=%d", taskHandle);
-	//xTaskCreate(ftp, "FTP", 1024*8, NULL, 2, NULL);
-	xTaskCreate(ftp, "FTP", 1024*8, (void *)taskHandle, 2, NULL);
+	//xTaskCreate(ftp_put, "FTP_PUT", 1024*8, NULL, 2, NULL);
+	xTaskCreate(ftp_put, "FTP_PUT", 1024*8, (void *)taskHandle, 2, NULL);
 
 	/* Create Shutter Task */
 #if CONFIG_SHUTTER_ENTER
@@ -496,6 +500,11 @@ void app_main()
 #if CONFIG_SHUTTER_HTTP
 #define SHUTTER "HTTP Request"
 	xTaskCreate(web_server, "WEB", 1024*4, NULL, 2, NULL);
+#endif
+
+#if CONFIG_SHUTTER_REMOTE_FILE
+#define SHUTTER "REMOTE file polling"
+	xTaskCreate(ftp_get, "FTP_GET", 1024*8, (void *)base_path, 2, NULL);
 #endif
 
 	/* Get the local IP address */

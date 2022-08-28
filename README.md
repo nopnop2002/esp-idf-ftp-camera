@@ -155,6 +155,11 @@ You can use this command as shutter.
 
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/99897502-4ca1d180-2cdd-11eb-92a7-7f1075d10920.jpg)
 
+- Shutter is Remote file polling   
+Take a picture if there is a file on the FTP server.   
+Check if the file exists at 10 second intervals.   
+![config-shutter-6](https://user-images.githubusercontent.com/6020549/187055808-78ff6f74-9525-4ff1-8c7c-e497b4187361.jpg)
+
 ## Flash Light
 
 ESP32-CAM by AI-Thinker has a flash light on GPIO4.
