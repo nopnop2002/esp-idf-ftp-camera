@@ -72,7 +72,7 @@ You can specify mDNS hostname for the FTP server.
 Store pictures in FTP Server subdirectories.   
 ![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/187012954-f6e79b78-813f-4072-854e-6d1f592f895a.jpg)
 
-Create index.html in in FTP Server.   
+Create index.html in FTP Server.   
 When your FTP server acts as an HTTP server, You can view picture using browser.   
 ![config-ftpserver-3](https://user-images.githubusercontent.com/6020549/187012955-c96f40d8-81d2-468a-aa13-ebd6faf26326.jpg)
 
@@ -159,6 +159,7 @@ You can use this command as shutter.
 - Shutter is Remote file polling   
 Take a picture if there is a file on the FTP server.   
 Check if the file exists at 10 second intervals.   
+
 ![config-shutter-6](https://user-images.githubusercontent.com/6020549/187055808-78ff6f74-9525-4ff1-8c7c-e497b4187361.jpg)
 
 ## Flash Light
