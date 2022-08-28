@@ -154,7 +154,7 @@ Requires netifaces.
 You can use this command as shutter.   
 `curl "http://esp32-camera.local:8080/take_picture"`
 
-![config-shutter-5](https://user-images.githubusercontent.com/6020549/99897502-4ca1d180-2cdd-11eb-92a7-7f1075d10920.jpg)
+![config-shutter-5](https://user-images.githubusercontent.com/6020549/187056456-d29c2536-660e-4689-917c-63f8c7b254e8.jpg)
 
 - Shutter is Remote file polling   
 Take a picture if there is a file on the FTP server.   
