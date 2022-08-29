@@ -168,6 +168,9 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
 ![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
 
+# Take & view pictures using flask
+read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
+
 # Built-in WEB Server
 You can check the pictures taken using the built-in WEB server.   
 Enter the ESP32's IP address and port number in the address bar of your browser.   
