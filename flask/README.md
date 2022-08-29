@@ -1,7 +1,7 @@
 # Take & View pictures using flask
 You can take & view pictures using WEB interface.   
 
-![slide4](https://user-images.githubusercontent.com/6020549/187102613-497a1ef5-5863-4011-aef6-399227576f43.JPG)
+![slide4](https://user-images.githubusercontent.com/6020549/187132648-23848e79-3f55-4a69-ac04-f761ebd5ed94.JPG)
 
 # Install flask & pyftpdlib
 ```
@@ -28,7 +28,7 @@ Start application with ftp server.
 
 
 # Take picture
-ESP32 shutter is configured with Remote file polling.   
+ESP32 shutter is configured with Remote file creation.   
 ![flask-11](https://user-images.githubusercontent.com/6020549/187102690-e611e921-65da-4cea-bff7-16cc2b0d15cd.jpg)
 
 Refresh web page.   
