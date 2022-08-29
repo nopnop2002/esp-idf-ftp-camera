@@ -501,7 +501,7 @@ void app_main()
 
 #if CONFIG_SHUTTER_REMOTE_FILE
 #define SHUTTER "REMOTE file polling"
-	xTaskCreate(ftp_get, "FTP_GET", 1024*8, (void *)base_path, 2, NULL);
+	xTaskCreate(ftp_get, "FTP_GET", 1024*8, NULL, 2, NULL);
 #endif
 
 	/* Get the local IP address */

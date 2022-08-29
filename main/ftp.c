@@ -99,18 +99,41 @@ void ftp_put(void *pvParameters)
 #if CONFIG_SHUTTER_REMOTE_FILE
 extern QueueHandle_t xQueueCmd;
 
+// Build new directory
+esp_err_t ftp_make_dir(char * path, FtpClient* ftpClient, NetBuf_t* ftpClientNetBuf)
+{
+	ESP_LOGI(__FUNCTION__, "path=[%s]",path);
+	char *start = path;
+	char *find;
+	while(1) {
+		ESP_LOGD(__FUNCTION__, "start=%p [%s]", start, start);
+		find = strstr(start, "/");
+		ESP_LOGD(__FUNCTION__, "find=%p", find);
+		if (find == 0) break;
+		ESP_LOGD(__FUNCTION__, "find=%p [%s]", find, find);
+
+		char newpath[64];
+		memset(newpath, 0, sizeof(newpath));
+		strncpy(newpath, path, find-path);
+		ESP_LOGI(__FUNCTION__, "newpath=[%s]",newpath);
+		int mkdir = ftpClient->ftpClientMakeDir(newpath, ftpClientNetBuf);
+		ESP_LOGI(__FUNCTION__, "mkdir=%d", mkdir);
+		start = find + 1;
+	}
+	return ESP_OK;
+}
+
 void ftp_get(void *pvParameters)
 {
-	char *base_path = (char *)pvParameters;
-	ESP_LOGI(pcTaskGetName(0), "Start. base_path=%s", base_path);
+	ESP_LOGI(pcTaskGetName(0), "Start");
+	ESP_LOGI(pcTaskGetName(0), "CONFIG_FTP_SERVER      :%s", CONFIG_FTP_SERVER);
+	ESP_LOGI(pcTaskGetName(0), "CONFIG_FTP_USER        :%s", CONFIG_FTP_USER);
+	ESP_LOGI(pcTaskGetName(0), "CONFIG_REMOTE_FILE_NAME:%s", CONFIG_REMOTE_FILE_NAME);
 
 	// Open FTP server
-	ESP_LOGI(pcTaskGetName(0), "ftp server :%s", CONFIG_FTP_SERVER);
-	ESP_LOGI(pcTaskGetName(0), "ftp user   :%s", CONFIG_FTP_USER);
 	static NetBuf_t* ftpClientNetBuf = NULL;
 	FtpClient* ftpClient = getFtpClient();
 	int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
-	//int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 2121, &ftpClientNetBuf);
 	if (connect == 0) {
 		ESP_LOGE(pcTaskGetName(0), "FTP server connect fail");
 		vTaskDelete( NULL );
@@ -123,10 +146,10 @@ void ftp_get(void *pvParameters)
 		vTaskDelete( NULL );
 	}
 
-#if CONFIG_REMOTE_FILE_REMOVE
 	static NetBuf_t* ftpClientNetData = NULL;
-	int access;
-	access = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_WRITE, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
+#if CONFIG_REMOTE_FILE_REMOVE
+	ftp_make_dir(CONFIG_REMOTE_FILE_NAME, ftpClient, ftpClientNetBuf);
+	int access = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_WRITE, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
 	ESP_LOGI(pcTaskGetName(0), "ftpClientAccess=%d", access);
 	if (access == 1) {
 		char buffer[10];
@@ -142,33 +165,31 @@ void ftp_get(void *pvParameters)
 	CMD_t cmdBuf;
 	cmdBuf.taskHandle = xTaskGetCurrentTaskHandle();
 	cmdBuf.command = CMD_TAKE;
-	char remoteFileName[64];
-	char localFileName[64];
-	//sprintf(remoteFileName, "shutter.txt");
-	sprintf(remoteFileName, CONFIG_REMOTE_FILE_NAME);
-	sprintf(localFileName, "%s/shutter.txt", base_path);
-	ESP_LOGI(pcTaskGetName(0), "remoteFileName=%s", remoteFileName);
-	ESP_LOGI(pcTaskGetName(0), "localFileName=%s", localFileName);
 
 	while(1) {
-		// Get file from FTP server
-		int get = ftpClient->ftpClientGet(localFileName, remoteFileName, FTP_CLIENT_TEXT, ftpClientNetBuf);
-		ESP_LOGD(pcTaskGetName(0), "ftpClientGet %d", get);
+		// Open file from FTP server
+		int get = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_READ, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
+		ESP_LOGD(pcTaskGetName(0), "ftpClientGet=%d", get);
+		if (get == 1) {
+			int close = ftpClient->ftpClientClose(ftpClientNetData);
+			ESP_LOGD(pcTaskGetName(0), "ftpClientClose %d", close);
+		}
 #if CONFIG_REMOTE_FILE_CREATE
 		// Triggered on remote file creation
 		if (get == 1) {
-			ESP_LOGI(pcTaskGetName(0), "ftpClientGet %s <--- %s", localFileName, remoteFileName);
-			int delete = ftpClient->ftpClientDelete(remoteFileName, ftpClientNetBuf);
+			ESP_LOGI(pcTaskGetName(0), "remote file create %s", CONFIG_REMOTE_FILE_NAME);
+			int delete = ftpClient->ftpClientDelete(CONFIG_REMOTE_FILE_NAME, ftpClientNetBuf);
 			ESP_LOGI(pcTaskGetName(0), "ftpClientDelete %d", delete);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
 				ESP_LOGE(pcTaskGetName(0), "xQueueSend fail");
 			}
 		}
-#endif
+#endif // CONFIG_REMOTE_FILE_CREATE
+
 #if CONFIG_REMOTE_FILE_REMOVE
 		// Trigger on remote file deletion
 		if (get == 0) {
-			ESP_LOGI(pcTaskGetName(0), "remote file removed %s", remoteFileName);
+			ESP_LOGI(pcTaskGetName(0), "remote file delete %s", CONFIG_REMOTE_FILE_NAME);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
 				ESP_LOGE(pcTaskGetName(0), "xQueueSend fail");
 			}
@@ -183,7 +204,7 @@ void ftp_get(void *pvParameters)
 				ESP_LOGE(pcTaskGetName(0), "FTP server access fail");
 			}
 		}
-#endif
+#endif // CONFIG_REMOTE_FILE_REMOVE
 		vTaskDelay(100);
 
 	} // end while
