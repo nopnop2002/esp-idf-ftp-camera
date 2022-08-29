@@ -30,5 +30,7 @@ Start application with ftp server.
 # Take picture
 ESP32 shutter is configured with Remote file polling.   
 ![flask-11](https://user-images.githubusercontent.com/6020549/187102690-e611e921-65da-4cea-bff7-16cc2b0d15cd.jpg)
+
+Refresh web page.   
 ![flask-12](https://user-images.githubusercontent.com/6020549/187102694-920040c2-a333-43ed-97ad-1978c00ddbac.jpg)
 ![flask-13](https://user-images.githubusercontent.com/6020549/187102696-d95ce0ab-211d-4196-85c1-dc92c7d6a101.jpg)
