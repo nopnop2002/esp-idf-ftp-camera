@@ -190,7 +190,9 @@ read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).
 I use X-plore File Manager app.   
 This app can easily view the files on the FTP server.   
 This app can easily delete files on FTP server.   
+It's much easier to delete a file than to create a new one.   
 You can easily take pictures by setting remote file deletion to shutter.   
+You can operate the ESP32 with just your fingertips.   
 __Very Good!!__
 
 ![X-plore-1](https://user-images.githubusercontent.com/6020549/187131037-e66cadc5-cf82-41e0-96d8-5e996f4caacf.JPG)
