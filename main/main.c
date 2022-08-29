@@ -471,10 +471,7 @@ void app_main()
 	configASSERT( xQueueHttp );
 
 	/* Create FTP Task */
-	TaskHandle_t taskHandle = xTaskGetCurrentTaskHandle();
-	ESP_LOGI(TAG, "taskHandle=%d", taskHandle);
-	//xTaskCreate(ftp_put, "FTP_PUT", 1024*8, NULL, 2, NULL);
-	xTaskCreate(ftp_put, "FTP_PUT", 1024*8, (void *)taskHandle, 2, NULL);
+	xTaskCreate(ftp_put, "FTP_PUT", 1024*8, NULL, 2, NULL);
 
 	/* Create Shutter Task */
 #if CONFIG_SHUTTER_ENTER
@@ -561,6 +558,10 @@ void app_main()
 	sprintf(ftpBuf.remoteFileName, "%s", CONFIG_FIXED_REMOTE_FILE);
 #endif
 	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.remoteFileName);
+#endif
+	memset(ftpBuf.remoteDirName, 0, sizeof(ftpBuf.remoteDirName));
+#if CONFIG_ENABLE_SUBDIR
+	strcpy(ftpBuf.remoteDirName, CONFIG_FTP_SUBDIR);
 #endif
 		
 	HTTP_t httpBuf;

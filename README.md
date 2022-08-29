@@ -160,7 +160,11 @@ You can use this command as shutter.
 Take a picture if there is a file on the FTP server.   
 Check if the file exists at 10 second intervals.   
 
-![config-shutter-6](https://user-images.githubusercontent.com/6020549/187055808-78ff6f74-9525-4ff1-8c7c-e497b4187361.jpg)
+![config-shutter-61](https://user-images.githubusercontent.com/6020549/187130276-8b10092d-3f1f-41dc-b8ca-b8ce4f0c74e5.jpg)
+
+You can choose to create a file or delete a file.   
+If you use Android, deleting files is easier.   
+![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)
 
 ## Flash Light
 
@@ -168,8 +172,6 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
 ![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
 
-# Take & view pictures using flask
-read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
 # Built-in WEB Server
 You can check the pictures taken using the built-in WEB server.   
@@ -179,6 +181,22 @@ Enter the ESP32's IP address and port number in the address bar of your browser.
 
 __This feature is not available when Shutter is an HTTP request.__   
 This is because two HTTP servers cannot be started at the same time.   
+
+
+# Take & view pictures using flask
+read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
+
+# Take & view pictures using Android
+I use X-plore File Manager app.   
+This app can easily view the files on the FTP server.   
+This app can easily delete files on FTP server.   
+You can easily take pictures by setting remote file deletion to shutter.   
+__Very Good!!__
+
+![X-plore-1](https://user-images.githubusercontent.com/6020549/187131037-e66cadc5-cf82-41e0-96d8-5e996f4caacf.JPG)
+![X-plore-2](https://user-images.githubusercontent.com/6020549/187131042-27051c15-9876-45b8-b884-e7cdecd02298.JPG)
+
+
 
 # References   
 https://github.com/nopnop2002/esp-idf-ftpServer

@@ -268,6 +268,25 @@ menu "Application configuration"
 			default "shutter.txt"
 			help
 				Remote file name for polling.
+
+		choice REMOTE_FILE_ACTION
+			prompt "Remote file action"
+			depends on SHUTTER_REMOTE_FILE
+			default REMOTE_FILE_CREATE
+			help
+				Select remote file action.
+
+			config REMOTE_FILE_CREATE
+				bool "Triggered on remote file creation"
+				help
+					Triggered on remote file creation.
+
+			config REMOTE_FILE_REMOVE
+				bool "Trigger on remote file deletion"
+				help
+					Trigger on remote file deletion.
+
+		endchoice
 	endmenu
 
 	config ENABLE_FLASH

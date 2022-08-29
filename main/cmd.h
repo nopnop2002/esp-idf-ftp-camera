@@ -11,6 +11,7 @@ typedef struct {
 typedef struct {
 	char localFileName[64];
 	char remoteFileName[64];
+	char remoteDirName[64];
 	uint16_t command;
 	TaskHandle_t taskHandle;
 } FTP_t;
