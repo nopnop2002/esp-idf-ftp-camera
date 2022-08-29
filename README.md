@@ -178,7 +178,7 @@ Enter the ESP32's IP address and port number in the address bar of your browser.
 ![browser](https://user-images.githubusercontent.com/6020549/124227364-837a7880-db45-11eb-9d8b-fa15c676adac.jpg)
 
 __This feature is not available when Shutter is an HTTP request.__   
-Because it is not possible to start two HTTP servers.   
+This is because two HTTP servers cannot be started at the same time.   
 
 # References   
 https://github.com/nopnop2002/esp-idf-ftpServer
