@@ -188,6 +188,7 @@ read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).
 
 # Take & view pictures using Android
 I use X-plore File Manager app.   
+You can download from [here](https://www.lonelycatgames.com/apps/xplore).   
 This app can easily view the files on the FTP server.   
 This app can easily delete files on FTP server.   
 It's much easier to delete a file than to create a new one.   
