@@ -3,9 +3,9 @@ Take a picture and Publish it via FTP.
 This project use [ESP32 Camera Driver](https://github.com/espressif/esp32-camera).   
 This project use [ESP32-FTP-Client](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
 
-![slide1](https://user-images.githubusercontent.com/6020549/119622002-b6906480-be41-11eb-84cd-d4a53532ee5e.JPG)
+![slide1](https://user-images.githubusercontent.com/6020549/187340044-1b84534c-d2ac-459b-81d9-77de0c593a42.JPG)
 ![slide2](https://user-images.githubusercontent.com/6020549/119622017-b98b5500-be41-11eb-8ad6-1bde963e7849.JPG)
-![slide3](https://user-images.githubusercontent.com/6020549/187056274-96810905-f4a1-45c8-9fe8-1def0f53b731.JPG)
+![slide3](https://user-images.githubusercontent.com/6020549/187340133-739c03a4-8b86-4b75-9d75-79a565fbc3cf.JPG)
 
 # Hardware requirements
 ESP32-CAM Development board.   
