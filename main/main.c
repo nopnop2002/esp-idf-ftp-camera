@@ -646,6 +646,13 @@ void app_main()
 		sprintf(indexBuf.localFileName, "%s/index.html", base_path);
 		strcpy(indexBuf.remoteDirName, CONFIG_INDEX_HTML_SUBDIR);
 		sprintf(indexBuf.remoteFileName, "index.html");
+		char remoteFileName[128];
+#if CONFIG_ENABLE_SUBDIR
+		sprintf(remoteFileName, "%s/%s", CONFIG_FTP_SUBDIR, ftpBuf.remoteFileName);
+#else
+		sprintf(remoteFileName, "%s", ftpBuf.remoteFileName);
+#endif
+
 		FILE* f = fopen(indexBuf.localFileName, "w");
 		if (f == NULL) {
 			ESP_LOGE(TAG, "Failed to open file for writing");
@@ -658,16 +665,16 @@ void app_main()
 			fprintf(f, "</head><body>\n");
 			fprintf(f, "%s\n", ftpBuf.remoteFileName);
 #if CONFIG_IMAGE_ROTATE_0
-			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(0deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(0deg);\">\n", remoteFileName, ftpBuf.remoteFileName);
 #endif
 #if CONFIG_IMAGE_ROTATE_90
-			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(90deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(90deg);\">\n", remoteFileName, ftpBuf.remoteFileName);
 #endif
 #if CONFIG_IMAGE_ROTATE_180
-			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(180deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(180deg);\">\n", remoteFileName, ftpBuf.remoteFileName);
 #endif
 #if CONFIG_IMAGE_ROTATE_270
-			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(270deg);\">\n", ftpBuf.remoteFileName, ftpBuf.remoteFileName);
+			fprintf(f, "<img src=\"%s\" alt=\"%s\" style=\"transform:rotate(270deg);\">\n", remoteFileName, ftpBuf.remoteFileName);
 #endif
 			fprintf(f, "</body></html>\n");
 			fclose(f);
