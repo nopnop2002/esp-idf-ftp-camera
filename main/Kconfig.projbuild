@@ -86,13 +86,21 @@ menu "Application configuration"
 			string "Remote subdirectory to store pictures"
 			default "pictures"
 			help
-				Subdirectory to store pictures.
+				Remote subdirectory to store pictures.
 
 		config CREATE_INDEX_HTML
-			bool "Create index.html"
+			bool "Create index.html on FTP Server"
 			default n
 			help
-				Create index.html.
+				Create index.html on FTP Server.
+				You can view pictures when the FTP server is also acting as an HTTP server.
+
+		config INDEX_HTML_SUBDIR
+			depends on CREATE_INDEX_HTML
+			string "Remote subdirectory to store index.html"
+			default "html"
+			help
+				Remote subdirectory to store index.html.
 
 		choice IMAGE_ROTATE
 			depends on CREATE_INDEX_HTML

@@ -72,12 +72,12 @@ You can specify mDNS hostname for the FTP server.
 Store pictures in FTP Server subdirectories.   
 ![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/187012954-f6e79b78-813f-4072-854e-6d1f592f895a.jpg)
 
-Create index.html in FTP Server.   
+Create index.html on FTP Server.   
 When your FTP server acts as an HTTP server, You can view picture using browser.   
-![config-ftpserver-3](https://user-images.githubusercontent.com/6020549/187012955-c96f40d8-81d2-468a-aa13-ebd6faf26326.jpg)
+![config-ftpserver-3](https://user-images.githubusercontent.com/6020549/192081871-b73ea69c-ca51-494c-a064-181707bf7b25.jpg)
 
 You can specify the rotation of the image.   
-![config-ftpserver-4](https://user-images.githubusercontent.com/6020549/187012956-45504691-4c88-481d-a083-27a3a83d79a5.jpg)
+![config-ftpserver-4](https://user-images.githubusercontent.com/6020549/192081894-db0d5b69-57f2-4e68-916f-13c3ddef77e4.jpg)
 
 My FTP server acts as an HTTP server.   
 ![rotate-000](https://user-images.githubusercontent.com/6020549/187013052-0991b3e7-d781-4661-925a-fe96fbb403af.jpg)
