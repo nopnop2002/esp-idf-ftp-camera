@@ -129,15 +129,19 @@ camera_config_t camera_config = {
 	.ledc_channel = LEDC_CHANNEL_0,
 
 	.pixel_format = PIXFORMAT_JPEG, //YUV422,GRAYSCALE,RGB565,JPEG
-	.frame_size = FRAMESIZE_VGA,	//QQVGA-UXGA Do not use sizes above QVGA when not JPEG
+	.frame_size = FRAMESIZE_VGA, //QQVGA-UXGA Do not use sizes above QVGA when not JPEG
 
 	.jpeg_quality = 12, //0-63 lower number means higher quality
-	.fb_count = 1		//if more than one, i2s runs in continuous mode. Use only with JPEG
+	.fb_count = 1, //if more than one, i2s runs in continuous mode. Use only with JPEG
+	.grab_mode = CAMERA_GRAB_WHEN_EMPTY,
+	.fb_location = CAMERA_FB_IN_PSRAM
 };
 
 static esp_err_t init_camera(int framesize)
 {
 	ESP_LOGI(TAG, "Start init_camera");
+	ESP_LOGI(TAG, "grab_mode=%d", camera_config.grab_mode);
+	ESP_LOGI(TAG, "fb_location=%d", camera_config.fb_location);
 	//initialize the camera
 	camera_config.frame_size = framesize;
 	esp_err_t err = esp_camera_init(&camera_config);
@@ -545,15 +549,25 @@ void app_main()
 	ftpBuf.taskHandle = xTaskGetCurrentTaskHandle();
 	sprintf(ftpBuf.localFileName, "%s/picture.jpg", base_path);
 	ESP_LOGI(TAG, "localFileName=%s",ftpBuf.localFileName);
+
 #if CONFIG_REMOTE_IS_FIXED_NAME
-	//sprintf(ftpBuf.remoteFileName, "picture.jpg");
 #if CONFIG_REMOTE_FRAMESIZE
-	sprintf(ftpBuf.remoteFileName, "%s_%s", CONFIG_FIXED_REMOTE_FILE, FRAMESIZE_STRING);
+	char baseFileName[64];
+	strcpy(baseFileName, CONFIG_FIXED_REMOTE_FILE);
+	for (int index=0;index<strlen(baseFileName);index++) {
+		if (baseFileName[index] == 0x2E) baseFileName[index] = 0;
+	}
+	ESP_LOGI(TAG, "baseFileName=[%s]", baseFileName);
+	// picture_640x480.jpg
+	sprintf(ftpBuf.remoteFileName, "%s_%s.jpg", baseFileName, FRAMESIZE_STRING);
 #else
+	// picture.jpg
 	sprintf(ftpBuf.remoteFileName, "%s", CONFIG_FIXED_REMOTE_FILE);
 #endif
 	ESP_LOGI(TAG, "remoteFileName=%s",ftpBuf.remoteFileName);
 #endif
+
+	// Set remote file directory
 	memset(ftpBuf.remoteDirName, 0, sizeof(ftpBuf.remoteDirName));
 #if CONFIG_ENABLE_SUBDIR
 	strcpy(ftpBuf.remoteDirName, CONFIG_FTP_SUBDIR);
@@ -586,10 +600,12 @@ void app_main()
 		strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
 		ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
 #if CONFIG_REMOTE_FRAMESIZE
+		// 20220927-110940_640x480.jpg
 		sprintf(ftpBuf.remoteFileName, "%04d%02d%02d-%02d%02d%02d_%s.jpg",
 		(timeinfo.tm_year+1900),(timeinfo.tm_mon+1),timeinfo.tm_mday,
 		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec, FRAMESIZE_STRING);
 #else
+		// 20220927-110742.jpg
 		sprintf(ftpBuf.remoteFileName, "%04d%02d%02d-%02d%02d%02d.jpg",
 		(timeinfo.tm_year+1900),(timeinfo.tm_mon+1),timeinfo.tm_mday,
 		timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec);
