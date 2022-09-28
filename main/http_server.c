@@ -21,6 +21,7 @@
 
 static const char *TAG = "HTTP";
 
+extern QueueHandle_t xQueueCmd;
 extern QueueHandle_t xQueueHttp;
 
 char * localFileName = NULL;
@@ -140,6 +141,29 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 	return ESP_OK;
 }
 
+#if CONFIG_SHUTTER_HTTP
+/* shutter handler */
+static esp_err_t shutter_handler(httpd_req_t *req)
+{
+    CMD_t cmdBuf;
+    cmdBuf.taskHandle = xTaskGetCurrentTaskHandle();
+    cmdBuf.command = CMD_TAKE;
+    if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
+        ESP_LOGE(TAG, "xQueueSend fail");
+    } else {
+        ESP_LOGI(TAG, "xQueueSend success");
+    }
+
+    /* Send response with custom headers and body set as the
+     * string passed in user context*/
+    const char* resp_str = (const char*) req->user_ctx;
+    httpd_resp_send(req, resp_str, HTTPD_RESP_USE_STRLEN);
+
+    return ESP_OK;
+}
+#endif
+
+
 /* favicon get handler */
 static esp_err_t favicon_get_handler(httpd_req_t *req)
 {
@@ -173,6 +197,16 @@ esp_err_t start_server(int port)
 		//.user_ctx  = "Hello World!"
 	};
 	httpd_register_uri_handler(server, &_root_get_handler);
+
+#if CONFIG_SHUTTER_HTTP
+	httpd_uri_t _shutter_handler = {
+		.uri		 = CONFIG_SHUTTER_URL,
+		.method		 = HTTP_GET,
+		.handler	 = shutter_handler,
+		.user_ctx    = "{\'result\':\'OK\'}" 
+	};
+	httpd_register_uri_handler(server, &_shutter_handler);
+#endif
 
 	httpd_uri_t _favicon_get_handler = {
 		.uri		 = "/favicon.ico",

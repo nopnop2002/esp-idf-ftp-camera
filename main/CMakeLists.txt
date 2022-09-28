@@ -5,7 +5,6 @@ set(COMPONENT_SRCS "main.c"
 	"keyboard.c" 
 	"tcp_server.c" 
 	"udp_server.c" 
-	"web_server.c"
 	"http_server.c")
 set(COMPONENT_ADD_INCLUDEDIRS ".")
 
