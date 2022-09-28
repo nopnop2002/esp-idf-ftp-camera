@@ -183,6 +183,15 @@ You can use mDNS instead of IP address.
 # Take & view pictures using flask
 read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
+# Take pictures using Android
+I use API Tester: HTTP Client app.   
+You can download from [Google Play](https://play.google.com/store/apps/details?id=apitester.org).   
+This app can easily issue HTTP requests.   
+You can easily take pictures by setting HTTP Request to shutter.   
+However, on Android, name resolution by mDNS is not possible.   
+
+![api-tester](https://user-images.githubusercontent.com/6020549/192765579-d4883faa-b9e8-45d2-8c3e-53bc1f97b769.jpg)
+
 # Take & view pictures using Android
 I use X-plore File Manager app.   
 You can download from [Google Play](https://www.lonelycatgames.com/apps/xplore).   
