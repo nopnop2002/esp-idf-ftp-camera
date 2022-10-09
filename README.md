@@ -52,18 +52,28 @@ Set the following items using menuconfig.
 
 ![config-wifi-1](https://user-images.githubusercontent.com/6020549/160319603-bd916f04-d149-499c-88a9-0182d7479c10.jpg)
 
-You can use the mDNS hostname instead of the IP address.   
-- esp-idf V4.3 or earlier   
- You will need to manually change the mDNS strict mode according to [this](https://github.com/espressif/esp-idf/issues/6190) instruction.   
-- esp-idf V4.4 or later  
- If you set CONFIG_MDNS_STRICT_MODE = y in sdkconfig.default, the firmware will be built with MDNS_STRICT_MODE = 1.
-
+You can connect using the mDNS hostname instead of the IP address.   
 ![config-wifi-2](https://user-images.githubusercontent.com/6020549/160319623-de65c66b-dfe1-4886-9ba6-986900b62c91.jpg)
 
 You can use static IP.   
 ![config-wifi-3](https://user-images.githubusercontent.com/6020549/160319234-4c7ee824-e833-4cf9-bed3-2b25ffe29066.jpg)
 
-
+## Using mDNS hostname
+You can connect using the mDNS hostname instead of the IP address.   
+- esp-idf V4.3 or earlier   
+ You will need to manually change the mDNS strict mode according to [this](https://github.com/espressif/esp-idf/issues/6190) instruction.   
+- esp-idf V4.4  
+ If you set CONFIG_MDNS_STRICT_MODE = y in sdkconfig.defaults, the firmware will be built with MDNS_STRICT_MODE.   
+ __If MDNS_STRICT_MODE is not set, mDNS name resolution will not be possible after long-term operation.__   
+- esp-idf V4.4.1   
+ mDNS component has been updated.   
+ If you set CONFIG_MDNS_STRICT_MODE = y in sdkconfig.defaults, the firmware will be built with MDNS_STRICT_MODE.   
+ __Even if MDNS_STRICT_MODE is set, mDNS name resolution will not be possible after long-term operation.__   
+- esp-idf V5.0 or later   
+ mDNS component has been updated.   
+ Long-term operation is possible without setting MDNS_STRICT_MODE.   
+ The following lines in sdkconfig.defaults should be removed before menuconfig.   
+ ```CONFIG_MDNS_STRICT_MODE=y```
 
 ## FTP server Setting
 You can specify mDNS hostname for the FTP server.   
