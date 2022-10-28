@@ -8,18 +8,16 @@ This project use [ESP32-FTP-Client](https://github.com/JohnnyB1290/ESP32-FTP-Cli
 ![slide3](https://user-images.githubusercontent.com/6020549/187340133-739c03a4-8b86-4b75-9d75-79a565fbc3cf.JPG)
 
 # Hardware requirements
-ESP32-CAM Development board.   
-Support for OV2640 camera.   
+ESP32 development board with OV2640 camera.   
 If you use other camera, edit sdkconfig.default.   
-![ESP32-CAM-1](https://user-images.githubusercontent.com/6020549/118466947-4fd2c300-b73e-11eb-8e64-23260e73e693.JPG)
-![ESP32-CAM-2](https://user-images.githubusercontent.com/6020549/118466960-53664a00-b73e-11eb-8950-a5058516e1a3.JPG)
+![ESP32-Camera-board](https://user-images.githubusercontent.com/6020549/198520670-27ea9bd1-71d8-438f-be58-8516154be4af.JPG)
 
 
 # Software requirements
 esp-idf v4.3 or later.   
 
 # Installation
-Use a USB-TTL converter.   
+For AiThinker ESP32-CAM, You have to use a USB-TTL converter.   
 
 |ESP-32|USB-TTL|
 |:-:|:-:|
@@ -40,13 +38,13 @@ idf.py flash monitor
 ```
 
 # Start firmware
-Change GPIO0 to open and press the RESET button.
+For AiThinker ESP32-CAM, Change GPIO0 to open and press the RESET button.
 
 # Configuration
 Set the following items using menuconfig.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/118468330-9c6ace00-b73f-11eb-9ed0-49e6084f3dcf.jpg)
-![config-app](https://user-images.githubusercontent.com/6020549/182742820-9df4809c-bd90-46cd-923e-e7e974a03b3a.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/198521329-cd8e8a45-92df-4b3e-9445-fe762b2446bb.jpg)
 
 ## Wifi Setting
 
@@ -112,6 +110,15 @@ When this is enabled, FrameSize is added to remote file name like this.
 `20210520-165740_800x600.jpg`   
 
 ![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
+
+
+
+
+
+## Select Board
+![config-board](https://user-images.githubusercontent.com/6020549/198521553-cac7bb32-ad8e-4d9a-9f2f-36aa5a3f5ec1.jpg)
+
+
 
 ## Select Frame Size
 Large frame sizes take longer to take a picture.   
