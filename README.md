@@ -127,7 +127,7 @@ Large frame sizes take longer to take a picture.
 
 ## Select Shutter
 
-You can choose one of the following shutter methods
+You can choose one of the following as shutter
 
 - Shutter is the Enter key on the keyboard   
 For operation check
