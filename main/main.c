@@ -33,7 +33,6 @@
 #include "lwip/dns.h"
 
 #include "esp_camera.h"
-
 #include "camera_pin.h"
 
 #include "cmd.h"
@@ -395,7 +394,7 @@ void app_main()
 	ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
 #endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
-	char *partition_label = "storage0";
+	char *partition_label = "storage";
 	char *base_path = "/spiffs"; 
 	ret = mountSPIFFS(partition_label, base_path);
 	if (ret != ESP_OK) {

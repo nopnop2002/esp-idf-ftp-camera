@@ -112,12 +112,8 @@ When this is enabled, FrameSize is added to remote file name like this.
 ![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
 
 
-
-
-
 ## Select Board
 ![config-board](https://user-images.githubusercontent.com/6020549/198521553-cac7bb32-ad8e-4d9a-9f2f-36aa5a3f5ec1.jpg)
-
 
 
 ## Select Frame Size

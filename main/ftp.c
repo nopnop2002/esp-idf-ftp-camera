@@ -38,7 +38,7 @@ void ftp_put(void *pvParameters)
 		ESP_LOGI(pcTaskGetName(0), "localFile  :%s", ftpBuf.localFileName);
 		ESP_LOGI(pcTaskGetName(0), "remoteFile :%s", ftpBuf.remoteFileName);
 		ESP_LOGI(pcTaskGetName(0), "remoteDir  :%s", ftpBuf.remoteDirName);
-		ESP_LOGI(pcTaskGetName(0), "taskHandle :%d", ftpBuf.taskHandle);
+		ESP_LOGI(pcTaskGetName(0), "taskHandle :%d", (unsigned int)ftpBuf.taskHandle);
 		static NetBuf_t* ftpClientNetBuf = NULL;
 		FtpClient* ftpClient = getFtpClient();
 		int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
