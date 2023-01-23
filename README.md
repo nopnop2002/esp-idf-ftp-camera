@@ -158,7 +158,7 @@ You can use tcp_send.py as shutter.
 
 - Shutter is UDP Socket   
 You can use this command as shutter.   
-`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`
+`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`   
 You can use udp_send.py as shutter.   
 Requires netifaces.   
 `python3 ./udp_send.py`
