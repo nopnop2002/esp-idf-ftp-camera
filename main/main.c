@@ -147,8 +147,7 @@ static esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 	return ESP_OK;
 }
 
-static void event_handler(void* arg, esp_event_base_t event_base,
-								int32_t event_id, void* event_data)
+static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
 {
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
 		esp_wifi_connect();
@@ -256,7 +255,7 @@ void wifi_init_sta()
 	vEventGroupDelete(s_wifi_event_group);
 }
 
-void initialise_mdns(void)
+void initialize_mdns(void)
 {
 	//initialize mDNS
 	ESP_ERROR_CHECK( mdns_init() );
@@ -366,7 +365,7 @@ void http_task(void *pvParameters);
 
 void app_main()
 {
-	//Initialize NVS
+	// Initialize NVS
 	esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
 		ESP_ERROR_CHECK(nvs_flash_erase());
@@ -374,9 +373,11 @@ void app_main()
 	}
 	ESP_ERROR_CHECK(ret);
 
-	ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+	// Initilize WiFi
 	wifi_init_sta();
-	initialise_mdns();
+
+	// Initialize mDNS
+	initialize_mdns();
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 	// obtain time over NTP
@@ -398,6 +399,7 @@ void app_main()
 	ESP_LOGI(TAG, "The current date/time is: %s", strftime_buf);
 #endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
+	// Mount SPIFFS
 	char *partition_label = "storage";
 	char *base_path = "/spiffs"; 
 	ret = mountSPIFFS(partition_label, base_path);
@@ -488,6 +490,7 @@ void app_main()
 	#define	FRAMESIZE_STRING "1600x1200"
 #endif
 
+	// Initialize camera
 	ret = init_camera(framesize);
 	if (ret != ESP_OK) {
 		while(1) { vTaskDelay(1); }
