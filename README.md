@@ -125,7 +125,7 @@ Large frame sizes take longer to take a picture.
 
 You can choose one of the following as shutter
 
-![config-shutter-0](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/0aa9cce9-f7bf-4705-a7f7-6b840f0e9c66)
+![config-shutter-0](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/e0e6a5f9-9e5d-4417-a337-8d6fb2cb1cf0)
 
 - Shutter is the Enter key on the keyboard   
 For operation check

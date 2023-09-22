@@ -223,7 +223,7 @@ menu "Application configuration"
 			config SHUTTER_HTTP
 				bool "Use HTTP Request"
 			config SHUTTER_MQTT
-				bool "Use MQTT Subscrive"
+				bool "Use MQTT Subscribe"
 			config SHUTTER_REMOTE_FILE
 				bool "Use REMOTE file polling"
 		endchoice
