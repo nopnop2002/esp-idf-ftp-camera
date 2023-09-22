@@ -125,6 +125,8 @@ Large frame sizes take longer to take a picture.
 
 You can choose one of the following as shutter
 
+![config-shutter-0](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/0aa9cce9-f7bf-4705-a7f7-6b840f0e9c66)
+
 - Shutter is the Enter key on the keyboard   
 For operation check
 
@@ -170,6 +172,12 @@ You can use this command as shutter.
 `curl "http://esp32-camera.local:8080/take/picture"`
 
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
+
+- Shutter is MQTT Subscribe   
+You can use this command as shutter.   
+`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`
+
+![config-shutter-mqtt](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/56037b1e-79b6-4daf-bbd4-40eb9dec5985)
 
 - Shutter is Remote file polling   
 Take a picture if there is a file on the FTP server.   

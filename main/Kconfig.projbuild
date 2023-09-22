@@ -222,13 +222,15 @@ menu "Application configuration"
 				bool "Use UDP Socket"
 			config SHUTTER_HTTP
 				bool "Use HTTP Request"
+			config SHUTTER_MQTT
+				bool "Use MQTT Subscrive"
 			config SHUTTER_REMOTE_FILE
 				bool "Use REMOTE file polling"
 		endchoice
 
 		config GPIO_INPUT
-			int "Input GPIO number"
 			depends on SHUTTER_GPIO
+			int "Input GPIO number"
 			range 4 34
 			default 15
 			help
@@ -236,8 +238,8 @@ menu "Application configuration"
 				Some GPIOs are used for other purposes (flash connections, etc.) and cannot be used to Button.
 
 		choice GPIO_INITIAL
-			prompt "GPIO Initial state"
 			depends on SHUTTER_GPIO
+			prompt "GPIO Initial state"
 			default GPIO_PULLDOWN
 			help
 				Select initial state of GPIO.
@@ -254,41 +256,54 @@ menu "Application configuration"
 
 		endchoice
 
-
 		config TCP_PORT
-			int "TCP Port"
 			depends on SHUTTER_TCP
+			int "TCP Port"
 			range 49152 65535
 			default 49876
 			help
 				Local port TCP server will listen on.
 
 		config UDP_PORT
-			int "UDP Port"
 			depends on SHUTTER_UDP
+			int "UDP Port"
 			range 49152 65535
 			default 49876
 			help
 				Local port UDP server will listen on.
 
 		config SHUTTER_URL
-			string "URL for built-in WEB server"
 			depends on SHUTTER_HTTP
+			string "URL for built-in WEB server"
 			default "/take/picture"
 			help
 				URL for built-in WEB server.
 				Must start with /.
 
+		config MQTT_BROKER
+			depends on SHUTTER_MQTT
+			string "MQTT Broker"
+			default "broker.emqx.io"
+			help
+				Host name or IP address of the broker to connect to
+
+		config SUB_TOPIC
+			depends on SHUTTER_MQTT
+			string "Subscribe Topic"
+			default "/take/picture"
+			help
+				Topic of subscribe
+
 		config REMOTE_FILE_NAME
-			string "Remote file name for polling"
 			depends on SHUTTER_REMOTE_FILE
+			string "Remote file name for polling"
 			default "shutter.txt"
 			help
 				Remote file name for polling.
 
 		choice REMOTE_FILE_ACTION
-			prompt "Remote file action"
 			depends on SHUTTER_REMOTE_FILE
+			prompt "Remote file action"
 			default REMOTE_FILE_CREATE
 			help
 				Select remote file action.
@@ -313,8 +328,8 @@ menu "Application configuration"
 			Enable Flash Light.
 
 	config GPIO_FLASH
-		int "Flash GPIO number"
 		depends on ENABLE_FLASH
+		int "Flash GPIO number"
 		range 4 34
 		default 4
 		help
