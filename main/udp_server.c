@@ -84,7 +84,7 @@ void udp_server(void *pvParameters)
 		}
 	}
 
-	/* close socket. Don't reach here. */
+	/* Don't reach here. */
 	ret = lwip_close(fd);
 	LWIP_ASSERT("ret == 0", ret == 0);
 	vTaskDelete( NULL );

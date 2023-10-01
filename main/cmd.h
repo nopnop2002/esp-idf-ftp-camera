@@ -1,6 +1,4 @@
-#define CMD_TAKE	100
-#define CMD_HALT	300
-#define CMD_FTP		500
+typedef enum {CMD_TAKE, CMD_RESTART, CMD_HALT, CMD_FTP} DIRECTION;
 
 typedef struct {
 	uint16_t command;

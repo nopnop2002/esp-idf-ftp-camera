@@ -1,4 +1,4 @@
-/* MQTT (over TCP) Example
+/*	MQTT (over TCP) Example
 
 	This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -47,7 +47,7 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 		case MQTT_EVENT_CONNECTED:
 			ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
 			xTaskNotifyGive( mqttBuf->taskHandle );
-			//esp_mqtt_client_subscribe(mqtt_client, CONFIG_SUB_TOPIC, 0);
+			//esp_mqtt_client_subscribe(mqtt_client, CONFIG_MQTT_SUB_TOPIC, 0);
 			break;
 		case MQTT_EVENT_DISCONNECTED:
 			ESP_LOGW(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -118,18 +118,29 @@ void mqtt_sub(void *pvParameters)
 	sprintf(uri, "mqtt://%s", ip);
 	ESP_LOGI(TAG, "uri=[%s]", uri);
 
+	// Initialize MQTT Connection
 	MQTT_t mqttBuf;
 	mqttBuf.taskHandle = xTaskGetCurrentTaskHandle();
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
 	esp_mqtt_client_config_t mqtt_cfg = {
 		.broker.address.uri = uri,
+		.broker.address.port = 1883,
+#if CONFIG_BROKER_AUTHENTICATION
+        .credentials.username = CONFIG_AUTHENTICATION_USERNAME,
+        .credentials.authentication.password = CONFIG_AUTHENTICATION_PASSWORD,
+#endif
 		.credentials.client_id = client_id
 	};
 #else
 	esp_mqtt_client_config_t mqtt_cfg = {
 		.user_context = &mqttBuf,
 		.uri = uri,
+		.port = 1883,
 		.event_handle = mqtt_event_handler,
+#if CONFIG_BROKER_AUTHENTICATION
+        .username = CONFIG_AUTHENTICATION_USERNAME,
+        .password = CONFIG_AUTHENTICATION_PASSWORD,
+#endif
 		.client_id = client_id
 	};
 #endif
@@ -145,16 +156,15 @@ void mqtt_sub(void *pvParameters)
 	CMD_t cmdBuf;
 	cmdBuf.taskHandle = xTaskGetCurrentTaskHandle();
 	cmdBuf.command = CMD_TAKE;
+
 	while (1) {
 		ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
 		ESP_LOGI(TAG, "event_id=%"PRIi32, mqttBuf.event_id);
 
 		if (mqttBuf.event_id == MQTT_EVENT_CONNECTED) {
-			esp_mqtt_client_subscribe(mqtt_client, CONFIG_SUB_TOPIC, 0);
-#if 0
+			esp_mqtt_client_subscribe(mqtt_client, CONFIG_MQTT_SUB_TOPIC, 0);
 		} else if (mqttBuf.event_id == MQTT_EVENT_DISCONNECTED) {
 			break;
-#endif
 		} else if (mqttBuf.event_id == MQTT_EVENT_DATA) {
 			ESP_LOGI(TAG, "TOPIC=%.*s\r", mqttBuf.topic_len, mqttBuf.topic);
 			ESP_LOGI(TAG, "DATA=%.*s\r", mqttBuf.data_len, mqttBuf.data);
@@ -162,11 +172,18 @@ void mqtt_sub(void *pvParameters)
 				ESP_LOGE(TAG, "xQueueSend fail");
 			}
 		} else if (mqttBuf.event_id == MQTT_EVENT_ERROR) {
-			break;
+			//break;
 		}
 	} // end while
 
+	// Disconnect from server
 	ESP_LOGI(TAG, "Task Delete");
+#if CONFIG_MQTT_RESTART
+	cmdBuf.command = CMD_RESTART;
+	if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
+		ESP_LOGE(TAG, "xQueueSend fail");
+	}
+#endif
 	esp_mqtt_client_stop(mqtt_client);
 	vTaskDelete(NULL);
 }

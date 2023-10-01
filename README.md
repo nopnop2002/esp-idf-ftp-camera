@@ -177,7 +177,9 @@ You can use this command as shutter.
 You can use this command as shutter.   
 `mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`
 
-![config-shutter-mqtt](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/56037b1e-79b6-4daf-bbd4-40eb9dec5985)
+![config-shutter-mqtt-1](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/d0b99bf9-c5e8-4553-8e2a-9afcb8735796)
+![config-shutter-mqtt-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/5f5395b4-ea32-47d1-be48-abf909d5ae5a)
+![config-shutter-mqtt-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/b6375ff1-d043-4891-928b-ece60bdfebe1)
 
 - Shutter is Remote file polling   
 Take a picture if there is a file on the FTP server.   

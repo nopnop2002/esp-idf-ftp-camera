@@ -594,6 +594,11 @@ void app_main()
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
 		ESP_LOGI(TAG,"cmdBuf.command=%d", cmdBuf.command);
 		if (cmdBuf.command == CMD_HALT) break;
+		if (cmdBuf.command == CMD_RESTART) {
+			ESP_LOGW(TAG, "Restarting after 10 seconds");
+			vTaskDelay(1000);
+			esp_restart();
+		}
 
 		// Delete local file
 		struct stat statBuf;
