@@ -175,7 +175,7 @@ You can use this command as shutter.
 
 - Shutter is MQTT Subscribe   
 You can use this command as shutter.   
-`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`
+`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
 The firmware can be restarted when disconnected from the MQTT server.   
 
 ![config-shutter-mqtt-1](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/63850db1-f7ba-4fb1-9b88-2a0da4125a9d)
