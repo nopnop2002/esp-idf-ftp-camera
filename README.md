@@ -1,6 +1,6 @@
 # esp-idf-ftp-camera
 Take a picture and Publish it via FTP.   
-This project use [ESP32 Camera Driver](https://github.com/espressif/esp32-camera).   
+This project use [ESP32 Camera Driver](https://components.espressif.com/components/espressif/esp32-camera).   
 This project use [ESP32-FTP-Client](https://github.com/JohnnyB1290/ESP32-FTP-Client).   
 
 ![slide1](https://user-images.githubusercontent.com/6020549/187340044-1b84534c-d2ac-459b-81d9-77de0c593a42.JPG)
@@ -31,7 +31,6 @@ For AiThinker ESP32-CAM, You have to use a USB-TTL converter.
 ```
 git clone https://github.com/nopnop2002/esp-idf-ftp-camera
 cd esp-idf-ftp-camera
-git clone https://github.com/espressif/esp32-camera components/esp32-camera
 idf.py set-target esp32
 idf.py menuconfig
 idf.py flash monitor

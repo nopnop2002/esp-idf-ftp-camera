@@ -516,14 +516,11 @@ void app_main()
 #endif
 
 	/* Get the local IP address */
-	//tcpip_adapter_ip_info_t ip_info;
-	//ESP_ERROR_CHECK(tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info));
 	esp_netif_ip_info_t ip_info;
 	ESP_ERROR_CHECK(esp_netif_get_ip_info(esp_netif_get_handle_from_ifkey("WIFI_STA_DEF"), &ip_info));
 
 	/* Create HTTP Task */
 	char cparam0[64];
-	//sprintf(cparam0, "%s", ip4addr_ntoa(&ip_info.ip));
 	sprintf(cparam0, IPSTR, IP2STR(&ip_info.ip));
 	ESP_LOGI(TAG, "cparam0=[%s]", cparam0);
 	xTaskCreate(http_task, "HTTP", 1024*6, (void *)cparam0, 2, NULL);
