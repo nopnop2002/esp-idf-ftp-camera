@@ -29,6 +29,7 @@ You can specify an FTP server.
 
 # Take picture
 ESP32 shutter trigger must be configured with Triggered on remote file creation.    
+Take Picutre creates shutter.txt on the FTP server.   
 ![flask-11](https://user-images.githubusercontent.com/6020549/187102690-e611e921-65da-4cea-bff7-16cc2b0d15cd.jpg)
 
 Refresh web page.   
