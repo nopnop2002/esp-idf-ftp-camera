@@ -24,8 +24,7 @@ python3 ftp-client.py --help
 ![flask-1](https://user-images.githubusercontent.com/6020549/187102653-f30c4655-37ca-4db8-a926-e77a380cdc94.jpg)
 
 You can specify an FTP server.   
-![flask-2](https://user-images.githubusercontent.com/6020549/187102655-d16c891e-fa84-4e9a-9771-73de524eb594.jpg)
-
+![flask-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/19394ad3-927f-47ee-b277-660aa48323c8)
 
 # Take picture
 ESP32 shutter is configured with Remote file creation.   
