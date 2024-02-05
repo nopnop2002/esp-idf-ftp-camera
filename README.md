@@ -173,8 +173,8 @@ You can use this command as shutter.
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
 
 
-You can use flask application.   
-read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
+ You can use flask application.   
+ read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
 
 - Shutter is MQTT Subscribe   
