@@ -301,26 +301,26 @@ menu "Application configuration"
 			help
 				Restart when disconnected from MQTT server
 
-        config BROKER_AUTHENTICATION
-            depends on SHUTTER_MQTT
-            bool "Server requests for password when connecting"
-            default false
-            help
-                Server requests for password when connecting.
+		config BROKER_AUTHENTICATION
+			depends on SHUTTER_MQTT
+			bool "Server requests for password when connecting"
+			default false
+			help
+				Server requests for password when connecting
 
-        config AUTHENTICATION_USERNAME
-            depends on BROKER_AUTHENTICATION
-            string "Username used for connecting to the broker"
-            default "user"
-            help
-                Username used for connecting to the broker.
+		config AUTHENTICATION_USERNAME
+			depends on BROKER_AUTHENTICATION
+			string "Username used for connecting to the broker"
+			default "user"
+			help
+				Username used for connecting to the broker
 
-        config AUTHENTICATION_PASSWORD
-            depends on BROKER_AUTHENTICATION
-            string "Password used for connecting to the broker"
-            default "password"
-            help
-                Username used for connecting to the broker.
+		config AUTHENTICATION_PASSWORD
+			depends on BROKER_AUTHENTICATION
+			string "Password used for connecting to the broker"
+			default "password"
+			help
+				Password used for connecting to the broker
 
 		config REMOTE_FILE_NAME
 			depends on SHUTTER_REMOTE_FILE
@@ -347,6 +347,7 @@ menu "Application configuration"
 					Trigger on remote file deletion.
 
 		endchoice
+
 	endmenu
 
 	config ENABLE_FLASH
