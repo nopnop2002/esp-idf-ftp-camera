@@ -23,7 +23,7 @@ python3 ftp-client.py --help
 
 ![flask-1](https://user-images.githubusercontent.com/6020549/187102653-f30c4655-37ca-4db8-a926-e77a380cdc94.jpg)
 
-Start application with ftp server.   
+You can specify an FTP server.   
 ![flask-2](https://user-images.githubusercontent.com/6020549/187102655-d16c891e-fa84-4e9a-9771-73de524eb594.jpg)
 
 
