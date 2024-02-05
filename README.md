@@ -172,6 +172,11 @@ You can use this command as shutter.
 
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
 
+
+You can use flask application.   
+read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
+
+
 - Shutter is MQTT Subscribe   
 You can use this command as shutter.   
 `mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
@@ -204,9 +209,6 @@ Enter the ESP32's IP address and port number in the address bar of your browser.
 You can use mDNS instead of IP address.   
 
 ![browser](https://user-images.githubusercontent.com/6020549/124227364-837a7880-db45-11eb-9d8b-fa15c676adac.jpg)
-
-# Take & view pictures using flask
-read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
 # Take pictures using Android
 I use API Tester: HTTP Client app.   
