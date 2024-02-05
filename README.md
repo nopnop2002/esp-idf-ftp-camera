@@ -173,8 +173,6 @@ You can use this command as shutter.
 ![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
 
 
-You can use flask application.   
-read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
 
 - Shutter is MQTT Subscribe   
@@ -202,8 +200,11 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
 ![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
 
+# Take picture using flask application   
+You can use flask application.   
+read [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/flask).   
 
-# View picture using Built-in WEB Server
+# View picture using Built-in WEB Server   
 You can view the pictures taken using the built-in WEB server.   
 Enter the ESP32's IP address and port number in the address bar of your browser.   
 You can use mDNS instead of IP address.   
