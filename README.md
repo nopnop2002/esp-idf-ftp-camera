@@ -10,7 +10,12 @@ This project use [ESP32-FTP-Client](https://github.com/JohnnyB1290/ESP32-FTP-Cli
 # Hardware requirements
 ESP32 development board with OV2640 camera.   
 If you use other camera, edit sdkconfig.default.   
-![ESP32-Camera-board](https://user-images.githubusercontent.com/6020549/198520670-27ea9bd1-71d8-438f-be58-8516154be4af.JPG)
+From the left:   
+- Aithinker ESP32-CAM   
+- Freenove ESP32-WROVER CAM   
+- UICPAL ESPS3 CAM   
+
+![UICPAL-ESP32-S3-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/1e4f9128-2bb0-431f-9f99-15c1187c097b)
 
 
 # Software requirements
@@ -112,7 +117,7 @@ When this is enabled, FrameSize is added to remote file name like this.
 
 
 ## Select Board
-![config-board](https://user-images.githubusercontent.com/6020549/198521553-cac7bb32-ad8e-4d9a-9f2f-36aa5a3f5ec1.jpg)
+![config-board](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/11e77e7f-625b-40bd-a0eb-4f18006188e2)
 
 
 ## Select Frame Size
