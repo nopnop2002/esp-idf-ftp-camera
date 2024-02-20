@@ -30,7 +30,6 @@
 #include "esp_spiffs.h" 
 #include "esp_sntp.h"
 #include "mdns.h"
-#include "lwip/dns.h"
 
 #include "esp_camera.h"
 #include "camera_pin.h"
@@ -262,6 +261,9 @@ void initialize_mdns(void)
 	//set mDNS hostname (required if you want to advertise services)
 	ESP_ERROR_CHECK( mdns_hostname_set(CONFIG_MDNS_HOSTNAME) );
 	ESP_LOGI(TAG, "mdns hostname set to: [%s]", CONFIG_MDNS_HOSTNAME);
+
+	//initialize service
+	ESP_ERROR_CHECK( mdns_service_add("ESP32-WebServer", "_http", "_tcp", 8080, NULL, 0) );
 
 #if 0
 	//set default mDNS instance name
