@@ -14,8 +14,9 @@ From the left:
 - Aithinker ESP32-CAM   
 - Freenove ESP32-WROVER CAM   
 - UICPAL ESPS3 CAM   
+- Freenove ESP32S3-WROVER CAM (Clone)   
 
-![UICPAL-ESP32-S3-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/1e4f9128-2bb0-431f-9f99-15c1187c097b)
+![es32-camera](https://github.com/nopnop2002/esp-idf-websocket-camera/assets/6020549/38dbef9a-ed85-4df2-8d22-499b2b497278)
 
 
 # Software requirements
@@ -199,11 +200,16 @@ You can choose to create a file or delete a file.
 If you use Android, deleting files is easier.   
 ![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)
 
-## Flash Light
-
+## Flash Light   
 ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 
 ![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
+
+## PSRAM   
+When you use ESP32S3-WROVER CAM, you need to set the PSRAM type.   
+
+![config-psram](https://github.com/nopnop2002/esp-idf-websocket-camera/assets/6020549/ba04f088-c628-46ac-bc5b-2968032753e0)
+
 
 # Take picture using flask application   
 You can use flask application.   
