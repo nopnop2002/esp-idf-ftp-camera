@@ -133,7 +133,11 @@ You can choose one of the following as shutter
 ![config-shutter-0](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/e0e6a5f9-9e5d-4417-a337-8d6fb2cb1cf0)
 
 - Shutter is the Enter key on the keyboard   
-For operation check
+ For operation check.   
+ When using the USB port provided by the USB Serial/JTAG Controller Console, you need to enable the following line in sdkconfig.
+ ```
+ CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+ ```
 
 ![config-shutter-1](https://user-images.githubusercontent.com/6020549/99897436-d1d8b680-2cdc-11eb-8f6c-cea149cb845a.jpg)
 
