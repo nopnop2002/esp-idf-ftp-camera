@@ -25,13 +25,13 @@ esp-idf v4.4/v5.0.
 # Installation
 For AiThinker ESP32-CAM, you need to use a USB-TTL converter and connect GPIO0 to GND.   
 
-|ESP-32|USB-TTL||
-|:-:|:-:|:-:|
-|U0TXD|RXD||
-|U0RXD|TXD||
-|GPIO0|GND|For AiThinker ESP32-CAM|
-|5V|5V||
-|GND|GND||
+|ESP-32|USB-TTL|
+|:-:|:-:|
+|U0TXD|RXD|
+|U0RXD|TXD|
+|GPIO0|GND|
+|5V|5V|
+|GND|GND|
 
 
 ```
