@@ -1,5 +1,4 @@
 set(COMPONENT_SRCS "main.c" 
-	"FtpClient.c" 
 	"ftp.c" 
 	"gpio.c" 
 	"keyboard.c" 

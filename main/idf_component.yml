@@ -6,3 +6,6 @@ dependencies:
     version: "^1.0.3"
     rules:
       - if: "idf_version >=5.0"
+  nopnop2002/ftpClient:
+    path: components/ftpClient/
+    git: https://github.com/nopnop2002/esp-idf-ftpClient.git
