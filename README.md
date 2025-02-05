@@ -195,8 +195,9 @@ ESP32-CAM by AI-Thinker has a flash light on GPIO4.
 ![config-flash](https://user-images.githubusercontent.com/6020549/187013402-5aac5709-ae8c-421f-978b-a0e321ff1cdb.jpg)
 
 ## PSRAM   
-When you use ESP32S3-WROVER CAM, you need to set the PSRAM type.   
-
+When using ESP32S3, you need to set the PSRAM type according to the hardware.   
+ESP32S3-WROVER CAM has Octal Mode PSRAM.   
+UICPAL ESPS3 CAM  has Quad Mode PSRAM.   
 ![config-psram](https://github.com/nopnop2002/esp-idf-websocket-camera/assets/6020549/ba04f088-c628-46ac-bc5b-2968032753e0)
 
 
