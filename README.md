@@ -142,6 +142,7 @@ You can choose one of the following as shutter
 	|GPIO14|OK|OK|
 	|GPIO15|OK|OK|
 	|GPIO16|NG|NG|
+
 	![config-shutter-2](https://user-images.githubusercontent.com/6020549/99897437-d2714d00-2cdc-11eb-8e59-c8bf4ef25d62.jpg)
 
 - Shutter is TCP Socket   
