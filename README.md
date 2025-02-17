@@ -89,17 +89,15 @@ My FTP server acts as an HTTP server.
 You can choose the file name on the FTP server side from the following.   
 - Always the same file name   
 - File name based on date and time   
-When you choose date and time file name, you will need an NTP server.   
-The file name will be YYYYMMDD-hhmmss.jpg.   
-
-![config-remote-file-1](https://user-images.githubusercontent.com/6020549/118946651-8f451d80-b991-11eb-94c4-8976a2ee67ba.jpg)
-![config-remote-file-2](https://user-images.githubusercontent.com/6020549/118946780-b3086380-b991-11eb-96a5-a0ca8a604745.jpg)
+	When you choose date and time file name, you will need an NTP server.   
+	The file name will be YYYYMMDD-hhmmss.jpg.   
+	![config-remote-file-1](https://user-images.githubusercontent.com/6020549/118946651-8f451d80-b991-11eb-94c4-8976a2ee67ba.jpg)
+	![config-remote-file-2](https://user-images.githubusercontent.com/6020549/118946780-b3086380-b991-11eb-96a5-a0ca8a604745.jpg)
 
 - Add FrameSize to Remote file Name   
-When this is enabled, FrameSize is added to remote file name like this.   
-`20210520-165740_800x600.jpg`   
-
-![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
+	When this is enabled, FrameSize is added to remote file name like this.   
+	`20210520-165740_800x600.jpg`   
+	![config-remote-file-3](https://user-images.githubusercontent.com/6020549/118946842-c0bde900-b991-11eb-83ef-ceb4a197a026.jpg)
 
 
 ## Select Board
