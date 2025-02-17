@@ -147,19 +147,17 @@ I confirmed that the following GPIO can be used.
 ![config-shutter-2](https://user-images.githubusercontent.com/6020549/99897437-d2714d00-2cdc-11eb-8e59-c8bf4ef25d62.jpg)
 
 - Shutter is TCP Socket   
-You can use tcp_send.py as shutter.   
-`python3 ./tcp_send.py`
-
-![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
+	You can use tcp_send.py as shutter.   
+	`python3 ./tcp_send.py`
+	![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
 
 - Shutter is UDP Socket   
-You can use this command as shutter.   
-`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`   
-You can use udp_send.py as shutter.   
-Requires netifaces.   
-`python3 ./udp_send.py`
-
-![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
+	You can use this command as shutter.   
+	`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`   
+	You can use udp_send.py as shutter.   
+	Requires netifaces.   
+	`python3 ./udp_send.py`
+	![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
 
 - Shutter is HTTP Request   
 You can use this command as shutter.   
