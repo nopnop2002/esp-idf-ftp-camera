@@ -127,21 +127,21 @@ You can choose one of the following as shutter
 
 - Shutter is a GPIO toggle
 
-  - Initial Sate is PULLDOWN   
-The shutter is prepared when it is turned from OFF to ON, and a picture is taken when it is turned from ON to OFF.   
+	- Initial Sate is PULLDOWN   
+		The shutter is prepared when it is turned from OFF to ON, and a picture is taken when it is turned from ON to OFF.   
 
-  - Initial Sate is PULLUP   
-The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
+	- Initial Sate is PULLUP   
+		The shutter is prepared when it is turned from ON to OFF, and a picture is taken when it is turned from OFF to ON.   
 
-I confirmed that the following GPIO can be used.   
+	I confirmed that the following GPIO can be used.   
 
-|GPIO|PullDown|PullUp|
-|:-:|:-:|:-:|
-|GPIO12|OK|NG|
-|GPIO13|OK|OK|
-|GPIO14|OK|OK|
-|GPIO15|OK|OK|
-|GPIO16|NG|NG|
+	|GPIO|PullDown|PullUp|
+	|:-:|:-:|:-:|
+	|GPIO12|OK|NG|
+	|GPIO13|OK|OK|
+	|GPIO14|OK|OK|
+	|GPIO15|OK|OK|
+	|GPIO16|NG|NG|
 
 ![config-shutter-2](https://user-images.githubusercontent.com/6020549/99897437-d2714d00-2cdc-11eb-8e59-c8bf4ef25d62.jpg)
 
