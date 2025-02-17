@@ -167,12 +167,23 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 	}
 }
 
+#if CONFIG_STATIC_IP
+static esp_err_t example_set_dns_server(esp_netif_t *netif, uint32_t addr, esp_netif_dns_type_t type)
+{
+	if (addr && (addr != IPADDR_NONE)) {
+		esp_netif_dns_info_t dns;
+		dns.ip.u_addr.ip4.addr = addr;
+		dns.ip.type = IPADDR_TYPE_V4;
+		ESP_ERROR_CHECK(esp_netif_set_dns_info(netif, type, &dns));
+	}
+	return ESP_OK;
+}
+#endif
 
-void wifi_init_sta()
+esp_err_t wifi_init_sta()
 {
 	s_wifi_event_group = xEventGroupCreate();
 
-	ESP_LOGI(TAG,"ESP-IDF esp_netif");
 	ESP_ERROR_CHECK(esp_netif_init());
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
 	esp_netif_t *netif = esp_netif_create_default_wifi_sta();
@@ -194,31 +205,29 @@ void wifi_init_sta()
 	ip_info.ip.addr = ipaddr_addr(CONFIG_STATIC_IP_ADDRESS);
 	ip_info.netmask.addr = ipaddr_addr(CONFIG_STATIC_NM_ADDRESS);
 	ip_info.gw.addr = ipaddr_addr(CONFIG_STATIC_GW_ADDRESS);;
-	esp_netif_set_ip_info(netif, &ip_info);
+	ESP_ERROR_CHECK(esp_netif_set_ip_info(netif, &ip_info));
 
-	/*
-	I referred from here.
-	https://www.esp32.com/viewtopic.php?t=5380
-
-	if we should not be using DHCP (for example we are using static IP addresses),
-	then we need to instruct the ESP32 of the locations of the DNS servers manually.
-	Google publicly makes available two name servers with the addresses of 8.8.8.8 and 8.8.4.4.
-	*/
-
-	ip_addr_t d;
-	d.type = IPADDR_TYPE_V4;
-	d.u_addr.ip4.addr = 0x08080808; //8.8.8.8 dns
-	dns_setserver(0, &d);
-	d.u_addr.ip4.addr = 0x08080404; //8.8.4.4 dns
-	dns_setserver(1, &d);
+	/* Set DNS Server */
+	ESP_ERROR_CHECK(example_set_dns_server(netif, ipaddr_addr("8.8.8.8"), ESP_NETIF_DNS_MAIN));
+	ESP_ERROR_CHECK(example_set_dns_server(netif, ipaddr_addr("8.8.4.4"), ESP_NETIF_DNS_BACKUP));
 
 #endif // CONFIG_STATIC_IP
 
 	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 	ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-	ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-	ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL));
+	esp_event_handler_instance_t instance_any_id;
+	esp_event_handler_instance_t instance_got_ip;
+	ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+		ESP_EVENT_ANY_ID,
+		&event_handler,
+		NULL,
+		&instance_any_id));
+	ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
+		IP_EVENT_STA_GOT_IP,
+		&event_handler,
+		NULL,
+		&instance_got_ip));
 
 	wifi_config_t wifi_config = {
 		.sta = {
@@ -226,14 +235,15 @@ void wifi_init_sta()
 			.password = CONFIG_ESP_WIFI_PASSWORD
 		},
 	};
-	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
-	ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
-	ESP_ERROR_CHECK(esp_wifi_start() );
+	ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
+	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+	ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
+	ESP_ERROR_CHECK(esp_wifi_start());
 
-	ESP_LOGI(TAG, "wifi_init_sta finished.");
 
 	/* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
 	 * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
+	esp_err_t ret_value = ESP_OK;
 	EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
 			WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
 			pdFALSE,
@@ -243,15 +253,20 @@ void wifi_init_sta()
 	/* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
 	 * happened. */
 	if (bits & WIFI_CONNECTED_BIT) {
-		ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-				 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+		ESP_LOGI(TAG, "connected to ap SSID:%s password:%s", CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
 	} else if (bits & WIFI_FAIL_BIT) {
-		ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
-				 CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+		ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s", CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+		ret_value = ESP_FAIL;
 	} else {
 		ESP_LOGE(TAG, "UNEXPECTED EVENT");
+		ret_value = ESP_FAIL;
 	}
+
+	/* The event will not be processed after unregister */
+	ESP_ERROR_CHECK(esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
+	ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
 	vEventGroupDelete(s_wifi_event_group);
+	return ret_value;
 }
 
 void initialize_mdns(void)
@@ -271,13 +286,11 @@ void initialize_mdns(void)
 #endif
 }
 
-esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
-	ESP_LOGI(TAG, "Initializing SPIFFS file system");
-
+esp_err_t mountSPIFFS(char * path, char * label, int max_files) {
 	esp_vfs_spiffs_conf_t conf = {
-		.base_path = base_path,
-		.partition_label = partition_label,
-		.max_files = 5,
+		.base_path = path,
+		.partition_label = label,
+		.max_files = max_files,
 		.format_if_mount_failed = true
 	};
 
@@ -286,27 +299,38 @@ esp_err_t mountSPIFFS(char * partition_label, char * base_path) {
 	esp_err_t ret = esp_vfs_spiffs_register(&conf);
 
 	if (ret != ESP_OK) {
-		if (ret == ESP_FAIL) {
+		if (ret ==ESP_FAIL) {
 			ESP_LOGE(TAG, "Failed to mount or format filesystem");
-		} else if (ret == ESP_ERR_NOT_FOUND) {
+		} else if (ret== ESP_ERR_NOT_FOUND) {
 			ESP_LOGE(TAG, "Failed to find SPIFFS partition");
 		} else {
-			ESP_LOGE(TAG, "Failed to initialize SPIFFS (%s)", esp_err_to_name(ret));
+			ESP_LOGE(TAG, "Failed to initialize SPIFFS (%s)",esp_err_to_name(ret));
 		}
 		return ret;
 	}
 
-	size_t total = 0, used = 0;
-	ret = esp_spiffs_info(partition_label, &total, &used);
+#if 0
+	ESP_LOGI(TAG, "Performing SPIFFS_check().");
+	ret = esp_spiffs_check(conf.partition_label);
 	if (ret != ESP_OK) {
-		ESP_LOGE(TAG, "Failed to get SPIFFS partition information (%s)", esp_err_to_name(ret));
+		ESP_LOGE(TAG, "SPIFFS_check() failed (%s)", esp_err_to_name(ret));
+		return ret;
 	} else {
-		ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
+			ESP_LOGI(TAG, "SPIFFS_check() successful");
 	}
-	ESP_LOGI(TAG, "Mount SPIFFS filesystem");
+#endif
+
+	size_t total = 0, used = 0;
+	ret = esp_spiffs_info(conf.partition_label, &total, &used);
+	if (ret != ESP_OK) {
+		ESP_LOGE(TAG,"Failed to get SPIFFS partition information (%s)",esp_err_to_name(ret));
+	} else {
+		ESP_LOGI(TAG,"Mount %s to %s success", path, label);
+		ESP_LOGI(TAG,"Partition size: total: %d, used: %d", total, used);
+	}
+
 	return ret;
 }
-
 
 #if CONFIG_REMOTE_IS_VARIABLE_NAME
 void time_sync_notification_cb(struct timeval *tv)
@@ -394,25 +418,15 @@ void ftp_put(void *pvParameters);
 
 #if CONFIG_SHUTTER_ENTER
 void keyin(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_GPIO
+#elif CONFIG_SHUTTER_GPIO
 void gpio(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_TCP
+#elif CONFIG_SHUTTER_TCP
 void tcp_server(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_UDP
+#elif CONFIG_SHUTTER_UDP
 void udp_server(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_MQTT
+#elif CONFIG_SHUTTER_MQTT
 void mqtt_sub(void *pvParameters);
-#endif
-
-#if CONFIG_SHUTTER_REMOTE_FILE
+#elif CONFIG_SHUTTER_REMOTE_FILE
 void ftp_get(void *pvParameters);
 #endif
 
@@ -455,13 +469,8 @@ void app_main()
 #endif // CONFIG_REMOTE_IS_VARIABLE_NAME
 
 	// Mount SPIFFS
-	char *partition_label = "storage";
 	char *base_path = "/spiffs"; 
-	ret = mountSPIFFS(partition_label, base_path);
-	if (ret != ESP_OK) {
-		ESP_LOGE(TAG, "mountSPIFFS fail");
-		while(1) { vTaskDelay(1); }
-	}
+	ESP_ERROR_CHECK(mountSPIFFS(base_path, "storage", 2));
 
 #if CONFIG_ENABLE_FLASH
 	// Enable Flash Light
@@ -587,7 +596,6 @@ void app_main()
 	strcpy(httpBuf.localFileName, ftpBuf.localFileName);
 	
 	CMD_t cmdBuf;
-
 	while(1) {
 		ESP_LOGI(TAG,"Waitting %s ....", SHUTTER);
 		xQueueReceive(xQueueCmd, &cmdBuf, portMAX_DELAY);
