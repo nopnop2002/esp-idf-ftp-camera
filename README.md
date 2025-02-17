@@ -118,13 +118,12 @@ You can choose one of the following as shutter
 ![config-shutter-0](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/e0e6a5f9-9e5d-4417-a337-8d6fb2cb1cf0)
 
 - Shutter is the Enter key on the keyboard   
- For operation check.   
- When using the USB port provided by the USB Serial/JTAG Controller Console, you need to enable the following line in sdkconfig.
- ```
- CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
- ```
-
-![config-shutter-1](https://user-images.githubusercontent.com/6020549/99897436-d1d8b680-2cdc-11eb-8f6c-cea149cb845a.jpg)
+	For operation check.   
+	When using the USB port provided by the USB Serial/JTAG Controller Console, you need to enable the following line in sdkconfig.
+	```
+	CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+	```
+	![config-shutter-1](https://user-images.githubusercontent.com/6020549/99897436-d1d8b680-2cdc-11eb-8f6c-cea149cb845a.jpg)
 
 - Shutter is a GPIO toggle
 
@@ -160,32 +159,28 @@ I confirmed that the following GPIO can be used.
 	![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
 
 - Shutter is HTTP Request   
-You can use this command as shutter.   
-`curl "http://esp32-camera.local:8080/take/picture"`
-
-![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
+	You can use this command as shutter.   
+	`curl "http://esp32-camera.local:8080/take/picture"`
+	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
 
 
 
 
 - Shutter is MQTT Subscribe   
-You can use this command as shutter.   
-`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
-The firmware can be restarted when disconnected from the MQTT server.   
-
-![config-shutter-mqtt-1](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/63850db1-f7ba-4fb1-9b88-2a0da4125a9d)
-![config-shutter-mqtt-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/5f5395b4-ea32-47d1-be48-abf909d5ae5a)
-![config-shutter-mqtt-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/b6375ff1-d043-4891-928b-ece60bdfebe1)
+	You can use this command as shutter.   
+	`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
+	The firmware can be restarted when disconnected from the MQTT server.   
+	![config-shutter-mqtt-1](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/63850db1-f7ba-4fb1-9b88-2a0da4125a9d)
+	![config-shutter-mqtt-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/5f5395b4-ea32-47d1-be48-abf909d5ae5a)
+	![config-shutter-mqtt-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/b6375ff1-d043-4891-928b-ece60bdfebe1)
 
 - Shutter is Remote file polling   
-Take a picture if there is a file on the FTP server.   
-Check if the file exists at 10 second intervals.   
-
-![config-shutter-61](https://user-images.githubusercontent.com/6020549/187130276-8b10092d-3f1f-41dc-b8ca-b8ce4f0c74e5.jpg)
-
-You can choose to create a file or delete a file.   
-If you use Android, deleting files is easier.   
-![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)
+	Take a picture if there is a file on the FTP server.   
+	Check if the file exists at 10 second intervals.   
+	![config-shutter-61](https://user-images.githubusercontent.com/6020549/187130276-8b10092d-3f1f-41dc-b8ca-b8ce4f0c74e5.jpg)
+	You can choose to create a file or delete a file.   
+	If you use Android, deleting files is easier.   
+	![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)
 
 ## Flash Light   
 ESP32-CAM by AI-Thinker has a flash light on GPIO4.
