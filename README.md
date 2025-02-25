@@ -144,11 +144,15 @@ You can choose one of the following as shutter
 	![config-shutter-2](https://user-images.githubusercontent.com/6020549/99897437-d2714d00-2cdc-11eb-8e59-c8bf4ef25d62.jpg)
 
 - Shutter is TCP Socket   
+	ESP32 acts as a TCP server.   
+	Waits for requests from TCP clients.   
 	You can use tcp_send.py as shutter.   
 	`python3 ./tcp_send.py`
 	![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
 
 - Shutter is UDP Socket   
+	ESP32 acts as a UDP listener.   
+	Waits for requests from UDP clients.   
 	You can use this command as shutter.   
 	`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`   
 	You can use udp_send.py as shutter.   
@@ -157,12 +161,11 @@ You can choose one of the following as shutter
 	![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
 
 - Shutter is HTTP Request   
+	ESP32 acts as a HTP server.   
+	Waits for requests from HTTP clients.   
 	You can use this command as shutter.   
 	`curl "http://esp32-camera.local:8080/take/picture"`
 	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
-
-
-
 
 - Shutter is MQTT Subscribe   
 	You can use this command as shutter.   
