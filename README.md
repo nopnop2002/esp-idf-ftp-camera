@@ -147,16 +147,16 @@ You can choose one of the following as shutter
 	ESP32 acts as a TCP server and listens for requests from TCP clients.   
 	You can use tcp_send.py as shutter.   
 	`python3 ./tcp_send.py`
-	![config-shutter-3](https://user-images.githubusercontent.com/6020549/99897438-d2714d00-2cdc-11eb-8ab0-2838b1051a16.jpg)
+	![Image](https://github.com/user-attachments/assets/4c301018-2f8c-4644-be3f-417222fb1842)
 
 - Shutter is UDP Socket   
 	ESP32 acts as a UDP listener and listens for requests from UDP clients.   
 	You can use this command as shutter.   
-	`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:9876,broadcast`   
+	`echo "take" | socat - UDP-DATAGRAM:255.255.255.255:49876,broadcast`   
 	You can use udp_send.py as shutter.   
 	Requires netifaces.   
 	`python3 ./udp_send.py`
-	![config-shutter-4](https://user-images.githubusercontent.com/6020549/99897493-3a279800-2cdd-11eb-91eb-87747cc28876.jpg)
+	![Image](https://github.com/user-attachments/assets/3dcd72be-d0ef-4bd9-9273-f420ca88f11b)
 
 - Shutter is HTTP Request   
 	ESP32 acts as an HTTP server and listens for HTTP GET requests.   
