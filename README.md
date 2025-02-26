@@ -155,8 +155,11 @@ You can choose one of the following as shutter
 	`echo -n "take" | socat - UDP-DATAGRAM:255.255.255.255:49876,broadcast`   
 	You can use udp_send.py as shutter.   
 	Requires netifaces.   
-	`python3 ./udp_send.py`
-	![Image](https://github.com/user-attachments/assets/3dcd72be-d0ef-4bd9-9273-f420ca88f11b)
+	`python3 ./udp_send.py`   
+	![Image](https://github.com/user-attachments/assets/3dcd72be-d0ef-4bd9-9273-f420ca88f11b)   
+	You can use these devices as shutters.   
+	![Image](https://github.com/user-attachments/assets/cc97da4e-6c06-4604-8362-f81c6fb6eb58)   
+	Click [here](https://github.com/nopnop2002/esp-idf-selfie-trigger) for details.   
 
 - Shutter is HTTP Request   
 	ESP32 acts as an HTTP server and listens for HTTP GET requests.   
