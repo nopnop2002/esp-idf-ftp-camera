@@ -162,7 +162,6 @@ You can choose one of the following as shutter
 
 - Shutter is HTTP Request   
 	ESP32 acts as an HTTP server and listens for HTTP GET requests.   
-	Waits for requests from HTTP clients.   
 	You can use this command as shutter.   
 	`curl "http://esp32-camera.local:8080/take/picture"`
 	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
