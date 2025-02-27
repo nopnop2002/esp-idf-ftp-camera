@@ -165,7 +165,7 @@ You can choose one of the following as shutter
 	ESP32 acts as an HTTP server and listens for HTTP GET requests.   
 	You can use this command as shutter.   
 	`curl "http://esp32-camera.local:8080/take/picture"`
-	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
+	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)   
 
 - Shutter is MQTT Publish   
 	ESP32 acts as an MQTT subscriber and listens to requests from MQTT publishes.   
@@ -180,10 +180,10 @@ You can choose one of the following as shutter
 - Shutter is Remote file polling   
 	Take a picture if there is a file on the FTP server.   
 	Check if the file exists at 10 second intervals.   
-	![config-shutter-61](https://user-images.githubusercontent.com/6020549/187130276-8b10092d-3f1f-41dc-b8ca-b8ce4f0c74e5.jpg)
+	![config-shutter-61](https://user-images.githubusercontent.com/6020549/187130276-8b10092d-3f1f-41dc-b8ca-b8ce4f0c74e5.jpg)   
 	You can choose to create a file or delete a file.   
 	If you use Android, deleting files is easier.   
-	![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)
+	![config-shutter-62](https://user-images.githubusercontent.com/6020549/187130281-3bd52d09-3153-46a7-a929-9f0209ea726e.jpg)   
 
 ## Flash Light   
 ESP32-CAM by AI-Thinker has a flash light on GPIO4.
