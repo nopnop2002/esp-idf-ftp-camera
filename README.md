@@ -167,7 +167,8 @@ You can choose one of the following as shutter
 	`curl "http://esp32-camera.local:8080/take/picture"`
 	![config-shutter-5](https://user-images.githubusercontent.com/6020549/192754978-cf5f505c-5f7b-4856-b6a3-692b2f94a80b.jpg)
 
-- Shutter is MQTT Subscribe   
+- Shutter is MQTT Publish   
+	ESP32 acts as an MQTT subscriber and listens to requests from MQTT publishes.   
 	You can use this command as shutter.   
 	`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
 	The firmware can be restarted when disconnected from the MQTT server.   
