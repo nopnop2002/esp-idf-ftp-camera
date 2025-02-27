@@ -171,9 +171,10 @@ You can choose one of the following as shutter
 	ESP32 acts as an MQTT subscriber and listens to requests from MQTT publishes.   
 	You can use this command as shutter.   
 	`mosquitto_pub -h broker.emqx.io -p 1883 -t "/take/picture" -m "take picture"`   
-	The firmware can be restarted when disconnected from the MQTT server.   
 	![config-shutter-mqtt-1](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/63850db1-f7ba-4fb1-9b88-2a0da4125a9d)
+	The firmware can be restarted when disconnected from the MQTT server.   
 	![config-shutter-mqtt-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/5f5395b4-ea32-47d1-be48-abf909d5ae5a)
+	Specifies the username and password if the server requires a password when connecting.   
 	![config-shutter-mqtt-3](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/b6375ff1-d043-4891-928b-ece60bdfebe1)
 
 - Shutter is Remote file polling   
