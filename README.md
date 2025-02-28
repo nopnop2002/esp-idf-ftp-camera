@@ -196,6 +196,18 @@ ESP32S3-WROVER CAM has Octal Mode PSRAM.
 UICPAL ESPS3 CAM  has Quad Mode PSRAM.   
 ![config-psram](https://github.com/nopnop2002/esp-idf-websocket-camera/assets/6020549/ba04f088-c628-46ac-bc5b-2968032753e0)
 
+# View picture using opencv-python   
+You can use unix_ftpd.py as image viewer.   
+__It can only be used on linux systems.__   
+```
+python3 -m pip install pyftpdlib
+python3 -m pip install opencv-python
+
+sudo $IDF_PYTHON_ENV_PATH/bin/python3 unix_ftpd.py
+```
+__Close the image window with the ESC key.__   
+![opencv](https://github.com/nopnop2002/esp-idf-mqtt-camera/assets/6020549/516b2f25-d285-47d6-ae56-ee1cceed5c58)   
+
 
 # Take picture using flask application   
 You can use flask application.   
