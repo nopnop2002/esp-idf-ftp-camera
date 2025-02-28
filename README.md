@@ -198,6 +198,9 @@ UICPAL ESPS3 CAM  has Quad Mode PSRAM.
 
 # View picture using opencv-python   
 You can use unix_ftpd.py as image viewer.   
+This script acts as an FTP server.   
+When receiving a file with jpeg or jpg extension, display the image with opencv.   
+Uses a local UNIX account database to authenticate users.   
 __It can only be used on linux systems.__   
 ```
 python3 -m pip install pyftpdlib
