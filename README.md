@@ -206,9 +206,16 @@ __It can only be used on linux systems.__
 python3 -m pip install pyftpdlib
 python3 -m pip install opencv-python
 
-sudo $IDF_PYTHON_ENV_PATH/bin/python3 unix_ftpd.py
+sudo $IDF_PYTHON_ENV_PATH/bin/python3 unix_ftpd.py --help
+usage: unix_ftpd.py [-h] [--timeout TIMEOUT]
+
+options:
+  -h, --help         show this help message and exit
+  --timeout TIMEOUT  wait time for keyboard input[sec]
 ```
-__Close the image window with the ESC key.__   
+When timeout is specified, display the image for the specified number of seconds.   
+When timeout is not specified, the image will be displayed until the ESC key is pressed.   
+__Close the image window with the ESC key. Do not use the close button.__   
 ![opencv](https://github.com/nopnop2002/esp-idf-mqtt-camera/assets/6020549/516b2f25-d285-47d6-ae56-ee1cceed5c58)   
 
 

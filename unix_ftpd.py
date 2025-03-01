@@ -15,6 +15,7 @@ import queue
 import threading
 import time
 import cv2
+import argparse
 from pyftpdlib.authorizers import UnixAuthorizer
 from pyftpdlib.filesystems import UnixFilesystem
 from pyftpdlib.handlers import FTPHandler
@@ -33,11 +34,12 @@ def threadView(q1, q2):
 			#print("thread waiting..")
 		else:
 			localVal = q1.get()
-			print("thread q1.get() localVal={}".format(localVal))
+			print("thread q1.get() localVal={} timeout={}".format(localVal, args.timeout))
 			print("imageFileName={}".format(imageFileName))
 			image = cv2.imread(imageFileName)
 			cv2.imshow('image', image)
-			cv2.waitKey(0)
+			#cv2.waitKey(0)
+			cv2.waitKey(args.timeout*1000)
 			cv2.destroyWindow('image')
 			print("thread q2.put() localVal={}".format(localVal))
 			q2.put(localVal)
@@ -78,6 +80,11 @@ def main():
 	server.serve_forever()
 
 if __name__ == "__main__":
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--timeout', type=int, help='wait time for keyboard input[sec]', default=0)
+	args = parser.parse_args() 
+	print("args.timeout={}".format(args.timeout))
+
 	thread = threading.Thread(target=threadView, args=(queue01,queue02,) ,daemon = True)
 	thread.start()
 
