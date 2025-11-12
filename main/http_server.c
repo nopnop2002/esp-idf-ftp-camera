@@ -151,7 +151,8 @@ static esp_err_t shutter_handler(httpd_req_t *req)
     CMD_t cmdBuf;
     cmdBuf.taskHandle = xTaskGetCurrentTaskHandle();
     cmdBuf.command = CMD_TAKE;
-    if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
+    //if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
+    if (xQueueSendFromISR(xQueueCmd, &cmdBuf, NULL) != pdPASS) {
         ESP_LOGE(TAG, "xQueueSend fail");
     } else {
         ESP_LOGI(TAG, "xQueueSend success");
