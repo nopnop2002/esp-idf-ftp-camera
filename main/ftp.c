@@ -25,33 +25,34 @@ extern QueueHandle_t xQueueFtp;
 
 void ftp_put(void *pvParameters)
 {
-	ESP_LOGI(pcTaskGetName(0), "Start");
+	ESP_LOGI(pcTaskGetName(NULL), "Start");
 	FTP_t ftpBuf;
 	while(1) {
 		xQueueReceive(xQueueFtp, &ftpBuf, portMAX_DELAY);
-		ESP_LOGI(pcTaskGetName(0),"ftpBuf.command=%d", ftpBuf.command);
+		ESP_LOGI(pcTaskGetName(NULL),"ftpBuf.command=%d", ftpBuf.command);
 		if (ftpBuf.command == CMD_HALT) break;
 
 		// Open FTP server
-		ESP_LOGI(pcTaskGetName(0), "ftp server :%s", CONFIG_FTP_SERVER);
-		ESP_LOGI(pcTaskGetName(0), "ftp user   :%s", CONFIG_FTP_USER);
-		ESP_LOGI(pcTaskGetName(0), "localFile  :%s", ftpBuf.localFileName);
-		ESP_LOGI(pcTaskGetName(0), "remoteFile :%s", ftpBuf.remoteFileName);
-		ESP_LOGI(pcTaskGetName(0), "remoteDir  :%s", ftpBuf.remoteDirName);
-		ESP_LOGI(pcTaskGetName(0), "taskHandle :%d", (unsigned int)ftpBuf.taskHandle);
+		ESP_LOGI(pcTaskGetName(NULL), "ftp server :%s", CONFIG_FTP_SERVER);
+		ESP_LOGI(pcTaskGetName(NULL), "ftp user   :%s", CONFIG_FTP_USER);
+		ESP_LOGI(pcTaskGetName(NULL), "ftp port   :%d", CONFIG_FTP_PORT);
+		ESP_LOGI(pcTaskGetName(NULL), "localFile  :%s", ftpBuf.localFileName);
+		ESP_LOGI(pcTaskGetName(NULL), "remoteFile :%s", ftpBuf.remoteFileName);
+		ESP_LOGI(pcTaskGetName(NULL), "remoteDir  :%s", ftpBuf.remoteDirName);
+		ESP_LOGI(pcTaskGetName(NULL), "taskHandle :%d", (unsigned int)ftpBuf.taskHandle);
 		static NetBuf_t* ftpClientNetBuf = NULL;
 		FtpClient* ftpClient = getFtpClient();
-		int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
-		//int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 2121, &ftpClientNetBuf);
+		//int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
+		int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, CONFIG_FTP_PORT, &ftpClientNetBuf);
 		if (connect == 0) {
-			ESP_LOGE(pcTaskGetName(0), "FTP server connect fail");
+			ESP_LOGE(pcTaskGetName(NULL), "FTP server connect fail");
 			continue;
 		}
 
 		// Login FTP server
 		int login = ftpClient->ftpClientLogin(CONFIG_FTP_USER, CONFIG_FTP_PASSWORD, ftpClientNetBuf);
 		if (login == 0) {
-			ESP_LOGE(pcTaskGetName(0), "FTP server login fail");
+			ESP_LOGE(pcTaskGetName(NULL), "FTP server login fail");
 			continue;
 		}
 
@@ -59,14 +60,14 @@ void ftp_put(void *pvParameters)
 		if (strlen(ftpBuf.remoteDirName)) {
 			//int mkdir = ftpClient->ftpClientMakeDir("pictire", ftpClientNetBuf);
 			int mkdir = ftpClient->ftpClientMakeDir(ftpBuf.remoteDirName, ftpClientNetBuf);
-			ESP_LOGD(pcTaskGetName(0), "mkdir=%d", mkdir);
+			ESP_LOGD(pcTaskGetName(NULL), "mkdir=%d", mkdir);
 
 			// Change working directory
 			//int chdir = ftpClient->ftpClientChangeDir("pictire", ftpClientNetBuf);
 			int chdir = ftpClient->ftpClientChangeDir(ftpBuf.remoteDirName, ftpClientNetBuf);
-			ESP_LOGD(pcTaskGetName(0), "chdir=%d", chdir);
+			ESP_LOGD(pcTaskGetName(NULL), "chdir=%d", chdir);
 			if (chdir == 0) {
-				ESP_LOGE(pcTaskGetName(0), "FTP server chdir fail");
+				ESP_LOGE(pcTaskGetName(NULL), "FTP server chdir fail");
 				continue;
 			}
 		}
@@ -74,14 +75,14 @@ void ftp_put(void *pvParameters)
 		// Put Picture to FTP server
 		int put = ftpClient->ftpClientPut(ftpBuf.localFileName, ftpBuf.remoteFileName, FTP_CLIENT_BINARY, ftpClientNetBuf);
 		if (put == 0) {
-			ESP_LOGE(pcTaskGetName(0), "FTP server put fail");
+			ESP_LOGE(pcTaskGetName(NULL), "FTP server put fail");
 			continue;
 		}
 
 		if (strlen(ftpBuf.remoteDirName)) {
-			ESP_LOGI(pcTaskGetName(0), "ftpClientPut %s ---> %s/%s", ftpBuf.localFileName, ftpBuf.remoteDirName, ftpBuf.remoteFileName);
+			ESP_LOGI(pcTaskGetName(NULL), "ftpClientPut %s ---> %s/%s", ftpBuf.localFileName, ftpBuf.remoteDirName, ftpBuf.remoteFileName);
 		} else {
-			ESP_LOGI(pcTaskGetName(0), "ftpClientPut %s ---> %s", ftpBuf.localFileName, ftpBuf.remoteFileName);
+			ESP_LOGI(pcTaskGetName(NULL), "ftpClientPut %s ---> %s", ftpBuf.localFileName, ftpBuf.remoteFileName);
 		}
 
 		ftpClient->ftpClientQuit(ftpClientNetBuf);
@@ -125,24 +126,26 @@ esp_err_t ftp_make_dir(char * path, FtpClient* ftpClient, NetBuf_t* ftpClientNet
 
 void ftp_get(void *pvParameters)
 {
-	ESP_LOGI(pcTaskGetName(0), "Start");
-	ESP_LOGI(pcTaskGetName(0), "CONFIG_FTP_SERVER      :%s", CONFIG_FTP_SERVER);
-	ESP_LOGI(pcTaskGetName(0), "CONFIG_FTP_USER        :%s", CONFIG_FTP_USER);
-	ESP_LOGI(pcTaskGetName(0), "CONFIG_REMOTE_FILE_NAME:%s", CONFIG_REMOTE_FILE_NAME);
+	ESP_LOGI(pcTaskGetName(NULL), "Start");
+	ESP_LOGI(pcTaskGetName(NULL), "CONFIG_FTP_SERVER      :%s", CONFIG_FTP_SERVER);
+	ESP_LOGI(pcTaskGetName(NULL), "CONFIG_FTP_USER        :%s", CONFIG_FTP_USER);
+	ESP_LOGI(pcTaskGetName(NULL), "CONFIG_FTP_PORT        :%d", CONFIG_FTP_PORT);
+	ESP_LOGI(pcTaskGetName(NULL), "CONFIG_REMOTE_FILE_NAME:%s", CONFIG_REMOTE_FILE_NAME);
 
 	// Open FTP server
 	static NetBuf_t* ftpClientNetBuf = NULL;
 	FtpClient* ftpClient = getFtpClient();
-	int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
+	//int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, 21, &ftpClientNetBuf);
+	int connect = ftpClient->ftpClientConnect(CONFIG_FTP_SERVER, CONFIG_FTP_PORT, &ftpClientNetBuf);
 	if (connect == 0) {
-		ESP_LOGE(pcTaskGetName(0), "FTP server connect fail");
+		ESP_LOGE(pcTaskGetName(NULL), "FTP server connect fail");
 		vTaskDelete( NULL );
 	}
 
 	// Login FTP server
 	int login = ftpClient->ftpClientLogin(CONFIG_FTP_USER, CONFIG_FTP_PASSWORD, ftpClientNetBuf);
 	if (login == 0) {
-		ESP_LOGE(pcTaskGetName(0), "FTP server login fail");
+		ESP_LOGE(pcTaskGetName(NULL), "FTP server login fail");
 		vTaskDelete( NULL );
 	}
 
@@ -150,14 +153,14 @@ void ftp_get(void *pvParameters)
 #if CONFIG_REMOTE_FILE_REMOVE
 	ftp_make_dir(CONFIG_REMOTE_FILE_NAME, ftpClient, ftpClientNetBuf);
 	int access = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_WRITE, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
-	ESP_LOGI(pcTaskGetName(0), "ftpClientAccess=%d", access);
+	ESP_LOGI(pcTaskGetName(NULL), "ftpClientAccess=%d", access);
 	if (access == 1) {
 		char buffer[10];
 		int write = ftpClient->ftpClientWrite(buffer, 0, ftpClientNetData);
-		ESP_LOGI(pcTaskGetName(0), "ftpClientwrite=%d", write);
+		ESP_LOGI(pcTaskGetName(NULL), "ftpClientwrite=%d", write);
 		ftpClient->ftpClientClose(ftpClientNetData);
 	} else {
-		ESP_LOGE(pcTaskGetName(0), "FTP server access fail");
+		ESP_LOGE(pcTaskGetName(NULL), "FTP server access fail");
 		vTaskDelete( NULL );
 	}
 #endif // CONFIG_REMOTE_FILE_REMOVE
@@ -169,19 +172,19 @@ void ftp_get(void *pvParameters)
 	while(1) {
 		// Open file from FTP server
 		int get = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_READ, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
-		ESP_LOGD(pcTaskGetName(0), "ftpClientGet=%d", get);
+		ESP_LOGD(pcTaskGetName(NULL), "ftpClientGet=%d", get);
 		if (get == 1) {
 			int close = ftpClient->ftpClientClose(ftpClientNetData);
-			ESP_LOGD(pcTaskGetName(0), "ftpClientClose %d", close);
+			ESP_LOGD(pcTaskGetName(NULL), "ftpClientClose %d", close);
 		}
 #if CONFIG_REMOTE_FILE_CREATE
 		// Triggered on remote file creation
 		if (get == 1) {
-			ESP_LOGI(pcTaskGetName(0), "remote file create %s", CONFIG_REMOTE_FILE_NAME);
+			ESP_LOGI(pcTaskGetName(NULL), "remote file create %s", CONFIG_REMOTE_FILE_NAME);
 			int delete = ftpClient->ftpClientDelete(CONFIG_REMOTE_FILE_NAME, ftpClientNetBuf);
-			ESP_LOGI(pcTaskGetName(0), "ftpClientDelete %d", delete);
+			ESP_LOGI(pcTaskGetName(NULL), "ftpClientDelete %d", delete);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGE(pcTaskGetName(0), "xQueueSend fail");
+				ESP_LOGE(pcTaskGetName(NULL), "xQueueSend fail");
 			}
 		}
 #endif // CONFIG_REMOTE_FILE_CREATE
@@ -189,19 +192,19 @@ void ftp_get(void *pvParameters)
 #if CONFIG_REMOTE_FILE_REMOVE
 		// Trigger on remote file deletion
 		if (get == 0) {
-			ESP_LOGI(pcTaskGetName(0), "remote file delete %s", CONFIG_REMOTE_FILE_NAME);
+			ESP_LOGI(pcTaskGetName(NULL), "remote file delete %s", CONFIG_REMOTE_FILE_NAME);
 			if (xQueueSend(xQueueCmd, &cmdBuf, 10) != pdPASS) {
-				ESP_LOGE(pcTaskGetName(0), "xQueueSend fail");
+				ESP_LOGE(pcTaskGetName(NULL), "xQueueSend fail");
 			}
 			access = ftpClient->ftpClientAccess(CONFIG_REMOTE_FILE_NAME, FTP_CLIENT_FILE_WRITE, FTP_CLIENT_ASCII, ftpClientNetBuf, &ftpClientNetData);
-			ESP_LOGI(pcTaskGetName(0), "ftpClientAccess=%d", access);
+			ESP_LOGI(pcTaskGetName(NULL), "ftpClientAccess=%d", access);
 			if (access == 1) {
 				char buffer[10];
 				int write = ftpClient->ftpClientWrite(buffer, 0, ftpClientNetData);
-				ESP_LOGI(pcTaskGetName(0), "ftpClientwrite=%d", write);
+				ESP_LOGI(pcTaskGetName(NULL), "ftpClientwrite=%d", write);
 				ftpClient->ftpClientClose(ftpClientNetData);
 			} else {
-				ESP_LOGE(pcTaskGetName(0), "FTP server access fail");
+				ESP_LOGE(pcTaskGetName(NULL), "FTP server access fail");
 			}
 		}
 #endif // CONFIG_REMOTE_FILE_REMOVE

@@ -63,6 +63,12 @@ menu "Application configuration"
 			help
 				The host name or IP address of the FTP server to use.
 
+		config FTP_PORT
+			int "FTP Server Port"
+			default 21
+			help
+				FTP Server port number to connect.
+
 		config FTP_USER
 			string "FTP User Name"
 			default "myftpuser"

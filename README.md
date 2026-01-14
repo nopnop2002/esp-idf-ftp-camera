@@ -66,17 +66,37 @@ You can use static IP.
 ## FTP server Setting
 You can specify mDNS hostname for the FTP server.   
 
-![config-ftpserver-1](https://user-images.githubusercontent.com/6020549/187012952-f7ef4541-64dd-4a1a-8dbd-b8c19b0a69b2.jpg)
+![Image](https://github.com/user-attachments/assets/369f1e87-1652-4cbb-99fe-7746a6f873b0)
+
+- Using Public FTP Server   
+	You can use [this](https://dlptest.com/ftp-test/) public FTP server for testing.   
+	The files will be stored for 10 minutes before being deleted.   
+	```
+	cd esp-idf-ftpClient
+	rm sdkconfig
+	cd main
+	cp Kconfig.projbuild Kconfig.projbuild.old
+	cp Kconfig.projbuild.dlptest Kconfig.projbuild
+	cd ..
+	idf.py menuconfig
+	idf.py build
+	```
+	![Image](https://github.com/user-attachments/assets/3fc731ff-b081-4807-9b34-c8aa8513a6e2)
+
+- Using Python FTP Server   
+	You can set up an FTP server with [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/python-ftp-server) script.   
+	Use port number 2121.   
+
 
 Store pictures in FTP Server subdirectories.   
-![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/187012954-f6e79b78-813f-4072-854e-6d1f592f895a.jpg)
+![Image](https://github.com/user-attachments/assets/9f7feadd-88e8-4bf5-aeef-e55cbbc22ef4)
 
 Create index.html on FTP Server.   
 When your FTP server acts as an HTTP server, You can view picture using browser.   
-![config-ftpserver-3](https://user-images.githubusercontent.com/6020549/192081871-b73ea69c-ca51-494c-a064-181707bf7b25.jpg)
+![Image](https://github.com/user-attachments/assets/1a0977e8-2ca0-4bad-97bb-2268348ecef9)
 
 You can specify the rotation of the image.   
-![config-ftpserver-4](https://user-images.githubusercontent.com/6020549/192081894-db0d5b69-57f2-4e68-916f-13c3ddef77e4.jpg)
+![Image](https://github.com/user-attachments/assets/557be573-af06-43f7-a95e-3ac798c57b16)
 
 My FTP server acts as an HTTP server.   
 ![rotate-000](https://user-images.githubusercontent.com/6020549/187013052-0991b3e7-d781-4661-925a-fe96fbb403af.jpg)
