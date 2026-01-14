@@ -68,14 +68,6 @@ You can specify mDNS hostname for the FTP server.
 
 ![config-ftpserver-1](https://user-images.githubusercontent.com/6020549/187012952-f7ef4541-64dd-4a1a-8dbd-b8c19b0a69b2.jpg)
 
-- Using Public FTP Server   
-	You can use [this](https://dlptest.com/ftp-test/) public FTP server for testing.   
-	The files will be stored for 10 minutes before being deleted.   
-
-- Using Python FTP Server   
-	You can set up an FTP server with [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/python-ftp-server) script.   
-	Use port number 2121.   
-
 Store pictures in FTP Server subdirectories.   
 ![config-ftpserver-2](https://user-images.githubusercontent.com/6020549/187012954-f6e79b78-813f-4072-854e-6d1f592f895a.jpg)
 
