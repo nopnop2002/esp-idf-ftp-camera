@@ -2,7 +2,6 @@
 You can take & view pictures using WEB interface.   
 This application works as an FTP client.   
 ESP32 shutter trigger must be configured with Triggered on remote file creation.   
-This will allow the ESP32 to act as an FTP server.   
 
 ![slide4](https://user-images.githubusercontent.com/6020549/187132648-23848e79-3f55-4a69-ac04-f761ebd5ed94.JPG)
 
