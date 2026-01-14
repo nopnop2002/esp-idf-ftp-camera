@@ -86,7 +86,7 @@ You can specify mDNS hostname for the FTP server.
 - Using Python FTP Server   
 	You can set up an FTP server with [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/python-ftp-server) script.   
 	Use port number 2121.   
-
+	![Image](https://github.com/user-attachments/assets/2b3db32c-fd05-4ccd-9773-f30e9dea5683)
 
 Store pictures in FTP Server subdirectories.   
 ![Image](https://github.com/user-attachments/assets/9f7feadd-88e8-4bf5-aeef-e55cbbc22ef4)
