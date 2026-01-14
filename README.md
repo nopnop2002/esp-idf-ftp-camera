@@ -71,17 +71,6 @@ You can specify mDNS hostname for the FTP server.
 - Using Public FTP Server   
 	You can use [this](https://dlptest.com/ftp-test/) public FTP server for testing.   
 	The files will be stored for 10 minutes before being deleted.   
-	```
-	cd esp-idf-ftpClient
-	rm sdkconfig
-	cd main
-	cp Kconfig.projbuild Kconfig.projbuild.old
-	cp Kconfig.projbuild.dlptest Kconfig.projbuild
-	cd ..
-	idf.py menuconfig
-	idf.py build
-	```
-	![Image](https://github.com/user-attachments/assets/3fc731ff-b081-4807-9b34-c8aa8513a6e2)
 
 - Using Python FTP Server   
 	You can set up an FTP server with [this](https://github.com/nopnop2002/esp-idf-ftp-camera/tree/master/python-ftp-server) script.   
