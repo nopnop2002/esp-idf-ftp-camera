@@ -32,7 +32,7 @@ You can specify an FTP server.
 ![flask-2](https://github.com/nopnop2002/esp-idf-ftp-camera/assets/6020549/19394ad3-927f-47ee-b277-660aa48323c8)
 
 # Take picture
-Take Picutre creates shutter.txt on the FTP server.   
+Take Picutre will create a new file (shutter.txt) on the FTP server.   
 This will trigger the ESP32 to take a photo.   
 ![flask-11](https://user-images.githubusercontent.com/6020549/187102690-e611e921-65da-4cea-bff7-16cc2b0d15cd.jpg)
 
