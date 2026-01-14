@@ -1,7 +1,7 @@
 # FTP Client using flask
 You can take & view pictures using WEB interface.   
 This application works as an FTP client.   
-This application creates shutter.txt on the FTP server.   
+This application will create a new file (shutter.txt) on the FTP server.   
 
 ESP32 shutter trigger must be configured with Triggered on remote file creation.   
 ESP32 periodically monitors the FTP server for file creation.
