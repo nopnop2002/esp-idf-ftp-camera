@@ -42,5 +42,5 @@ This will cause the ESP32 to take a photo and transfer the image to an FTP serve
 ![Image](https://github.com/user-attachments/assets/2cbd5ce0-92cc-4680-a485-856f82addf95)
 
 Refresh web page.   
-![Image](https://github.com/user-attachments/assets/93d6af24-9e3e-4dee-88f3-e94cafa14a4d)
-![flask-13](https://user-images.githubusercontent.com/6020549/187102696-d95ce0ab-211d-4196-85c1-dc92c7d6a101.jpg)
+![Image](https://github.com/user-attachments/assets/d1736c9f-71fb-487f-80a4-1f7cc706604d)
+![Image](https://github.com/user-attachments/assets/0d647322-3f6c-4130-88ed-6ef25815f01e)
