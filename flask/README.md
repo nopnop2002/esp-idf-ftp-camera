@@ -12,7 +12,6 @@ python3 -m pip install -U pip
 python3 -m pip install -U wheel
 python3 -m pip install -U Werkzeug
 python3 -m pip install -U flask
-python3 -m pip install -U flask-mqtt
 python3 -m pip install -U pyftpdlib
 ```
 
