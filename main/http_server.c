@@ -238,7 +238,7 @@ void http_task(void *pvParameters)
 	HTTP_t httpBuf;
 	while(1) {
 		// Wait to take a picture
-		if (xQueueReceive(xQueueHttp, &httpBuf, portMAX_DELAY) == pdTRUE) {
+		if (xQueueReceive(xQueueHttp, &httpBuf, portMAX_DELAY) == pdPASS) {
 			ESP_LOGI(TAG, "httpBuf.localFileName=[%s]", httpBuf.localFileName);
 			localFileName = httpBuf.localFileName;
 			ESP_LOGW(TAG, "Open this in your browser %s", url);
