@@ -28,7 +28,7 @@ menu "Application configuration"
 
 		config STATIC_IP
 			bool "Enable Static IP Address"
-			default false
+			default n
 			help
 				Enable Static IP Address.
 
@@ -167,7 +167,7 @@ menu "Application configuration"
 
 		config REMOTE_FRAMESIZE
 			bool "Add FrameSize to Remote file name"
-			default false
+			default n
 			help
 				Add FrameSize to Remote file name.
 
@@ -307,14 +307,14 @@ menu "Application configuration"
 		config MQTT_RESTART
 			depends on SHUTTER_MQTT
 			bool "Restart when disconnected from MQTT server"
-			default false
+			default n
 			help
 				Restart when disconnected from MQTT server
 
 		config BROKER_AUTHENTICATION
 			depends on SHUTTER_MQTT
 			bool "Server requests for password when connecting"
-			default false
+			default n
 			help
 				Server requests for password when connecting
 
